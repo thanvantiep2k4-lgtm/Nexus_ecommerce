@@ -1,0 +1,72 @@
+# ── Environment Variables ──
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── Dependencies ──
+node_modules/
+
+# ── Next.js ──
+.next/
+out/
+
+# ── Build / Production ──
+build/
+dist/
+
+# ── Testing ──
+coverage/
+
+# ── Docker volumes ──
+pgdata/
+mongodata/
+
+# ── Keycloak (secrets only, keep theme + realm config) ──
+keycloak/themes/shofy-theme/login/resources/img/favicon.ico
+
+# ── Debug Logs ──
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# ── Secrets & Certificates ──
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+
+# ── Vercel ──
+.vercel/
+
+# ── Misc ──
+.pnp
+.pnp.js
+
+# Audit script output
+audit-products-*.csv
+
+# Local DB snapshots (Phase 1b/3b rollback artifacts)
+backups/
+
+# Playwright test artifacts
+frontend/test-results/
+
+# Vendor reference template (Clicon HTML starter)
+clicon-html/
+.gitnexus

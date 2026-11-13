@@ -1,0 +1,201 @@
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
+// schema design
+const validator = require("validator");
+
+const productsSchema = mongoose.Schema({
+  id: {
+    type: String
+  },
+  sku: {
+    type: String,
+    required: false,
+  },
+  img:{
+    type: String,
+    required: true,
+    validate: [validator.isURL, "Please provide valid url(s)"]
+  },
+  title: {
+    type: String,
+    required: [true, "Please provide a name for this product."],
+    trim: true,
+    minLength: [3, "Name must be at least 3 characters."],
+    maxLength: [200, "Name is too large"],
+  },
+  slug: {
+    type: String,
+    trim: true,
+    required: false,
+  },
+  unit: {
+    type: String,
+    required: true,
+  },
+  imageURLs: [{
+    color:{
+      name:{
+        type: String,
+        required: false,
+        trim: true,
+      },
+      clrCode:{
+        type: String,
+        required: false,
+        trim: true,
+      }
+    },
+    img:{
+      type: String,
+      required: false,
+      validate: [validator.isURL, "Please provide valid url(s)"]
+    },
+    sizes:[String]
+  }],
+  parent:{
+    type:String,
+    required:true,
+    trim:true,
+   },
+  children:{
+    type:String,
+    required:true,
+    trim:true,
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: [0, "Product price can't be negative"]
+  },
+  discount: {
+    type: Number,
+    min: [0, "Product price can't be negative"]
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: [0, "Product quantity can't be negative"]
+  },
+  brand: {
+    name: {
+      type: String,
+      required: true,
+    },
+    id: {
+      type: ObjectId,
+      ref: "Brand",
+      required: true,
+    }
+  },
+  category: {
+    name: {
+      type: String,
+      required: true,
+    },
+    id: {
+      type: ObjectId,
+      ref: "Category",
+      required: true,
+    }
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: {
+      values: ["in-stock", "out-of-stock", "discontinued"],
+      message: "status can't be {VALUE} "
+    },
+    default: "in-stock",
+  },
+  reviews: [{type:ObjectId, ref: 'Reviews' }],
+  productType:{
+    type:String,
+    required: true,
+    lowercase: true,
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  videoId: {
+    type: String,
+    required: false
+  },
+  additionalInformation: [{}],
+  tags: [String],
+  sizes: [String],
+  offerDate:{
+    startDate:{
+      type:Date
+    },
+    endDate:{
+      type:Date
+    },
+  },
+  featured: {
+    type: Boolean,
+    default: false,
+  },
+  sellCount: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+
+  // Extended product fields
+  vendor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  barcode: { type: String },
+  weight: { type: Number },
+  dimensions: {
+    length: { type: Number },
+    width: { type: Number },
+    height: { type: Number },
+  },
+  variants: [
+    {
+      sku: { type: String, required: true },
+      color: {
+        name: { type: String },
+        clrCode: { type: String },
+      },
+      size: { type: String },
+      price: { type: Number, required: true },
+      stock: { type: Number, required: true, default: 0 },
+      images: [{ type: String }],
+    },
+  ],
+  shipping: {
+    freeShipping: { type: Boolean, default: false },
+    shippingCost: { type: Number, default: 0 },
+    estimatedDelivery: { type: String },
+  },
+  seo: {
+    metaTitle: { type: String, maxlength: 70 },
+    metaDescription: { type: String, maxlength: 160 },
+    metaKeywords: [{ type: String }],
+    ogImage: { type: String },
+  },
+
+  // Vector search fields
+  embedding: { type: [Number], default: null, select: false },
+  embeddedAt: { type: Date, default: null },
+
+  currencyReviewedAt: { type: Date, default: null },
+
+  // Catalog migration — tracks source record for idempotent re-runs
+  importId: { type: String, index: true, sparse: true, unique: true },
+}, {
+  timestamps: true,
+})
+
+productsSchema.index({ vendor: 1 }, { sparse: true });
+productsSchema.index({ price: 1 });
+productsSchema.index({ sellCount: -1 });
+productsSchema.index({ "offerDate.endDate": 1 }, { sparse: true });
+productsSchema.index({ tags: 1 });
+productsSchema.index({ title: "text", description: "text", tags: "text" });
+productsSchema.index({ createdAt: -1 });
+
+const Products = mongoose.model('Products', productsSchema)
+
+module.exports = Products;

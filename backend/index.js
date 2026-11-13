@@ -1,0 +1,273 @@
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const path = require('path');
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const mongoSanitize = require("express-mongo-sanitize");
+const http = require('http');
+const { Server } = require('socket.io');
+const connectDB = require("./config/db");
+const { secret } = require("./config/secret");
+const PORT = process.env.PORT || secret.port || 7001;
+const morgan = require('morgan');
+// error handler
+const globalErrorHandler = require("./middleware/global-error-handler");
+// routes — v1 (canonical)
+const v1Routes = require("./routes/v1");
+// exchange rate cron
+const { startCron: startExchangeRateCron } = require('./services/exchangeRateService');
+
+// ---------------------------------------------------------------------------
+// CORS
+// ---------------------------------------------------------------------------
+
+const allowedOrigins = [
+  ...new Set([
+    process.env.STORE_URL || 'http://localhost:3000',
+    process.env.ADMIN_URL || 'http://localhost:8080',
+    'http://localhost:3001',
+    'http://localhost:8081',
+    // secret.* are the same env vars — included as a safety net in case
+    // STORE_URL / ADMIN_URL differ from what secret.js reads
+    secret.client_url,
+    secret.admin_url,
+  ].filter(Boolean)),
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// ---------------------------------------------------------------------------
+// Security headers
+// ---------------------------------------------------------------------------
+
+app.use(helmet({
+  // Allow Cloudinary images and Swagger UI assets to load in browsers
+  crossOriginEmbedderPolicy: false,
+  // No HTML pages served from this API — skip CSP (avoids blocking Swagger UI)
+  contentSecurityPolicy: false,
+}));
+
+// ---------------------------------------------------------------------------
+// Body parsing + sanitization
+// ---------------------------------------------------------------------------
+
+app.use(mongoSanitize());
+app.use(express.json({ limit: '100kb' }));
+app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ---------------------------------------------------------------------------
+// Health check — liveness probe (no auth, outside rate limiter)
+// ---------------------------------------------------------------------------
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Swagger UI — API documentation (outside rate limiter so docs stay accessible)
+// ---------------------------------------------------------------------------
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Shofy API Documentation',
+  swaggerOptions: {
+    persistAuthorization: true,
+  },
+}));
+
+// Serve raw OpenAPI JSON for tooling (Postman, code-gen, etc.)
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+// ---------------------------------------------------------------------------
+// Rate limiters
+// ---------------------------------------------------------------------------
+
+// Global — 1000 req / 15 min per IP (generous for dev; tighten in production)
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { status: "fail", error: "Too many requests, please try again later" },
+});
+app.use(globalLimiter);
+
+// Auth endpoints — 10 req / 15 min per IP (prevents brute-force)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { status: "fail", error: "Too many authentication attempts, please try again later" },
+});
+app.use("/api/v1/auth", authLimiter);
+
+// Payment / order creation — 20 req / 15 min per IP
+const paymentLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { status: "fail", error: "Too many payment attempts, please try again later" },
+});
+app.use("/api/v1/user/orders", paymentLimiter);
+
+// Media upload — 30 req / 15 min per IP
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { status: "fail", error: "Too many upload requests, please try again later" },
+});
+app.use("/api/v1/admin/media", uploadLimiter);
+
+// ---------------------------------------------------------------------------
+// Socket.io
+// ---------------------------------------------------------------------------
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  },
+});
+
+// Store io instance globally for use in controllers
+global.io = io;
+
+// Socket.io authentication middleware (Keycloak JWT)
+const jwksRsa = require("jwks-rsa");
+const jwt = require("jsonwebtoken");
+const { keycloakConfig } = require("./config/keycloak");
+
+const socketJwksClient = jwksRsa({
+  cache: true,
+  rateLimit: true,
+  jwksRequestsPerMinute: 30,
+  jwksUri: keycloakConfig.jwksUri,
+});
+
+io.use(async (socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) {
+    // Allow anonymous connections for public events
+    socket.user = null;
+    return next();
+  }
+  try {
+    const decoded = jwt.decode(token, { complete: true });
+    if (!decoded) return next(new Error("Authentication error"));
+    const key = await socketJwksClient.getSigningKey(decoded.header.kid);
+    const verified = jwt.verify(token, key.getPublicKey(), {
+      algorithms: ["RS256"],
+      issuer: keycloakConfig.authority,
+    });
+    socket.user = {
+      keycloakId: verified.sub,
+      email: verified.email,
+      name: verified.preferred_username || verified.name,
+      roles: verified.realm_access?.roles || [],
+    };
+    next();
+  } catch (err) {
+    console.error("[Socket.io] Auth error:", err.message);
+    next(new Error("Authentication error"));
+  }
+});
+
+// Socket.io connection handling
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id, socket.user ? `(${socket.user.email})` : '(anonymous)');
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+
+  // Chatbot room management — clients join a room keyed by sessionId so the
+  // controller can stream tokens/tool-call events only to that session.
+  socket.on('chat:join', ({ sessionId }) => {
+    if (sessionId) socket.join(`chat:${sessionId}`);
+  });
+  socket.on('chat:leave', ({ sessionId }) => {
+    if (sessionId) socket.leave(`chat:${sessionId}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Database
+// ---------------------------------------------------------------------------
+
+connectDB().then(() => {
+  // Skip cron in test environment — prevents open handle leaks across Jest suites
+  if (process.env.NODE_ENV !== 'test') {
+    startExchangeRateCron();
+  }
+});
+
+// ---------------------------------------------------------------------------
+// API routes — v1 (canonical)
+//
+// NOTE: Legacy /api/* aliases were removed in Phase 5 (2026-03-20).
+// The file backend/routes/legacy-aliases.js is kept for reference but is no
+// longer mounted. All consumers must use /api/v1/* paths.
+// ---------------------------------------------------------------------------
+
+app.use("/api/v1", v1Routes);
+
+// Root route
+app.get("/", (req, res) => res.send("Shofy API is running. Documentation: /api-docs"));
+
+// ---------------------------------------------------------------------------
+// 404 handler (must be after all routes)
+// ---------------------------------------------------------------------------
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Not Found',
+    errorMessages: [
+      {
+        path: req.originalUrl,
+        message: 'API Not Found',
+      },
+    ],
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Global error handler (must be last middleware)
+// ---------------------------------------------------------------------------
+
+app.use(globalErrorHandler);
+
+// Start the chatbot embedding re-queue (debounced re-embed of products/blogs)
+require('./services/chatbot/embedQueue').start();
+
+// Only bind the port when this file is run directly (not when required by tests)
+if (require.main === module) {
+  server.listen(PORT, () => console.log(`server running on port ${PORT}`));
+}
+
+module.exports = app;
+// Force nodemon reload to read new return URL
+

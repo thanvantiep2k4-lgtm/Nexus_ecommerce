@@ -1,0 +1,11 @@
+# Handled by root .gitignore
+# This file kept minimal to avoid duplication
+
+node_modules/
+.env
+.DS_Store
+
+# catalog migration backups (payloads are large / contain live data)
+scripts/backups/
+backups/*
+!backups/.gitkeep

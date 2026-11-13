@@ -1,0 +1,150 @@
+/* ================================================
+   Shofy CRM Theme — Base Reset
+   Hides all default Keycloak UI elements
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  color: #374151;
+  background: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide all default Keycloak chrome */
+#kc-header,
+#kc-header-wrapper,
+.pf-v5-c-login__header,
+.pf-v5-c-login__footer,
+.pf-v5-c-brand,
+.pf-v5-c-login__main-header,
+.pf-v5-c-login__main-footer,
+.pf-v5-c-login__main-footer-band,
+.pf-v5-c-alert-group,
+#kc-locale,
+#kc-info,
+#kc-info-wrapper,
+#kc-restart-login,
+#kc-cancel,
+#kc-form-options,
+.kc-feedback-text,
+a[id*="kc-restart"],
+a[href*="restart-credentials"],
+a[href*="restart-flow"] {
+  display: none !important;
+}
+
+/* Defeat PatternFly's .pf-v5-c-form grid that breaks horizontal layouts */
+#kc-form-login,
+#kc-otp-login-form,
+#kc-totp-settings-form,
+form.crm-otp-form,
+form.crm-totp-form,
+form.pf-v5-c-form {
+  display: block !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
+  grid-row-gap: 0 !important;
+  grid-column-gap: 0 !important;
+}
+
+/* Make sure crm-field children don't get forced to width:100% by pf rules */
+.crm-otp-boxes input,
+.crm-otp-boxes > input {
+  width: auto !important;
+  max-width: 44px !important;
+  flex: 0 0 44px !important;
+}
+
+.pf-v5-c-login {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  grid-template-columns: none !important;
+}
+
+.pf-v5-c-login__container {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
+}
+
+.pf-v5-c-login__main {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.pf-v5-c-login__main-body {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.pf-v5-c-login__main-body .pf-v5-c-form {
+  padding: 0 !important;
+}
+
+.pf-v5-c-page,
+.pf-v5-c-page__main,
+.pf-v5-c-page__main-section {
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+}
+
+/* Force light color scheme on every CRM screen — Keycloak 26.4 ships with
+   pf-v5-theme-dark by default which leaks into form panels/cards. */
+html.pf-v5-theme-dark,
+html.login-pf,
+body#keycloak-bg,
+body.pf-v5-theme-dark,
+.pf-v5-theme-dark {
+  color-scheme: light !important;
+  background: #f8f9fb !important;
+}
+
+.pf-v5-theme-dark .crm-login-card,
+.pf-v5-theme-dark .crm-page-wrapper {
+  color-scheme: light !important;
+}
+
+/* Defeat PatternFly button reset on our custom buttons */
+button.crm-tab,
+button.crm-copy-btn,
+button.crm-secondary-btn,
+button.crm-submit-btn,
+button.crm-toggle-password,
+button.crm-lang-btn {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+a { text-decoration: none; }

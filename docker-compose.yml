@@ -1,0 +1,117 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: shofy-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: shofy-postgres
+    environment:
+      POSTGRES_DB: ${PG_DB:-keycloak}
+      POSTGRES_USER: ${PG_USER:-keycloak}
+      POSTGRES_PASSWORD: ${PG_PASS:-keycloak_password}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "${PG_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER:-keycloak}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.4
+    container_name: shofy-keycloak
+    env_file: .env
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin123}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${PG_DB:-keycloak}
+      KC_DB_USERNAME: ${PG_USER:-keycloak}
+      KC_DB_PASSWORD: ${PG_PASS:-keycloak_password}
+      KC_DB_SCHEMA: keycloak
+      KC_HOSTNAME: ${KEYCLOAK_URL:-http://localhost:8180}
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_PORT: 8180
+      KC_HOSTNAME_STRICT: "false"
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+    command: start-dev
+    volumes:
+      - ./keycloak/themes/shofy-theme:/opt/keycloak/themes/shofy-theme
+      - ./keycloak/themes/shofy-crm-theme:/opt/keycloak/themes/shofy-crm-theme
+    ports:
+      - "8180:8180"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shofy-backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongodb:27017/shofy
+      PORT: 4000
+      STORE_URL: http://localhost:3001
+      ADMIN_URL: http://localhost:8081
+    env_file:
+      - ./backend/.env
+
+  crm:
+    build:
+      context: ./crm
+      dockerfile: Dockerfile
+    container_name: shofy-crm
+    restart: unless-stopped
+    ports:
+      - "${CRM_PORT:-8081}:8081"
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+      BACKEND_API_URL: http://backend:4000
+      CRM_PORT: 8081
+    env_file:
+      - ./crm/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shofy-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3001}:3001"
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_BASE_URL: http://backend:4000
+      PORT: 3001
+    env_file:
+      - ./frontend/.env.local
+
+volumes:
+  mongodata:
+  pgdata:

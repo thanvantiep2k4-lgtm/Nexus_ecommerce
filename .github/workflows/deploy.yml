@@ -1,0 +1,68 @@
+name: Deploy to VPS
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DEPLOY_PATH: /opt/shofy
+  REGISTRY: ghcr.io
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+
+            cd ${{ env.DEPLOY_PATH }}
+
+            # Pull latest code (for compose file, nginx config, themes, etc.)
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Login to GitHub Container Registry
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GHCR_USER }} --password-stdin
+
+            # Pull latest images
+            docker compose -f docker-compose.prod.yml pull backend frontend crm
+
+            # Restart with new images
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            # Keycloak uses the stock image with themes bind-mounted from the repo,
+            # so `up -d` never recreates it when only theme files change. In prod
+            # mode Keycloak caches themes in memory, so we must restart it to pick
+            # up theme edits (e.g. login-otp.ftl / theme.properties / css changes).
+            docker compose -f docker-compose.prod.yml restart keycloak
+
+            # Cleanup old images
+            docker image prune -f
+
+            # Notify Telegram
+            TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}"
+            TELEGRAM_CHAT_ID="${{ secrets.TELEGRAM_CHAT_ID }}"
+            if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
+              curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                -d chat_id="${TELEGRAM_CHAT_ID}" \
+                -d parse_mode="Markdown" \
+                -d text="✅ *Shofy Deploy Successful*
+            📦 Server: $(hostname)
+            🕐 $(date '+%Y-%m-%d %H:%M:%S')
+            🐳 Containers: $(docker ps --format '{{.Names}}' | tr '\n' ', ')" || true
+            fi
+
+            echo "Deploy complete at $(date)"

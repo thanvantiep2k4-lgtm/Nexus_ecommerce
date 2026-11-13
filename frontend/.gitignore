@@ -1,0 +1,12 @@
+# Handled by root .gitignore
+# This file kept minimal to avoid duplication
+
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env.*.local
+.vercel/
+.DS_Store

@@ -1,0 +1,127 @@
+@use '../../utils' as *;
+
+// ── 404 Error Page — Clicon Style ───────────────────────────
+
+.cl-error-area {
+  padding: 80px 0;
+  background: #fff;
+  font-family: var(--cl-ff-body);
+
+  @media #{$sm, $xs} {
+    padding: 60px 0;
+  }
+}
+
+.cl-error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cl-error-accent {
+  width: 42px;
+  height: 2px;
+  background: var(--cl-primary);
+  border-radius: 2px;
+  margin: 28px auto;
+}
+
+.cl-error-thumb {
+  margin: 0 auto 32px;
+
+  img {
+    width: 280px !important;
+    height: auto !important;
+    object-fit: contain;
+  }
+
+  @media #{$sm} {
+    img { width: 220px !important; }
+  }
+
+  @media #{$xs} {
+    img { width: 180px !important; }
+  }
+}
+
+.cl-error-title {
+  font-size: 36px;
+  font-weight: var(--cl-fw-bold);
+  color: var(--cl-text-heading);
+  line-height: 1.2;
+  margin-bottom: 16px;
+
+  @media #{$sm} { font-size: 28px; }
+  @media #{$xs} { font-size: 22px; }
+}
+
+.cl-error-subtitle {
+  font-size: 15px;
+  color: var(--cl-text-secondary);
+  line-height: 1.75;
+  margin-bottom: 32px;
+  padding: 0 24px;
+
+  @media #{$xs} {
+    padding: 0;
+    font-size: 14px;
+  }
+}
+
+.cl-error-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @media #{$xs} {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.cl-error-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: var(--cl-radius-sm);
+  font-size: 14px;
+  font-weight: var(--cl-fw-semibold);
+  font-family: var(--cl-ff-body);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: 2px solid var(--cl-primary);
+  text-decoration: none;
+  transition: all var(--cl-transition-normal);
+  line-height: 1;
+
+  &--solid {
+    background: var(--cl-primary);
+    color: #fff;
+
+    &:hover {
+      background: var(--cl-primary-hover);
+      border-color: var(--cl-primary-hover);
+      color: #fff;
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: var(--cl-primary);
+
+    &:hover {
+      background: var(--cl-primary);
+      color: #fff;
+    }
+  }
+
+  @media #{$xs} {
+    width: 100%;
+  }
+}

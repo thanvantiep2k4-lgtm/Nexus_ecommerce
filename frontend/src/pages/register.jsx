@@ -1,0 +1,31 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import keycloak from "@/lib/keycloak";
+import Loader from "@/components/loader/loader";
+
+const RegisterPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (keycloak.authenticated) {
+      router.push("/");
+    } else {
+      const locale = (router.locale || "en").startsWith("vi") ? "vi" : "en";
+      keycloak.register({
+        redirectUri: window.location.origin + "/",
+        locale,
+      });
+    }
+  }, [router]);
+
+  return (
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{ height: "100vh" }}
+    >
+      <Loader spinner="fade" loading={true} />
+    </div>
+  );
+};
+
+export default RegisterPage;

@@ -1,0 +1,966 @@
+import { useState, useCallback } from 'react';
+import {
+  Table,
+  Input,
+  Select,
+  Button,
+  Modal,
+  Dropdown,
+  Space,
+  Typography,
+  Descriptions,
+  Divider,
+  Image,
+  Row,
+  Col,
+  Card,
+  Empty,
+  Form,
+  DatePicker,
+  Tag,
+} from 'antd';
+import {
+  SearchOutlined,
+  EyeOutlined,
+  DownOutlined,
+  ClearOutlined,
+  CarryOutOutlined,
+  SendOutlined,
+} from '@ant-design/icons';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import dayjs from 'dayjs';
+import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import type { MenuProps } from 'antd';
+
+import { ordersApi } from '@/services/api';
+import type { Order, OrderItem } from '@/types';
+import { useFormatters } from '@/hooks/useFormatters';
+import StatusBadge from '@/components/commons/StatusBadge';
+import PageHeader from '@/components/commons/PageHeader';
+import useAppStore from '@/stores/appStore';
+
+const { Text } = Typography;
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const PAGE_LIMIT = 10;
+
+const ORDER_STATUS_OPTIONS = [
+  { value: '', label: 'All Statuses' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'confirmed', label: 'Confirmed' },
+  { value: 'processing', label: 'Processing' },
+  { value: 'shipped', label: 'Shipped' },
+  { value: 'delivered', label: 'Delivered' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
+
+const PAYMENT_STATUS_OPTIONS = [
+  { value: '', label: 'All Payment Statuses' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'paid', label: 'Paid' },
+  { value: 'failed', label: 'Failed' },
+  { value: 'refunded', label: 'Refunded' },
+];
+
+const PAYMENT_METHOD_OPTIONS = [
+  { value: '', label: 'All Methods' },
+  { value: 'COD', label: 'COD' },
+  { value: 'Card', label: 'Card' },
+];
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function getOrderNumber(order: Order): string {
+  if (order.invoice) return `#${order.invoice}`;
+  if (order.orderNumber) return order.orderNumber;
+  return order._id;
+}
+
+function getCustomerName(order: Order): string {
+  return order.name ?? order.user?.name ?? 'N/A';
+}
+
+function getCustomerEmail(order: Order): string {
+  return order.email ?? order.user?.email ?? '';
+}
+
+function getEffectiveStatus(order: Order): string {
+  return order.orderStatus ?? order.status ?? 'pending';
+}
+
+function getCartItems(order: Order): OrderItem[] {
+  return order.cart ?? order.products ?? [];
+}
+
+// VNPay sends vnp_PayDate as a 'YYYYMMDDHHmmss' string. Parse it manually (no
+// dayjs customParseFormat plugin is loaded) into a readable datetime; fall back
+// to the raw value if it doesn't match the expected 14-digit shape.
+function formatVnpayPayDate(raw?: string): string {
+  if (!raw) return 'N/A';
+  const m = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/.exec(raw);
+  if (!m) return raw;
+  const [, y, mo, d, h, mi, s] = m;
+  const parsed = dayjs(`${y}-${mo}-${d}T${h}:${mi}:${s}`);
+  return parsed.isValid() ? parsed.format('HH:mm DD MMM, YYYY') : raw;
+}
+
+// ---------------------------------------------------------------------------
+// Order Detail Modal
+// ---------------------------------------------------------------------------
+
+const CARRIER_OPTIONS = [
+  { value: 'dhl', label: 'DHL' },
+  { value: 'fedex', label: 'FedEx' },
+  { value: 'ups', label: 'UPS' },
+  { value: 'usps', label: 'USPS' },
+  { value: 'ghtk', label: 'GHTK' },
+  { value: 'ghn', label: 'GHN' },
+  { value: 'viettelpost', label: 'ViettelPost' },
+];
+
+interface OrderDetailModalProps {
+  order: Order | null;
+  open: boolean;
+  onClose: () => void;
+  onStatusChange: (orderId: string, status: string) => void;
+  isUpdating: boolean;
+  isShipper: boolean;
+  onTakeOrder?: (id: string) => void;
+  isTaking?: boolean;
+  onTrackingUpdate?: (orderId: string, data: Record<string, unknown>) => void;
+  isUpdatingTracking?: boolean;
+}
+
+function OrderDetailModal({
+  order,
+  open,
+  onClose,
+  onStatusChange,
+  isUpdating,
+  isShipper,
+  onTakeOrder,
+  isTaking,
+  onTrackingUpdate,
+  isUpdatingTracking,
+}: OrderDetailModalProps) {
+  const [trackingForm] = Form.useForm();
+  const { formatCurrency, formatDate } = useFormatters();
+
+  if (!order) return null;
+
+  const items = getCartItems(order);
+  const customerName = getCustomerName(order);
+  const customerEmail = getCustomerEmail(order);
+  const effectiveStatus = getEffectiveStatus(order);
+
+  const subtotal = order.subTotal ?? order.totalAmount ?? 0;
+  const total = order.totalAmount ?? order.finalAmount ?? 0;
+
+  const statusMenuItems: MenuProps['items'] = [
+    { key: 'pending', label: 'Pending' },
+    { key: 'confirmed', label: 'Confirmed' },
+    { key: 'processing', label: 'Processing' },
+    { key: 'shipped', label: 'Shipped' },
+    { key: 'delivered', label: 'Delivered' },
+    { type: 'divider' },
+    {
+      key: 'cancelled',
+      label: <span style={{ color: '#ff4d4f' }}>Cancel</span>,
+      danger: true,
+    },
+  ];
+
+  const itemColumns: ColumnsType<OrderItem> = [
+    {
+      title: 'Product',
+      key: 'product',
+      render: (_, item) => (
+        <Space>
+          {(item.img ?? item.image) && (
+            <Image
+              src={item.img ?? item.image}
+              width={40}
+              height={40}
+              style={{ objectFit: 'cover', borderRadius: 4 }}
+              fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+            />
+          )}
+          <div>
+            <div>{item.title}</div>
+            {(item.color ?? item.size) && (
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                {[item.color, item.size].filter(Boolean).join(', ')}
+              </Text>
+            )}
+          </div>
+        </Space>
+      ),
+    },
+    {
+      title: 'Qty',
+      key: 'qty',
+      width: 60,
+      render: (_, item) => item.orderQuantity ?? item.quantity ?? 1,
+    },
+    {
+      title: 'Price',
+      key: 'price',
+      width: 100,
+      render: (_, item) => formatCurrency(item.price),
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      width: 100,
+      render: (_, item) =>
+        formatCurrency(item.price * (item.orderQuantity ?? item.quantity ?? 1)),
+    },
+  ];
+
+  return (
+    <Modal
+      open={open}
+      onCancel={onClose}
+      title={`Order ${getOrderNumber(order)}`}
+      width={860}
+      footer={
+        <Space>
+          {isShipper && ['pending', 'processing'].includes(effectiveStatus.toLowerCase()) && !order.shipper && (
+            <Button
+              type="primary"
+              icon={<CarryOutOutlined />}
+              onClick={() => onTakeOrder?.(order._id)}
+              loading={isTaking}
+              style={{ background: '#52c41a', borderColor: '#52c41a' }}
+            >
+              Take Order to Ship
+            </Button>
+          )}
+          {!isShipper && (
+            <Dropdown
+              menu={{
+                items: statusMenuItems,
+                onClick: ({ key }) => onStatusChange(order._id, key),
+              }}
+              disabled={isUpdating}
+            >
+              <Button type="primary" loading={isUpdating}>
+                Update Status <DownOutlined />
+              </Button>
+            </Dropdown>
+          )}
+          <Button onClick={onClose}>Close</Button>
+        </Space>
+      }
+    >
+      <Row gutter={24} style={{ marginBottom: 24 }}>
+        {/* Left: Order Info */}
+        <Col xs={24} md={12}>
+          <Typography.Title level={5} style={{ marginTop: 0, marginBottom: 12 }}>
+            Order Information
+          </Typography.Title>
+          <Descriptions column={1} size="small" bordered>
+            <Descriptions.Item label="Order Number">{getOrderNumber(order)}</Descriptions.Item>
+            <Descriptions.Item label="Order Status">
+              <StatusBadge status={effectiveStatus} type="order" />
+            </Descriptions.Item>
+            <Descriptions.Item label="Payment Status">
+              <StatusBadge status={order.paymentStatus ?? 'pending'} type="payment" />
+            </Descriptions.Item>
+            <Descriptions.Item label="Payment Method">{order.paymentMethod}</Descriptions.Item>
+            {order.paymentGateway && order.paymentGateway !== order.paymentMethod && (
+              <Descriptions.Item label="Payment Gateway">{order.paymentGateway}</Descriptions.Item>
+            )}
+            {(order.vnpayTransactionNo || order.transactionId) && (
+              <Descriptions.Item label="Transaction No.">
+                <Text copyable>{order.vnpayTransactionNo ?? order.transactionId}</Text>
+              </Descriptions.Item>
+            )}
+            {order.vnpayBankCode && (
+              <Descriptions.Item label="Bank">{order.vnpayBankCode}</Descriptions.Item>
+            )}
+            {(order.paidAt || order.vnpayPayDate) && (
+              <Descriptions.Item label="Paid At">
+                {order.paidAt ? formatDate(order.paidAt) : formatVnpayPayDate(order.vnpayPayDate)}
+              </Descriptions.Item>
+            )}
+            {order.refundAmount != null && order.refundAmount > 0 && (
+              <Descriptions.Item label="Refunded">
+                {formatCurrency(order.refundAmount)}
+                {order.refundedAt ? ` (${formatDate(order.refundedAt)})` : ''}
+              </Descriptions.Item>
+            )}
+            <Descriptions.Item label="Order Date">{formatDate(order.createdAt)}</Descriptions.Item>
+            {order.trackingNumber && (
+              <Descriptions.Item label="Tracking">{order.trackingNumber}</Descriptions.Item>
+            )}
+            {order.shipper && (
+              <Descriptions.Item label="Shipper">
+                <Tag color="blue">{order.shipper.name}</Tag>
+              </Descriptions.Item>
+            )}
+            {order.shippedAt && (
+              <Descriptions.Item label="Taken At">
+                {new Date(order.shippedAt).toLocaleString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </Descriptions.Item>
+            )}
+            {order.estimatedDelivery && (
+              <Descriptions.Item label="Est. Delivery">
+                {new Date(order.estimatedDelivery).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </Descriptions.Item>
+            )}
+          </Descriptions>
+        </Col>
+
+        {/* Right: Customer + Shipping */}
+        <Col xs={24} md={12}>
+          <Typography.Title level={5} style={{ marginTop: 0, marginBottom: 12 }}>
+            Customer Information
+          </Typography.Title>
+          <Descriptions column={1} size="small" bordered style={{ marginBottom: 16 }}>
+            <Descriptions.Item label="Name">{customerName}</Descriptions.Item>
+            <Descriptions.Item label="Email">{customerEmail}</Descriptions.Item>
+            <Descriptions.Item label="Phone">
+              {order.contact ?? order.user?.email ?? 'N/A'}
+            </Descriptions.Item>
+          </Descriptions>
+
+          <Typography.Title level={5} style={{ marginTop: 16, marginBottom: 12 }}>
+            Shipping Address
+          </Typography.Title>
+          <Descriptions column={1} size="small" bordered>
+            <Descriptions.Item label="Address">{order.address ?? 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="City">{order.city ?? 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="ZIP">{order.zipCode ?? 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="Country">{order.country ?? 'N/A'}</Descriptions.Item>
+          </Descriptions>
+        </Col>
+      </Row>
+
+      {/* Shipping & Tracking */}
+      {!isShipper && (
+        <>
+          <Divider style={{ marginTop: 0 }} />
+          <Typography.Title level={5} style={{ marginBottom: 12 }}>
+            Shipping &amp; Tracking
+          </Typography.Title>
+          <Form
+            form={trackingForm}
+            layout="vertical"
+            initialValues={{
+              carrier: order.carrier || undefined,
+              trackingNumber: order.trackingNumber || '',
+              trackingUrl: order.trackingUrl || '',
+              estimatedDelivery: order.estimatedDelivery ? dayjs(order.estimatedDelivery) : undefined,
+            }}
+            onFinish={(values) => {
+              const payload: Record<string, unknown> = {};
+              if (values.carrier) payload.carrier = values.carrier;
+              if (values.trackingNumber) payload.trackingNumber = values.trackingNumber;
+              if (values.trackingUrl) payload.trackingUrl = values.trackingUrl;
+              if (values.estimatedDelivery) payload.estimatedDelivery = values.estimatedDelivery.toISOString();
+              onTrackingUpdate?.(order._id, payload);
+            }}
+          >
+            <Row gutter={16}>
+              <Col xs={24} md={12}>
+                <Form.Item label="Carrier" name="carrier">
+                  <Select
+                    placeholder="Select carrier"
+                    options={CARRIER_OPTIONS}
+                    allowClear
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={12}>
+                <Form.Item label="Tracking Number" name="trackingNumber">
+                  <Input placeholder="e.g. 1Z999AA10123456784" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={12}>
+                <Form.Item label="Tracking URL (optional)" name="trackingUrl">
+                  <Input placeholder="Auto-generated if left blank" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={12}>
+                <Form.Item label="Estimated Delivery" name="estimatedDelivery">
+                  <DatePicker style={{ width: '100%' }} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<SendOutlined />}
+              loading={isUpdatingTracking}
+              style={{ marginBottom: 8 }}
+            >
+              Save Tracking Info
+            </Button>
+          </Form>
+        </>
+      )}
+
+      <Divider style={{ marginTop: 0 }} />
+
+      {/* Order Items */}
+      <Typography.Title level={5} style={{ marginBottom: 12 }}>
+        Order Items
+      </Typography.Title>
+      <Table<OrderItem>
+        columns={itemColumns}
+        dataSource={items}
+        rowKey={(item, idx) => item._id ?? String(idx)}
+        expandable={{ childrenColumnName: '__children' }}
+        pagination={false}
+        size="small"
+        style={{ marginBottom: 16 }}
+      />
+
+      {/* Totals */}
+      <Row justify="end">
+        <Col xs={24} sm={12} md={8}>
+          <Card size="small" style={{ background: '#fafafa' }}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Row justify="space-between">
+                <Text>Subtotal:</Text>
+                <Text>{formatCurrency(subtotal)}</Text>
+              </Row>
+              {(order.discount ?? 0) > 0 && (
+                <Row justify="space-between">
+                  <Text>Discount:</Text>
+                  <Text type="success">-{formatCurrency(order.discount!)}</Text>
+                </Row>
+              )}
+              {(order.shippingCost ?? 0) > 0 && (
+                <Row justify="space-between">
+                  <Text>Shipping:</Text>
+                  <Text>{formatCurrency(order.shippingCost!)}</Text>
+                </Row>
+              )}
+              {(order.tax ?? 0) > 0 && (
+                <Row justify="space-between">
+                  <Text>Tax:</Text>
+                  <Text>{formatCurrency(order.tax!)}</Text>
+                </Row>
+              )}
+              <Divider style={{ margin: '4px 0' }} />
+              <Row justify="space-between">
+                <Text strong>Total:</Text>
+                <Text strong>{formatCurrency(total)}</Text>
+              </Row>
+              {order.displayCurrency && order.displayCurrency !== 'VND' && (order.exchangeRate ?? 0) > 0 && (
+                <Typography.Text type="secondary" style={{ display: 'block', marginTop: 4 }}>
+                  Customer paid:{' '}
+                  {new Intl.NumberFormat(
+                    order.displayCurrency === 'USD' ? 'en-US' :
+                    order.displayCurrency === 'EUR' ? 'de-DE' :
+                    order.displayCurrency === 'GBP' ? 'en-GB' :
+                    order.displayCurrency === 'JPY' ? 'ja-JP' : 'en-US',
+                    { style: 'currency', currency: order.displayCurrency }
+                  ).format((order.totalAmount ?? 0) / (order.exchangeRate ?? 1))}{' '}
+                  ({order.displayCurrency} @ {(order.exchangeRate ?? 1).toLocaleString('vi-VN')} VND)
+                </Typography.Text>
+              )}
+            </Space>
+          </Card>
+        </Col>
+      </Row>
+
+      {order.notes && (
+        <>
+          <Divider />
+          <Typography.Title level={5} style={{ marginBottom: 8 }}>
+            Notes
+          </Typography.Title>
+          <Text type="secondary">{order.notes}</Text>
+        </>
+      )}
+    </Modal>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main Orders Page
+// ---------------------------------------------------------------------------
+
+interface Filters {
+  search: string;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+}
+
+const INITIAL_FILTERS: Filters = {
+  search: '',
+  status: '',
+  paymentStatus: '',
+  paymentMethod: '',
+};
+
+export default function OrdersPage() {
+  const queryClient = useQueryClient();
+  const { user } = useAppStore();
+  const { formatCurrency, formatDate } = useFormatters();
+
+  // Detect shipper-only role
+  const roles = user?.roles || [];
+  const isShipper = roles.some(r => r.toLowerCase() === 'shipper') &&
+                    !roles.some(r => ['admin', 'manager', 'staff'].includes(r.toLowerCase()));
+
+  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
+  const [pendingSearch, setPendingSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+
+  // Debounce for search input
+  const [searchTimer, setSearchTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setPendingSearch(value);
+      if (searchTimer) clearTimeout(searchTimer);
+      const timer = setTimeout(() => {
+        setFilters((prev) => ({ ...prev, search: value }));
+        setPage(1);
+      }, 400);
+      setSearchTimer(timer);
+    },
+    [searchTimer],
+  );
+
+  const handleFilterChange = (key: keyof Omit<Filters, 'search'>) => (value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setPendingSearch('');
+    setFilters(INITIAL_FILTERS);
+    setPage(1);
+  };
+
+  // ---------------------------------------------------------------------------
+  // Queries
+  // ---------------------------------------------------------------------------
+
+  const queryKey = ['orders', filters, page];
+
+  const { data, isLoading } = useQuery({
+    queryKey,
+    queryFn: () =>
+      ordersApi.getAll({
+        page,
+        limit: PAGE_LIMIT,
+        search: filters.search || undefined,
+        status: filters.status || undefined,
+        paymentStatus: filters.paymentStatus || undefined,
+        paymentMethod: filters.paymentMethod || undefined,
+      }),
+  });
+
+  // Fetch single order for modal
+  const { data: orderDetailData, isFetching: isFetchingDetail } = useQuery({
+    queryKey: ['order', selectedOrder?._id],
+    queryFn: () => ordersApi.getById(selectedOrder!._id),
+    enabled: detailModalOpen && selectedOrder !== null,
+  });
+
+  // ---------------------------------------------------------------------------
+  // Mutation — update status
+  // ---------------------------------------------------------------------------
+
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      ordersApi.updateStatus(id, status),
+    onSuccess: (_, variables) => {
+      toast.success(`Order status updated to ${variables.status}`);
+      void queryClient.invalidateQueries({ queryKey: ['orders'] });
+      void queryClient.invalidateQueries({ queryKey: ['order', variables.id] });
+    },
+    onError: () => {
+      toast.error('Failed to update order status');
+    },
+  });
+
+  const handleStatusChange = (orderId: string, status: string) => {
+    updateStatusMutation.mutate({ id: orderId, status });
+  };
+
+  // ---------------------------------------------------------------------------
+  // Mutation — take order (shipper)
+  // ---------------------------------------------------------------------------
+
+  const takeOrderMutation = useMutation({
+    mutationFn: (id: string) => ordersApi.takeOrder(id),
+    onSuccess: () => {
+      toast.success('Order taken successfully! You are now the shipper.');
+      void queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || 'Failed to take order');
+    },
+  });
+
+  const handleTakeOrder = (id: string) => {
+    takeOrderMutation.mutate(id);
+  };
+
+  // ---------------------------------------------------------------------------
+  // Mutation — update tracking info
+  // ---------------------------------------------------------------------------
+
+  const updateTrackingMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
+      ordersApi.updateTracking(id, data as Parameters<typeof ordersApi.updateTracking>[1]),
+    onSuccess: (_, variables) => {
+      toast.success('Tracking info updated');
+      void queryClient.invalidateQueries({ queryKey: ['orders'] });
+      void queryClient.invalidateQueries({ queryKey: ['order', variables.id] });
+    },
+    onError: () => {
+      toast.error('Failed to update tracking info');
+    },
+  });
+
+  const handleTrackingUpdate = (orderId: string, data: Record<string, unknown>) => {
+    updateTrackingMutation.mutate({ id: orderId, data });
+  };
+
+  // ---------------------------------------------------------------------------
+  // View order detail
+  // ---------------------------------------------------------------------------
+
+  const handleViewOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setDetailModalOpen(true);
+  };
+
+  const handleCloseDetail = () => {
+    setDetailModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  // Prefer the freshly-fetched detail over the list-row snapshot
+  const modalOrder = orderDetailData?.data ?? selectedOrder;
+
+  // ---------------------------------------------------------------------------
+  // Table columns
+  // ---------------------------------------------------------------------------
+
+  const columns: ColumnsType<Order> = [
+    {
+      title: 'Order #',
+      key: 'orderNumber',
+      width: 160,
+      render: (_, order) => (
+        <div>
+          <Text strong>{getOrderNumber(order)}</Text>
+          {order.trackingNumber && (
+            <div>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Tracking: {order.trackingNumber}
+              </Text>
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Customer',
+      key: 'customer',
+      width: 180,
+      render: (_, order) => (
+        <div>
+          <div>{getCustomerName(order)}</div>
+          <Text type="secondary" style={{ fontSize: 12 }}>
+            {getCustomerEmail(order)}
+          </Text>
+        </div>
+      ),
+    },
+    {
+      title: 'Items',
+      key: 'items',
+      width: 200,
+      render: (_, order) => {
+        const items = getCartItems(order);
+        const preview = items.slice(0, 2);
+        const extra = items.length - 2;
+        return (
+          <div>
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              {items.length} item{items.length !== 1 ? 's' : ''}
+            </Text>
+            {preview.map((item, idx) => (
+              <div
+                key={item._id ?? idx}
+                style={{
+                  maxWidth: 180,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  fontSize: 12,
+                }}
+              >
+                {item.title}
+              </div>
+            ))}
+            {extra > 0 && (
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                +{extra} more
+              </Text>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      title: 'Amount',
+      key: 'amount',
+      width: 130,
+      render: (_, order) => (
+        <div>
+          <Text strong>{formatCurrency(order.totalAmount ?? order.finalAmount ?? 0)}</Text>
+          {(order.shippingCost ?? 0) > 0 && (
+            <div>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                +{formatCurrency(order.shippingCost!)} shipping
+              </Text>
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Payment',
+      key: 'payment',
+      width: 130,
+      render: (_, order) => (
+        <div>
+          <StatusBadge status={order.paymentStatus ?? 'pending'} type="payment" />
+          <div>
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              {order.paymentMethod}
+            </Text>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      width: 160,
+      render: (_, order) => (
+        <Space direction="vertical" size={0}>
+          <StatusBadge status={getEffectiveStatus(order)} type="order" />
+          {order.shipper && (
+            <Text type="secondary" style={{ fontSize: 11 }}>
+              <CarryOutOutlined style={{ marginRight: 3 }} />
+              {order.shipper.name}
+            </Text>
+          )}
+          {order.shippedAt && (
+            <Text type="secondary" style={{ fontSize: 10 }}>
+              {new Date(order.shippedAt).toLocaleString('en-US', {
+                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+              })}
+            </Text>
+          )}
+        </Space>
+      ),
+    },
+    {
+      title: 'Date',
+      key: 'date',
+      width: 160,
+      render: (_, order) => (
+        <div>
+          <div style={{ fontSize: 12 }}>{formatDate(order.createdAt)}</div>
+          {order.estimatedDelivery && (
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              Est:{' '}
+              {new Date(order.estimatedDelivery).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+            </Text>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: 180,
+      fixed: 'right',
+      render: (_, order) => {
+        const effectiveStatus = getEffectiveStatus(order).toLowerCase();
+        const canTake = isShipper && ['pending', 'processing'].includes(effectiveStatus) && !order.shipper;
+
+        const statusMenuItems: MenuProps['items'] = [
+          { key: 'pending', label: 'Pending' },
+          { key: 'confirmed', label: 'Confirmed' },
+          { key: 'processing', label: 'Processing' },
+          { key: 'shipped', label: 'Shipped' },
+          { key: 'delivered', label: 'Delivered' },
+          { type: 'divider' },
+          {
+            key: 'cancelled',
+            label: <span style={{ color: '#ff4d4f' }}>Cancel</span>,
+            danger: true,
+          },
+        ];
+
+        return (
+          <Space size="small">
+            <Button
+              size="small"
+              icon={<EyeOutlined />}
+              onClick={() => handleViewOrder(order)}
+            >
+              View
+            </Button>
+            {canTake ? (
+              <Button
+                size="small"
+                type="primary"
+                icon={<CarryOutOutlined />}
+                onClick={() => handleTakeOrder(order._id)}
+                loading={takeOrderMutation.isPending}
+                style={{ background: '#52c41a', borderColor: '#52c41a' }}
+              >
+                Take
+              </Button>
+            ) : !isShipper ? (
+              <Dropdown
+                menu={{
+                  items: statusMenuItems,
+                  onClick: ({ key }) => handleStatusChange(order._id, key),
+                }}
+                disabled={updateStatusMutation.isPending}
+              >
+                <Button size="small">
+                  Status <DownOutlined />
+                </Button>
+              </Dropdown>
+            ) : null}
+          </Space>
+        );
+      },
+    },
+  ];
+
+  // ---------------------------------------------------------------------------
+  // Pagination config
+  // ---------------------------------------------------------------------------
+
+  const pagination: TablePaginationConfig = {
+    current: page,
+    pageSize: PAGE_LIMIT,
+    total: data?.pagination?.totalItems ?? 0,
+    showSizeChanger: false,
+    showTotal: (total) => `${total} orders`,
+    onChange: (p) => setPage(p),
+  };
+
+  const hasActiveFilters =
+    filters.search !== '' ||
+    filters.status !== '' ||
+    filters.paymentStatus !== '' ||
+    filters.paymentMethod !== '';
+
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
+
+  return (
+    <div>
+      <PageHeader title="Order Management" />
+
+      {/* Filters */}
+      <Card style={{ marginBottom: 16 }} size="small">
+        <Space wrap style={{ width: '100%' }}>
+          <Input
+            placeholder="Search orders..."
+            prefix={<SearchOutlined />}
+            value={pendingSearch}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            allowClear
+            style={{ width: 220 }}
+          />
+          <Select
+            value={filters.status}
+            onChange={handleFilterChange('status')}
+            options={ORDER_STATUS_OPTIONS}
+            style={{ width: 180 }}
+          />
+          <Select
+            value={filters.paymentStatus}
+            onChange={handleFilterChange('paymentStatus')}
+            options={PAYMENT_STATUS_OPTIONS}
+            style={{ width: 190 }}
+          />
+          <Select
+            value={filters.paymentMethod}
+            onChange={handleFilterChange('paymentMethod')}
+            options={PAYMENT_METHOD_OPTIONS}
+            style={{ width: 140 }}
+          />
+          {hasActiveFilters && (
+            <Button icon={<ClearOutlined />} onClick={handleClearFilters}>
+              Clear Filters
+            </Button>
+          )}
+        </Space>
+      </Card>
+
+      {/* Table */}
+      <Card size="small">
+        <Table<Order>
+          columns={columns}
+          dataSource={data?.data ?? []}
+          rowKey="_id"
+          loading={isLoading}
+          expandable={{ childrenColumnName: '__children' }}
+          pagination={pagination}
+          scroll={{ x: 1100 }}
+          size="small"
+          locale={{ emptyText: <Empty description="No orders found" /> }}
+        />
+      </Card>
+
+      {/* Order Detail Modal */}
+      <OrderDetailModal
+        order={isFetchingDetail ? selectedOrder : (modalOrder ?? null)}
+        open={detailModalOpen}
+        onClose={handleCloseDetail}
+        onStatusChange={handleStatusChange}
+        isUpdating={updateStatusMutation.isPending}
+        isShipper={isShipper}
+        onTakeOrder={handleTakeOrder}
+        isTaking={takeOrderMutation.isPending}
+        onTrackingUpdate={handleTrackingUpdate}
+        isUpdatingTracking={updateTrackingMutation.isPending}
+      />
+    </div>
+  );
+}
