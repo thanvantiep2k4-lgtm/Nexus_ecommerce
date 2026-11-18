@@ -1,4 +1,7 @@
-# Shofy E-Commerce Platform
+# NexusMart E-Commerce Platform
+
+> **Thành viên nhóm: đọc [PROJECT_PLAN.md](PROJECT_PLAN.md) trước.** Đó là kế hoạch thống nhất (kiến trúc, port, phân công, quy ước Git).
+> Tên cũ trong code vẫn là "Shofy" (đang đổi tên).
 
 Multi-vendor marketplace with CMS-driven storefront, built with Express.js, Next.js 13, React 19 + Ant Design 6, and MongoDB.
 
@@ -14,33 +17,22 @@ Multi-vendor marketplace with CMS-driven storefront, built with Express.js, Next
 
 ## Quick Start
 
-### Prerequisites
-- Node.js 20+
-- MongoDB 7+
-- Keycloak 26+ (for authentication)
-
-### Development
+Yêu cầu: Node.js 20, Docker Desktop.
 
 ```bash
-# Install all dependencies
-npm run install:all
-
-# Copy environment files
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env.local
-cp crm/.env.example crm/.env
-
-# Start backend + frontend
-npm run dev
-
-# Start CRM (separate terminal)
-cd crm && npm run dev
+npm run setup      # tạo .env từ .env.example + cài dependency (5 package)
+npm run infra:up   # MongoDB + PostgreSQL + Keycloak (tự import realm)
+# điền CLOUDINARY_*, GEMINI_API_KEY trong backend/.env
+npm run seed       # nạp dữ liệu mẫu (xoá sạch dữ liệu cũ!)
+npm run dev        # api :4000 · store :3001 · crm :8081 · crm-ui :5173
 ```
 
-### Docker
+Chi tiết, tài khoản dev và xử lý sự cố: xem [PROJECT_PLAN.md](PROJECT_PLAN.md#3-cách-chạy-dự-án-làm-đúng-thứ-tự).
+
+### Docker (toàn bộ stack)
 
 ```bash
-docker compose up -d
+npm run env:init && docker compose up -d --build
 ```
 
 ## API Documentation
