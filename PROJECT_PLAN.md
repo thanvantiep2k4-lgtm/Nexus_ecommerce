@@ -79,7 +79,7 @@ npm run dev            # chạy cùng lúc: api:4000, store:3001, crm:8081, crm-
 | Swagger | http://localhost:4000/api-docs |
 | Keycloak admin | http://localhost:8180 (admin / admin123) |
 
-**Tài khoản dev** (từ realm import, chỉ dùng local): `admin` / `Admin@123`, `manager` / `Manager@123`, `staff` / `Staff@123`, `customer` / `Customer@123`.
+**Tài khoản dev** (từ realm import, chỉ dùng local): `admin`, `manager`, `staff`, `customer` — mật khẩu chung `123456`.
 
 Chạy full bằng Docker: `docker compose up -d --build` (cần đủ 3 file `.env`).
 

@@ -466,7 +466,7 @@
   "requiredCredentials": [
     "password"
   ],
-  "passwordPolicy": "length(8) and specialChars(1) and upperCase(1) and lowerCase(1) and digits(1) and notUsername(undefined) and notEmail(undefined) and hashAlgorithm(argon2)",
+  "passwordPolicy": "",
   "otpPolicyType": "totp",
   "otpPolicyAlgorithm": "HmacSHA1",
   "otpPolicyInitialCounter": 0,
@@ -588,7 +588,7 @@
       "credentials": [
         {
           "type": "password",
-          "value": "Admin@123",
+          "value": "123456",
           "temporary": false
         }
       ],
@@ -607,7 +607,7 @@
       "credentials": [
         {
           "type": "password",
-          "value": "Manager@123",
+          "value": "123456",
           "temporary": false
         }
       ],
@@ -626,7 +626,7 @@
       "credentials": [
         {
           "type": "password",
-          "value": "Staff@123",
+          "value": "123456",
           "temporary": false
         }
       ],
@@ -645,7 +645,7 @@
       "credentials": [
         {
           "type": "password",
-          "value": "Customer@123",
+          "value": "123456",
           "temporary": false
         }
       ],
