@@ -101,14 +101,14 @@ Interactive Swagger UI: `http://localhost:4000/api-docs`
 ## AI Chatbot setup
 
 1. Set `GEMINI_API_KEY` in `backend/.env` (free tier works — get one at [aistudio.google.com](https://aistudio.google.com/apikey)).
-2. Create Atlas Vector Search indexes per [docs/superpowers/plans/atlas-vector-index.md](docs/superpowers/plans/atlas-vector-index.md).
+2. Create Atlas Vector Search indexes per [docs/atlas-vector-index.md](docs/atlas-vector-index.md).
 3. Backfill embeddings for existing data:
    ```bash
    node backend/scripts/backfill-embeddings.js
    ```
 4. Toggle from CRM → Settings → General → AI Chatbot.
 
-The widget appears on every page of the storefront as a floating bubble (bottom-right). See [docs/superpowers/plans/2026-05-16-ai-chatbot.md](docs/superpowers/plans/2026-05-16-ai-chatbot.md) for the full architecture.
+The widget appears on every page of the storefront as a floating bubble (bottom-right).
 
 ## Documentation
 

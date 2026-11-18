@@ -5,7 +5,7 @@ Express.js REST API for the Shofy e-commerce platform (port 4000).
 ## Chatbot setup
 
 1. Set `GEMINI_API_KEY` in `.env` (Google AI Studio key — free tier works).
-2. Create Atlas Vector Search indexes — see [docs/superpowers/plans/atlas-vector-index.md](../docs/superpowers/plans/atlas-vector-index.md).
+2. Create Atlas Vector Search indexes — see [docs/atlas-vector-index.md](../docs/atlas-vector-index.md).
 3. Backfill embeddings for existing products + published blog posts:
    ```bash
    node scripts/backfill-embeddings.js

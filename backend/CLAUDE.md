@@ -136,7 +136,7 @@ Envelope: `{ success: boolean, message: string, data: any, errors?: any[], meta?
 
 - Gemini 2.0 Flash via `services/chatbot/llmProvider.js` — token-bucket rate limit, streaming
 - 11 tools registered in `services/chatbot/tools/` — searchProducts, getProductDetails, getMyOrders, getOrderStatus, validateCoupon, getShippingPolicy, getReturnPolicy, searchFAQ, recommendProducts, proposeAddToCart, proposeApplyCoupon
-- RAG via `$vectorSearch` on `Product.embedding` / `BlogPost.embedding` (Atlas vector index required — see `docs/superpowers/plans/atlas-vector-index.md`). Falls back to `$text` when not on Atlas
+- RAG via `$vectorSearch` on `Product.embedding` / `BlogPost.embedding` (Atlas vector index required — see `docs/atlas-vector-index.md`). Falls back to `$text` when not on Atlas
 - `embedQueue.js` debounces re-embedding (30s) when products/blogs change
 - Bot **proposes** side effects (`add_to_cart`, `apply_coupon`, `view_product`, `view_order`, `sign_in`); the user confirms via card click — bot never mutates state directly
 
