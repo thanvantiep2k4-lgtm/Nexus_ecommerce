@@ -23,9 +23,7 @@ const PriceDisplay = ({ price, discount = 0, size = 'sm', className = '' }) => {
   return (
     <div className={`cl-price cl-price--${size}${className ? ` ${className}` : ''}`}>
       <span className="cl-price__current">{formatPrice(discountedPrice)}</span>
-      {hasDiscount && (
-        <span className="cl-price__old">{formatPrice(price)}</span>
-      )}
+      {hasDiscount && <span className="cl-price__old">{formatPrice(price)}</span>}
     </div>
   );
 };

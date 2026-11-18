@@ -15,15 +15,14 @@ export const initSocket = (store) => {
     reconnection: true,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
-    reconnectionAttempts: 5
+    reconnectionAttempts: 5,
   });
 
   socket.on('connect', () => {
     // connected
   });
 
-  socket.on('disconnect', () => {
-  });
+  socket.on('disconnect', () => {});
 
   // Product events
   socket.on('product:created', (data) => {
@@ -149,9 +148,7 @@ const registerInvalidateCallback = (resourceType, callback) => {
  *   registerCmsInvalidations(store, apiSlice);
  */
 export const registerCmsInvalidations = (store, api) => {
-  registerInvalidateCallback('banner', () =>
-    store.dispatch(api.util.invalidateTags(['Banners']))
-  );
+  registerInvalidateCallback('banner', () => store.dispatch(api.util.invalidateTags(['Banners'])));
   registerInvalidateCallback('blog', () =>
     store.dispatch(api.util.invalidateTags(['BlogPosts', 'BlogPost']))
   );
@@ -160,10 +157,8 @@ export const registerCmsInvalidations = (store, api) => {
   );
 };
 
-
 export const registerOrderInvalidations = (store, api) => {
   registerInvalidateCallback('order', () =>
     store.dispatch(api.util.invalidateTags(['UserOrders', 'UserOrder']))
   );
 };
-

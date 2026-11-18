@@ -14,11 +14,7 @@ import {
   Col,
   Divider,
 } from 'antd';
-import {
-  SaveOutlined,
-  ArrowLeftOutlined,
-  GlobalOutlined,
-} from '@ant-design/icons';
+import { SaveOutlined, ArrowLeftOutlined, GlobalOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -153,9 +149,7 @@ export default function BlogEditorPage() {
       setCategory(p.category ?? '');
       setTags(p.tags ?? []);
       setStatus(p.status);
-      setPublishedAt(
-        p.publishedAt ? dayjs(p.publishedAt).format('YYYY-MM-DDTHH:mm') : ''
-      );
+      setPublishedAt(p.publishedAt ? dayjs(p.publishedAt).format('YYYY-MM-DDTHH:mm') : '');
       setFeatured(p.featured);
       setSeoTitle(p.seo?.metaTitle ?? '');
       setSeoDescription(p.seo?.metaDescription ?? '');
@@ -251,7 +245,15 @@ export default function BlogEditorPage() {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Post title"
               size="large"
-              style={{ fontSize: 20, fontWeight: 600, marginBottom: 12, border: 'none', boxShadow: 'none', padding: '0 0 12px 0', borderBottom: '1px solid #f0f0f0' }}
+              style={{
+                fontSize: 20,
+                fontWeight: 600,
+                marginBottom: 12,
+                border: 'none',
+                boxShadow: 'none',
+                padding: '0 0 12px 0',
+                borderBottom: '1px solid #f0f0f0',
+              }}
             />
 
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 16 }}>

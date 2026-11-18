@@ -1,20 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   coupon_info: undefined,
 };
 
 export const couponSlice = createSlice({
-  name: "coupon",
+  name: 'coupon',
   initialState,
   reducers: {
     set_coupon: (state, { payload }) => {
       state.coupon_info = payload;
-      
-      localStorage.setItem(
-        "couponInfo",
-        JSON.stringify(payload)
-      );
+
+      localStorage.setItem('couponInfo', JSON.stringify(payload));
     },
   },
 });

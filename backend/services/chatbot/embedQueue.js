@@ -10,8 +10,8 @@
  * and a multi-instance deployment will double-embed. Acceptable trade-off
  * given hourly product updates and Gemini free-tier rate limits.
  */
-const Product = require('../../model/Products');
-const BlogPost = require('../../model/BlogPost');
+const Product = require('../../models/Products');
+const BlogPost = require('../../models/BlogPost');
 const embeddings = require('./embeddings');
 
 const DEBOUNCE_MS = 30_000;

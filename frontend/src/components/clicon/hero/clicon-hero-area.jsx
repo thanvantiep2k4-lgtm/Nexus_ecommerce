@@ -143,9 +143,8 @@ const CliconHeroArea = () => {
   // Use CRM banners if available, otherwise fallback
   const useApi = heroBanners.length > 0;
   const slides = useApi ? heroBanners.map(bannerToSlide) : FALLBACK_SLIDES;
-  const promos = promoBanners.length > 0
-    ? promoBanners.slice(0, 2).map(bannerToPromo)
-    : FALLBACK_PROMOS;
+  const promos =
+    promoBanners.length > 0 ? promoBanners.slice(0, 2).map(bannerToPromo) : FALLBACK_PROMOS;
 
   return (
     <section className="cl-hero-area" data-testid="clicon-hero-area">

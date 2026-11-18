@@ -19,11 +19,14 @@
     "seed": "npm --prefix backend run data:import",
     "test": "npm --prefix backend test",
     "kill-ports": "npx kill-port 4000 3001 8081 5173",
-    "clean-start": "npm run kill-ports && npm run dev"
+    "clean-start": "npm run kill-ports && npm run dev",
+    "format": "prettier --write \"{backend,crm,frontend}/**/*.{js,jsx,ts,tsx,json,yml}\" \".github/**/*.yml\"",
+    "format:check": "prettier --check \"{backend,crm,frontend}/**/*.{js,jsx,ts,tsx,json,yml}\" \".github/**/*.yml\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "kill-port": "^2.0.1"
+    "kill-port": "^2.0.1",
+    "prettier": "^3.10.1"
   },
   "engines": {
     "node": ">=20"

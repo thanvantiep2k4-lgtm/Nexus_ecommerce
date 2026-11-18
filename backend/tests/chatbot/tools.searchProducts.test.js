@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const Product = require('../../model/Products');
+const Product = require('../../models/Products');
 const factory = require('../../services/chatbot/tools/searchProducts');
 
 let mongo;
@@ -23,7 +23,9 @@ describe('searchProducts tool', () => {
   beforeAll(async () => {
     mongo = await MongoMemoryServer.create();
     await mongoose.connect(mongo.getUri());
-    factory((t) => { registered = t; });
+    factory((t) => {
+      registered = t;
+    });
   });
   afterAll(async () => {
     await mongoose.disconnect();
@@ -41,7 +43,7 @@ describe('searchProducts tool', () => {
       quantity: 5,
       productType: 'fashion',
       status: 'in-stock',
-      slug: 'red-running-shoes'
+      slug: 'red-running-shoes',
     });
     const out = await registered.handler({ query: 'running shoes' }, { isAuthenticated: false });
     expect(out.items.length).toBeGreaterThanOrEqual(1);
@@ -49,9 +51,28 @@ describe('searchProducts tool', () => {
   });
 
   it('respects price filters', async () => {
-    await Product.create({ ...baseProduct, title: 'Cheap Item', price: 10, quantity: 1, productType: 'electronics', status: 'in-stock', slug: 'cheap-item' });
-    await Product.create({ ...baseProduct, title: 'Expensive Item', price: 1000, quantity: 1, productType: 'electronics', status: 'in-stock', slug: 'expensive-item' });
-    const out = await registered.handler({ query: '', filters: { maxPrice: 100 } }, { isAuthenticated: false });
+    await Product.create({
+      ...baseProduct,
+      title: 'Cheap Item',
+      price: 10,
+      quantity: 1,
+      productType: 'electronics',
+      status: 'in-stock',
+      slug: 'cheap-item',
+    });
+    await Product.create({
+      ...baseProduct,
+      title: 'Expensive Item',
+      price: 1000,
+      quantity: 1,
+      productType: 'electronics',
+      status: 'in-stock',
+      slug: 'expensive-item',
+    });
+    const out = await registered.handler(
+      { query: '', filters: { maxPrice: 100 } },
+      { isAuthenticated: false }
+    );
     const titles = out.items.map((i) => i.title);
     expect(titles).toContain('Cheap Item');
     expect(titles).not.toContain('Expensive Item');

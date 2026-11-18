@@ -4,7 +4,17 @@ const agentLoop = require('./agentLoop');
 const guardrails = require('./guardrails');
 const config = require('../../config/gemini');
 
-async function handleMessage({ sessionId, userId, anonId, locale, userMessage, cartSnapshot, recentlyViewedProducts, onToken, onToolCall }) {
+async function handleMessage({
+  sessionId,
+  userId,
+  anonId,
+  locale,
+  userMessage,
+  cartSnapshot,
+  recentlyViewedProducts,
+  onToken,
+  onToolCall,
+}) {
   if (!config.enabled) return { error: 'disabled', message: 'Assistant is currently disabled.' };
 
   const identity = userId ? `u:${userId}` : `a:${anonId || sessionId}`;
@@ -18,7 +28,8 @@ async function handleMessage({ sessionId, userId, anonId, locale, userMessage, c
 
   const session = await sessionStore.getOrCreate({ sessionId, userId, anonId, locale });
   session.context.cartSnapshot = cartSnapshot || session.context.cartSnapshot;
-  session.context.recentlyViewedProducts = recentlyViewedProducts || session.context.recentlyViewedProducts;
+  session.context.recentlyViewedProducts =
+    recentlyViewedProducts || session.context.recentlyViewedProducts;
   await session.save();
 
   await sessionStore.appendMessage(session, { role: 'user', content: cleanMessage });
@@ -26,7 +37,7 @@ async function handleMessage({ sessionId, userId, anonId, locale, userMessage, c
   const sys = systemPrompt.build(locale || session.locale || 'en', {
     userId,
     cartSnapshot: session.context.cartSnapshot,
-    recentlyViewedProducts: session.context.recentlyViewedProducts
+    recentlyViewedProducts: session.context.recentlyViewedProducts,
   });
   const history = sessionStore.buildGeminiHistory(session, config.historyWindow);
 
@@ -39,11 +50,14 @@ async function handleMessage({ sessionId, userId, anonId, locale, userMessage, c
       userMessage: cleanMessage,
       context: { userId, sessionId, locale, isAuthenticated: !!userId },
       onToken,
-      onToolCall
+      onToolCall,
     });
   } catch (e) {
     console.error('[chatbot] turn failed:', e);
-    return { error: 'llm_error', message: "I'm having trouble right now. Please try again in a minute." };
+    return {
+      error: 'llm_error',
+      message: "I'm having trouble right now. Please try again in a minute.",
+    };
   }
 
   const assistantMsg = await sessionStore.appendMessage(session, {
@@ -53,7 +67,7 @@ async function handleMessage({ sessionId, userId, anonId, locale, userMessage, c
     suggestedActions: turnResult.suggestedActions,
     tokensIn: turnResult.usage.promptTokenCount || 0,
     tokensOut: turnResult.usage.candidatesTokenCount || 0,
-    latencyMs: Date.now() - turnStart
+    latencyMs: Date.now() - turnStart,
   });
 
   // Chat traffic is already persisted on the ChatSession document
@@ -67,7 +81,7 @@ async function handleMessage({ sessionId, userId, anonId, locale, userMessage, c
     messageId: assistantMsg._id,
     text: turnResult.text,
     suggestedActions: turnResult.suggestedActions,
-    toolCalls: turnResult.toolCalls.map((tc) => ({ name: tc.toolName, args: tc.args }))
+    toolCalls: turnResult.toolCalls.map((tc) => ({ name: tc.toolName, args: tc.args })),
   };
 }
 

@@ -1,28 +1,24 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import SEO from "@/components/seo";
-import Wrapper from "@/layout/wrapper";
-import HeaderClicon from "@/layout/headers/header-clicon";
-import FooterClicon from "@/layout/footers/footer-clicon";
-import ShopBreadcrumb from "@/components/breadcrumb/shop-breadcrumb";
-import CliconBlogListingArea from "@/components/clicon/blog/clicon-blog-listing-area";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import SEO from '@/components/seo';
+import Wrapper from '@/layout/wrapper';
+import HeaderClicon from '@/layout/headers/header-clicon';
+import FooterClicon from '@/layout/footers/footer-clicon';
+import ShopBreadcrumb from '@/components/breadcrumb/shop-breadcrumb';
+import CliconBlogListingArea from '@/components/clicon/blog/clicon-blog-listing-area';
 
 const BlogPage = ({ posts, pagination, currentPage, latestPosts, query }) => {
   const { t } = useTranslation();
 
   const breadcrumbLinks = [
-    { label: t("breadcrumb.home"), href: "/" },
-    { label: t("breadcrumb.pages") },
-    { label: t("blog.title") },
+    { label: t('breadcrumb.home'), href: '/' },
+    { label: t('breadcrumb.pages') },
+    { label: t('blog.title') },
   ];
 
   return (
     <Wrapper>
-      <SEO
-        pageTitle={t("blog.title")}
-        description={t("blog.section_subtitle")}
-        url="/blog"
-      />
+      <SEO pageTitle={t('blog.title')} description={t('blog.section_subtitle')} url="/blog" />
       <HeaderClicon />
       <ShopBreadcrumb links={breadcrumbLinks} />
       <CliconBlogListingArea
@@ -40,19 +36,19 @@ const BlogPage = ({ posts, pagination, currentPage, latestPosts, query }) => {
 export default BlogPage;
 
 export async function getServerSideProps({ query }) {
-  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
   const page = parseInt(query.page) || 1;
-  const category = query.category || "";
-  const search = query.search || "";
-  const sort = query.sort || "newest";
-  const tag = query.tag || "";
+  const category = query.category || '';
+  const search = query.search || '';
+  const sort = query.sort || 'newest';
+  const tag = query.tag || '';
 
   const params = new URLSearchParams({ page, limit: 9 });
-  if (category) params.set("category", category);
-  if (search) params.set("search", search);
-  if (tag) params.set("tag", tag);
-  if (sort === "oldest") params.set("sort", "publishedAt");
-  else if (sort === "newest") params.set("sort", "-publishedAt");
+  if (category) params.set('category', category);
+  if (search) params.set('search', search);
+  if (tag) params.set('tag', tag);
+  if (sort === 'oldest') params.set('sort', 'publishedAt');
+  else if (sort === 'newest') params.set('sort', '-publishedAt');
 
   let posts = [];
   let pagination = null;
@@ -75,7 +71,7 @@ export async function getServerSideProps({ query }) {
       latestPosts = data.data || [];
     }
   } catch (err) {
-    console.error("[Blog SSR] Error:", err.message);
+    console.error('[Blog SSR] Error:', err.message);
   }
 
   return {

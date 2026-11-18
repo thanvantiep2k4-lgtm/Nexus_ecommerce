@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const ctrl = require('../../controller/v1/chatbot.controller');
+const ctrl = require('../../controllers/v1/chatbot.controller');
 const { validate } = require('../../middleware/validate');
 const v = require('../../validations/chatbot.validation');
 const verifyToken = require('../../middleware/verifyToken');
@@ -21,9 +21,9 @@ function softAuth(req, res, next) {
   });
 }
 
-router.post('/message',        softAuth, validate(v.messageBody),  ctrl.sendMessage);
-router.get('/sessions/:id',    softAuth,                           ctrl.getSession);
-router.delete('/sessions/:id', softAuth,                           ctrl.endSession);
-router.post('/feedback',       softAuth, validate(v.feedbackBody), ctrl.submitFeedback);
+router.post('/message', softAuth, validate(v.messageBody), ctrl.sendMessage);
+router.get('/sessions/:id', softAuth, ctrl.getSession);
+router.delete('/sessions/:id', softAuth, ctrl.endSession);
+router.post('/feedback', softAuth, validate(v.feedbackBody), ctrl.submitFeedback);
 
 module.exports = router;

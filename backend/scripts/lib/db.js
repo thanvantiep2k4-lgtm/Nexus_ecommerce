@@ -1,15 +1,17 @@
 'use strict';
 const mongoose = require('mongoose');
 const { secret } = require('../../config/secret');
-const Products = require('../../model/Products');
-const Category = require('../../model/Category');
-const Brand = require('../../model/Brand');
+const Products = require('../../models/Products');
+const Category = require('../../models/Category');
+const Brand = require('../../models/Brand');
 
 function parseFlags(argv = process.argv.slice(2)) {
   const flags = { commit: false, dryRun: true, yes: false, positional: [] };
   for (const a of argv) {
-    if (a === '--commit') { flags.commit = true; flags.dryRun = false; }
-    else if (a === '--yes') flags.yes = true;
+    if (a === '--commit') {
+      flags.commit = true;
+      flags.dryRun = false;
+    } else if (a === '--yes') flags.yes = true;
     else if (!a.startsWith('--')) flags.positional.push(a);
   }
   return flags;
@@ -22,6 +24,8 @@ async function connect(uri = secret.db_url) {
   return mongoose.connection;
 }
 
-async function disconnect() { await mongoose.disconnect(); }
+async function disconnect() {
+  await mongoose.disconnect();
+}
 
 module.exports = { mongoose, parseFlags, connect, disconnect, Products, Category, Brand };

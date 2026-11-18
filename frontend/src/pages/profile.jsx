@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
-import SEO from "@/components/seo";
-import Wrapper from "@/layout/wrapper";
-import HeaderClicon from "@/layout/headers/header-clicon";
-import FooterClicon from "@/layout/footers/footer-clicon";
-import ProfileArea from "@/components/my-account/profile-area";
-import { useGetUserOrdersQuery } from "@/redux/features/order/orderApi";
-import Loader from "@/components/loader/loader";
-import { useKeycloak } from "@/components/providers/keycloak-provider";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
+import SEO from '@/components/seo';
+import Wrapper from '@/layout/wrapper';
+import HeaderClicon from '@/layout/headers/header-clicon';
+import FooterClicon from '@/layout/footers/footer-clicon';
+import ProfileArea from '@/components/my-account/profile-area';
+import { useGetUserOrdersQuery } from '@/redux/features/order/orderApi';
+import Loader from '@/components/loader/loader';
+import { useKeycloak } from '@/components/providers/keycloak-provider';
 
 const ProfilePage = () => {
   const { t } = useTranslation();
@@ -28,10 +28,7 @@ const ProfilePage = () => {
 
   if (!kc?.initialized || isLoading) {
     return (
-      <div
-        className="d-flex align-items-center justify-content-center"
-        style={{ height: "100vh" }}
-      >
+      <div className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
         <Loader loading={true} />
       </div>
     );

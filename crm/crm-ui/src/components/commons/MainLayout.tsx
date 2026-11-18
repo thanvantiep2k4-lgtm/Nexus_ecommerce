@@ -59,17 +59,17 @@ const FLAT_NAV: FlatNavItem[] = [
 
 function resolveSelectedKey(pathname: string): string {
   if (pathname === '/') return '/';
-  const match = FLAT_NAV
-    .filter((item) => item.path !== '/' && pathname.startsWith(item.path))
-    .sort((a, b) => b.path.length - a.path.length)[0];
+  const match = FLAT_NAV.filter((item) => item.path !== '/' && pathname.startsWith(item.path)).sort(
+    (a, b) => b.path.length - a.path.length
+  )[0];
   return match?.key ?? '/';
 }
 
 function resolvePageTitle(pathname: string): string {
   if (pathname === '/') return 'Dashboard';
-  const match = FLAT_NAV
-    .filter((item) => item.path !== '/' && pathname.startsWith(item.path))
-    .sort((a, b) => b.path.length - a.path.length)[0];
+  const match = FLAT_NAV.filter((item) => item.path !== '/' && pathname.startsWith(item.path)).sort(
+    (a, b) => b.path.length - a.path.length
+  )[0];
   return match?.label ?? 'Dashboard';
 }
 
@@ -176,8 +176,9 @@ export default function MainLayout() {
   // Hydrate user session from CRM backend on mount
   useEffect(() => {
     if (!user) {
-      authApi.getMe()
-        .then(data => {
+      authApi
+        .getMe()
+        .then((data) => {
           console.log('[MainLayout] /api/me response:', data);
           if (data && data.roles) {
             setUser(data);
@@ -193,17 +194,23 @@ export default function MainLayout() {
 
   // Detect shipper-only role
   const roles = user?.roles || [];
-  const isShipper = roles.some(r => r.toLowerCase() === 'shipper') &&
-                    !roles.some(r => ['admin', 'manager', 'staff'].includes(r.toLowerCase()));
+  const isShipper =
+    roles.some((r) => r.toLowerCase() === 'shipper') &&
+    !roles.some((r) => ['admin', 'manager', 'staff'].includes(r.toLowerCase()));
 
   // Filter sidebar: shippers can only see Orders
   const displayMenuItems = isShipper
-    ? MENU_ITEMS.filter(item => (item as any)?.key === '/orders')
+    ? MENU_ITEMS.filter((item) => (item as any)?.key === '/orders')
     : MENU_ITEMS;
 
   // Redirect shippers away from non-order pages
   useEffect(() => {
-    if (user && isShipper && !location.pathname.startsWith('/orders') && location.pathname !== '/logout') {
+    if (
+      user &&
+      isShipper &&
+      !location.pathname.startsWith('/orders') &&
+      location.pathname !== '/logout'
+    ) {
       navigate('/orders', { replace: true });
     }
   }, [user, isShipper, location.pathname, navigate]);
@@ -324,12 +331,7 @@ export default function MainLayout() {
             lineHeight: '56px',
           }}
         >
-          <Breadcrumb
-            items={[
-              { title: 'Shofy CRM' },
-              { title: pageTitle },
-            ]}
-          />
+          <Breadcrumb items={[{ title: 'Shofy CRM' }, { title: pageTitle }]} />
           <div style={{ marginLeft: 'auto' }}>
             <CurrencySwitcher />
           </div>

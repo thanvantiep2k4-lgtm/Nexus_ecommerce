@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config({ path: path.join(process.cwd(), '.env') })
+dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 module.exports.secret = {
   port: process.env.PORT,
@@ -22,4 +22,4 @@ module.exports.secret = {
   vnpay_url: process.env.VNPAY_URL,
   vnpay_return_url: process.env.VNPAY_RETURN_URL,
   vnpay_ipn_url: process.env.VNPAY_IPN_URL,
-}
+};

@@ -67,7 +67,10 @@ const CliconNewsletter = () => {
             </div>
           </form>
 
-          <div className="cl-newsletter__brands" aria-label={t('newsletter.brands_label', 'Our brand partners')}>
+          <div
+            className="cl-newsletter__brands"
+            aria-label={t('newsletter.brands_label', 'Our brand partners')}
+          >
             {BRAND_LOGOS.map((brand) => (
               <span key={brand} className="cl-newsletter__brand-logo">
                 {brand}

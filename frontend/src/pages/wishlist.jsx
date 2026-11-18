@@ -14,10 +14,7 @@ const WishlistPage = () => {
       <SEO pageTitle={t('wishlist.title')} />
       <HeaderClicon />
       <ShopBreadcrumb
-        links={[
-          { label: t('breadcrumb.home'), href: '/' },
-          { label: t('wishlist.title') },
-        ]}
+        links={[{ label: t('breadcrumb.home'), href: '/' }, { label: t('wishlist.title') }]}
       />
       <WishlistArea />
       <FooterClicon />

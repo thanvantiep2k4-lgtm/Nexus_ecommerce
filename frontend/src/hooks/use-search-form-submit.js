@@ -1,10 +1,10 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const useSearchFormSubmit = () => {
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
-  const [category, setCategory] = useState("");
+  const [searchText, setSearchText] = useState('');
+  const [category, setCategory] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12,17 +12,17 @@ const useSearchFormSubmit = () => {
     if (searchText) {
       let route = `/search?searchText=${searchText}`;
 
-      if (category && category !== "Select Category") {
+      if (category && category !== 'Select Category') {
         route += `&productType=${category}`;
-        setCategory("");
+        setCategory('');
       }
 
       router.push(route, null, { scroll: false });
-      setSearchText("");
+      setSearchText('');
     } else {
       router.push(`/`, null, { scroll: false });
-      setSearchText("");
-      setCategory("");
+      setSearchText('');
+      setCategory('');
     }
   };
 

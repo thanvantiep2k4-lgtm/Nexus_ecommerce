@@ -44,9 +44,10 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Order Shipped',
-    `      <h2>Your order is on its way!</h2>
+  en: (d) =>
+    layout(
+      'Order Shipped',
+      `      <h2>Your order is on its way!</h2>
       <p>Hi <strong>${d.customerName}</strong>,</p>
       <p>Great news — your order has been shipped and is heading your way.</p>
       <hr class="divider" />
@@ -57,10 +58,11 @@ const bodies = {
       <hr class="divider" />
       <a href="${d.trackingUrl}" class="btn">Track Your Package</a>
       <p style="margin-top:24px;">If you have questions about your shipment, please reply to this email.</p>`
-  ),
-  vi: (d) => layout(
-    'Đơn hàng đã được giao đi',
-    `      <h2>Đơn hàng của bạn đang trên đường!</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Đơn hàng đã được giao đi',
+      `      <h2>Đơn hàng của bạn đang trên đường!</h2>
       <p>Xin chào <strong>${d.customerName}</strong>,</p>
       <p>Tin vui — đơn hàng của bạn đã được giao cho đơn vị vận chuyển.</p>
       <hr class="divider" />
@@ -70,10 +72,10 @@ const bodies = {
       <div class="info-row"><span class="label">Ngày dự kiến nhận hàng:</span> ${d.estimatedDelivery}</div>
       <hr class="divider" />
       <a href="${d.trackingUrl}" class="btn">Theo dõi đơn hàng</a>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

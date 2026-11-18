@@ -1,19 +1,23 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Product = require('../model/Products');
-const BlogPost = require('../model/BlogPost');
+const Product = require('../models/Products');
+const BlogPost = require('../models/BlogPost');
 const embeddings = require('../services/chatbot/embeddings');
 
 const BATCH = 20;
 const SLEEP_MS = 500;
 
-async function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+async function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
 
 async function backfillProducts() {
   const cursor = Product.find({ $or: [{ embedding: null }, { embedding: { $exists: false } }] })
     .select('+embedding')
     .cursor();
-  let i = 0, ok = 0, fail = 0;
+  let i = 0,
+    ok = 0,
+    fail = 0;
   for await (const p of cursor) {
     try {
       const vec = await embeddings.embedProduct(p);
@@ -35,10 +39,15 @@ async function backfillProducts() {
 }
 
 async function backfillBlogPosts() {
-  const cursor = BlogPost.find({ status: 'published', $or: [{ embedding: null }, { embedding: { $exists: false } }] })
+  const cursor = BlogPost.find({
+    status: 'published',
+    $or: [{ embedding: null }, { embedding: { $exists: false } }],
+  })
     .select('+embedding')
     .cursor();
-  let i = 0, ok = 0, fail = 0;
+  let i = 0,
+    ok = 0,
+    fail = 0;
   for await (const b of cursor) {
     try {
       const vec = await embeddings.embedBlogPost(b);
@@ -66,4 +75,7 @@ async function backfillBlogPosts() {
   await backfillBlogPosts();
   await mongoose.disconnect();
   console.log('[backfill] complete');
-})().catch((e) => { console.error(e); process.exit(1); });
+})().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

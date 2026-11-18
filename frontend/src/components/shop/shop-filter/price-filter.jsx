@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import InputRange from "@/ui/input-range";
-import useCurrency from "@/hooks/use-currency";
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import InputRange from '@/ui/input-range';
+import useCurrency from '@/hooks/use-currency';
 
 const PRICE_PRESETS = [
   { kind: 'all', min: 0, max: null },
@@ -53,7 +53,10 @@ const PriceFilter = ({ priceFilterValues, maxPrice }) => {
             MIN={0}
             MAX={maxPrice}
             values={priceValue}
-            handleChanges={(val) => { handleChanges(val); setActivePreset(-1); }}
+            handleChanges={(val) => {
+              handleChanges(val);
+              setActivePreset(-1);
+            }}
           />
         </div>
         <div className="cl-shop__price-inputs">
@@ -75,7 +78,9 @@ const PriceFilter = ({ priceFilterValues, maxPrice }) => {
         <ul className="cl-shop__price-presets">
           {PRICE_PRESETS.map((preset, i) => (
             <li key={i}>
-              <label className={`cl-shop__price-preset${activePreset === i ? ' cl-shop__price-preset--active' : ''}`}>
+              <label
+                className={`cl-shop__price-preset${activePreset === i ? ' cl-shop__price-preset--active' : ''}`}
+              >
                 <input
                   type="radio"
                   name="price-preset"

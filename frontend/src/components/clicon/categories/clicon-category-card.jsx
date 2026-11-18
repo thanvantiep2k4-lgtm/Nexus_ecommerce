@@ -14,9 +14,7 @@ const CliconCategoryCard = ({ category }) => {
 
   const { parent, img, products } = category;
 
-  const slug = parent
-    ? parent.toLowerCase().replace(/&/g, '').trim().split(/\s+/).join('-')
-    : '';
+  const slug = parent ? parent.toLowerCase().replace(/&/g, '').trim().split(/\s+/).join('-') : '';
 
   const productCount = products?.length || 0;
 

@@ -25,21 +25,22 @@ async function seed() {
 
   // Order matches FallbackHomeClicon exactly
   const blocks = [
-    { blockType: 'clicon-hero',                  order: 1 },
-    { blockType: 'clicon-features-bar',          order: 2 },
-    { blockType: 'clicon-best-deals',            order: 3 },
-    { blockType: 'clicon-category-showcase',     order: 4 },
-    { blockType: 'clicon-featured-products',     order: 5 },
-    { blockType: 'clicon-double-banner',         order: 6 },
+    { blockType: 'clicon-hero', order: 1 },
+    { blockType: 'clicon-features-bar', order: 2 },
+    { blockType: 'clicon-best-deals', order: 3 },
+    { blockType: 'clicon-category-showcase', order: 4 },
+    { blockType: 'clicon-featured-products', order: 5 },
+    { blockType: 'clicon-double-banner', order: 6 },
     {
-      blockType: 'clicon-product-section-promo', order: 7,
+      blockType: 'clicon-product-section-promo',
+      order: 7,
       title: 'Computer Accessories',
       settings: { productType: 'electronics', queryType: 'new' },
     },
-    { blockType: 'clicon-full-banner',           order: 8 },
-    { blockType: 'clicon-product-columns',       order: 9 },
-    { blockType: 'clicon-blog-area',             order: 10 },
-    { blockType: 'clicon-newsletter',            order: 11 },
+    { blockType: 'clicon-full-banner', order: 8 },
+    { blockType: 'clicon-product-columns', order: 9 },
+    { blockType: 'clicon-blog-area', order: 10 },
+    { blockType: 'clicon-newsletter', order: 11 },
   ].map((b) => ({
     _id: new ObjectId(),
     isVisible: true,
@@ -65,7 +66,9 @@ async function seed() {
 
   await db.collection('pages').insertOne(doc);
   console.log(`Created home page with ${blocks.length} clicon-* blocks:`);
-  blocks.forEach((b) => console.log(`  ${b.order}. ${b.blockType}${b.title ? ' — ' + b.title : ''}`));
+  blocks.forEach((b) =>
+    console.log(`  ${b.order}. ${b.blockType}${b.title ? ' — ' + b.title : ''}`)
+  );
 
   await client.close();
 }

@@ -114,7 +114,11 @@ export default function TaxSettingsPage() {
 
       <Form form={form} layout="vertical" initialValues={DEFAULT_TAX}>
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Thuế giá trị gia tăng</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Thuế giá trị gia tăng
+            </Title>
+          }
           size="small"
         >
           <Row gutter={16}>
@@ -134,7 +138,13 @@ export default function TaxSettingsPage() {
                 label="Thuế suất (%)"
                 rules={[{ required: true, message: 'Bắt buộc' }]}
               >
-                <InputNumber min={0} max={100} step={0.5} style={{ width: '100%' }} addonAfter="%" />
+                <InputNumber
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  style={{ width: '100%' }}
+                  addonAfter="%"
+                />
               </Form.Item>
             </Col>
             <Col xs={24} sm={8}>
@@ -163,8 +173,8 @@ export default function TaxSettingsPage() {
           </Row>
 
           <Text type="secondary">
-            Ví dụ với thuế suất 10%: nếu subtotal = 500.000 ₫, shipping = 25.000 ₫, discount = 0
-            → Thuế = (500.000 + 25.000) × 10% = 52.500 ₫. Tổng = 577.500 ₫.
+            Ví dụ với thuế suất 10%: nếu subtotal = 500.000 ₫, shipping = 25.000 ₫, discount = 0 →
+            Thuế = (500.000 + 25.000) × 10% = 52.500 ₫. Tổng = 577.500 ₫.
           </Text>
         </Card>
       </Form>

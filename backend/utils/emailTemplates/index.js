@@ -16,14 +16,14 @@
 
 const templates = {
   'order-confirmation': require('./orderConfirmation'),
-  'order-shipped':      require('./orderShipped'),
-  'order-delivered':    require('./orderDelivered'),
-  'order-cancelled':    require('./orderCancelled'),
-  'welcome':            require('./welcome'),
-  'password-reset':     require('./passwordReset'),
+  'order-shipped': require('./orderShipped'),
+  'order-delivered': require('./orderDelivered'),
+  'order-cancelled': require('./orderCancelled'),
+  welcome: require('./welcome'),
+  'password-reset': require('./passwordReset'),
   'vendor-application': require('./vendorApplication'),
-  'vendor-approved':    require('./vendorApproved'),
-  'low-stock-alert':    require('./lowStockAlert'),
+  'vendor-approved': require('./vendorApproved'),
+  'low-stock-alert': require('./lowStockAlert'),
 };
 
 /**

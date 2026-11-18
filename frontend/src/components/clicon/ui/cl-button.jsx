@@ -14,47 +14,47 @@ import React, { forwardRef } from 'react';
  * @param {string} [props.className]
  * @param {React.ReactNode} props.children
  */
-const ClButton = forwardRef(({
-  variant = 'primary',
-  size = 'md',
-  leftIcon,
-  rightIcon,
-  fullWidth = false,
-  loading = false,
-  disabled = false,
-  className = '',
-  children,
-  ...rest
-}, ref) => {
-  const classes = [
-    'cl-btn',
-    `cl-btn--${variant}`,
-    `cl-btn--${size}`,
-    fullWidth && 'cl-btn--full',
-    loading && 'cl-btn--loading',
-    className,
-  ].filter(Boolean).join(' ');
+const ClButton = forwardRef(
+  (
+    {
+      variant = 'primary',
+      size = 'md',
+      leftIcon,
+      rightIcon,
+      fullWidth = false,
+      loading = false,
+      disabled = false,
+      className = '',
+      children,
+      ...rest
+    },
+    ref
+  ) => {
+    const classes = [
+      'cl-btn',
+      `cl-btn--${variant}`,
+      `cl-btn--${size}`,
+      fullWidth && 'cl-btn--full',
+      loading && 'cl-btn--loading',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
 
-  return (
-    <button
-      ref={ref}
-      className={classes}
-      disabled={disabled || loading}
-      {...rest}
-    >
-      {loading && (
-        <span className="cl-btn__spinner" aria-hidden="true" />
-      )}
-      {!loading && leftIcon && (
-        <span className="cl-btn__icon cl-btn__icon--left">{leftIcon}</span>
-      )}
-      {!loading && <span className="cl-btn__text">{children}</span>}
-      {!loading && rightIcon && (
-        <span className="cl-btn__icon cl-btn__icon--right">{rightIcon}</span>
-      )}
-    </button>
-  );
-});
+    return (
+      <button ref={ref} className={classes} disabled={disabled || loading} {...rest}>
+        {loading && <span className="cl-btn__spinner" aria-hidden="true" />}
+        {!loading && leftIcon && (
+          <span className="cl-btn__icon cl-btn__icon--left">{leftIcon}</span>
+        )}
+        {!loading && <span className="cl-btn__text">{children}</span>}
+        {!loading && rightIcon && (
+          <span className="cl-btn__icon cl-btn__icon--right">{rightIcon}</span>
+        )}
+      </button>
+    );
+  }
+);
 
 ClButton.displayName = 'ClButton';
 

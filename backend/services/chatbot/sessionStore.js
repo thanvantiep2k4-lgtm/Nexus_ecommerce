@@ -1,4 +1,4 @@
-const ChatSession = require('../../model/ChatSession');
+const ChatSession = require('../../models/ChatSession');
 
 /**
  * Get an existing session or create a new one.
@@ -35,7 +35,7 @@ function buildGeminiHistory(session, window) {
     .slice(-window)
     .map((m) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
+      parts: [{ text: m.content }],
     }));
 }
 

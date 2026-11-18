@@ -23,32 +23,20 @@ const ImageGallery = ({ settings = {}, title }) => {
         )}
         <div className="cl-image-gallery__grid">
           {images.map((img, idx) => (
-            <div
-              key={idx}
-              className="cl-image-gallery__item"
-              onClick={() => setLightbox(idx)}
-            >
+            <div key={idx} className="cl-image-gallery__item" onClick={() => setLightbox(idx)}>
               <img src={img.url || img} alt={img.alt || ''} loading="lazy" />
-              {img.caption && (
-                <span className="cl-image-gallery__caption">{img.caption}</span>
-              )}
+              {img.caption && <span className="cl-image-gallery__caption">{img.caption}</span>}
             </div>
           ))}
         </div>
       </div>
 
       {lightbox !== null && (
-        <div
-          className="cl-image-gallery__lightbox"
-          onClick={() => setLightbox(null)}
-        >
+        <div className="cl-image-gallery__lightbox" onClick={() => setLightbox(null)}>
           <button className="cl-image-gallery__close" aria-label={t('aria.close')}>
             &times;
           </button>
-          <img
-            src={images[lightbox]?.url || images[lightbox]}
-            alt={images[lightbox]?.alt || ''}
-          />
+          <img src={images[lightbox]?.url || images[lightbox]} alt={images[lightbox]?.alt || ''} />
         </div>
       )}
     </section>

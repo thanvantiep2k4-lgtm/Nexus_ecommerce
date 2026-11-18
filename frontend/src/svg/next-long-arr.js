@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const NextLongArr = () => {
   return (
-    <svg
-      width="33"
-      height="16"
-      viewBox="0 0 33 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="33" height="16" viewBox="0 0 33 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M30.9795 7.97534L0.979492 7.97534"
         stroke="currentColor"

@@ -1,5 +1,5 @@
-const Product = require('../../model/Products');
-const BlogPost = require('../../model/BlogPost');
+const Product = require('../../models/Products');
+const BlogPost = require('../../models/BlogPost');
 const embeddings = require('./embeddings');
 
 async function searchProductsByVector(queryText, { limit = 10, filters = {} } = {}) {
@@ -17,12 +17,23 @@ async function searchProductsByVector(queryText, { limit = 10, filters = {} } = 
         path: 'embedding',
         queryVector: vec,
         numCandidates: 100,
-        limit: limit * 2
-      }
+        limit: limit * 2,
+      },
     },
     { $match: { status: { $ne: 'out-of-stock' }, ...buildFilterMatch(filters) } },
-    { $project: { title: 1, slug: 1, price: 1, quantity: 1, imageURLs: 1, sellCount: 1, productType: 1, score: { $meta: 'vectorSearchScore' } } },
-    { $limit: limit }
+    {
+      $project: {
+        title: 1,
+        slug: 1,
+        price: 1,
+        quantity: 1,
+        imageURLs: 1,
+        sellCount: 1,
+        productType: 1,
+        score: { $meta: 'vectorSearchScore' },
+      },
+    },
+    { $limit: limit },
   ];
   try {
     const results = await Product.aggregate(pipeline);
@@ -55,7 +66,7 @@ async function textSearchProductsFallback(queryText, { limit = 10, filters = {} 
       { parent: { $regex: t, $options: 'i' } },
       { children: { $regex: t, $options: 'i' } },
       { description: { $regex: t, $options: 'i' } },
-      { tags: { $regex: t, $options: 'i' } }
+      { tags: { $regex: t, $options: 'i' } },
     ]);
   }
 
@@ -92,11 +103,11 @@ async function searchBlogsByVector(queryText, { limit = 5 } = {}) {
         path: 'embedding',
         queryVector: vec,
         numCandidates: 50,
-        limit
-      }
+        limit,
+      },
     },
     { $match: { status: 'published' } },
-    { $project: { title: 1, slug: 1, excerpt: 1, score: { $meta: 'vectorSearchScore' } } }
+    { $project: { title: 1, slug: 1, excerpt: 1, score: { $meta: 'vectorSearchScore' } } },
   ];
   try {
     return await BlogPost.aggregate(pipeline);

@@ -33,20 +33,45 @@ async function patch({ commit = false } = {}) {
 
   // === 2) Misclassification fixes (manual mapping for VN titles) ===
   const moves = [
-    { match: { title: /^Đồng Hồ Thông Minh Series/ }, toParent: 'Đồng hồ thông minh', toType: 'electronics', children: 'Apple Watch' },
-    { match: { title: /^Loa Bluetooth Di Động/ }, toParent: 'Phụ kiện điện tử', toType: 'electronics', children: 'Loa' },
-    { match: { title: /^Bông Tai Ngọc Trai/ }, toParent: 'Hoa tai', toType: 'jewelry', children: 'Vàng' },
+    {
+      match: { title: /^Đồng Hồ Thông Minh Series/ },
+      toParent: 'Đồng hồ thông minh',
+      toType: 'electronics',
+      children: 'Apple Watch',
+    },
+    {
+      match: { title: /^Loa Bluetooth Di Động/ },
+      toParent: 'Phụ kiện điện tử',
+      toType: 'electronics',
+      children: 'Loa',
+    },
+    {
+      match: { title: /^Bông Tai Ngọc Trai/ },
+      toParent: 'Hoa tai',
+      toType: 'jewelry',
+      children: 'Vàng',
+    },
   ];
   for (const m of moves) {
     const docs = await Products.find(m.match).lean();
     const target = catByParent.get(m.toParent);
-    if (!target) { console.warn(`reclass: target category not found: ${m.toParent}`); continue; }
+    if (!target) {
+      console.warn(`reclass: target category not found: ${m.toParent}`);
+      continue;
+    }
     for (const p of docs) {
       console.log(`reclass: ${p.title} -> ${m.toParent} (${m.toType})`);
       if (commit) {
         await Products.updateOne(
           { _id: p._id },
-          { $set: { parent: m.toParent, productType: m.toType, children: m.children, category: { name: m.toParent, id: target._id } } },
+          {
+            $set: {
+              parent: m.toParent,
+              productType: m.toType,
+              children: m.children,
+              category: { name: m.toParent, id: target._id },
+            },
+          }
         );
       }
       result.reclass += 1;
@@ -54,7 +79,8 @@ async function patch({ commit = false } = {}) {
   }
 
   // === 3) Retry image upload for products still on the legacy shared image ===
-  const legacyImg = 'https://res.cloudinary.com/dfddeabbs/image/upload/v1774383778/shofy/products/nkqwzy38ifecfug7zqlr.png';
+  const legacyImg =
+    'https://res.cloudinary.com/dfddeabbs/image/upload/v1774383778/shofy/products/nkqwzy38ifecfug7zqlr.png';
   const stuck = await Products.find({ img: legacyImg }).lean();
   const catalog = require('./data/dummyjson-catalog.json');
   const { mapDjToTaxonomy } = require('./lib/mappings');
@@ -68,13 +94,24 @@ async function patch({ commit = false } = {}) {
   const manifestPath = path.join(__dirname, 'data', 'image-manifest.json');
   for (const p of stuck) {
     const srcs = reps[p.parent] || [];
-    if (!srcs.length) { console.warn(`image: no source images for parent ${p.parent} on ${p._id}`); continue; }
+    if (!srcs.length) {
+      console.warn(`image: no source images for parent ${p.parent} on ${p._id}`);
+      continue;
+    }
     try {
       const imgs = await processImages(srcs, `retry-${String(p._id)}`, { manifestPath });
-      if (!imgs.length) { console.warn(`image: retry returned 0 for ${p._id}`); result.retryFailed += 1; continue; }
+      if (!imgs.length) {
+        console.warn(`image: retry returned 0 for ${p._id}`);
+        result.retryFailed += 1;
+        continue;
+      }
       console.log(`image: retried ${p._id} -> ${imgs.length} images`);
       if (commit) {
-        const imageURLs = imgs.map((u) => ({ img: u, color: { name: 'Mặc định', clrCode: '#000000' }, sizes: p.sizes || [] }));
+        const imageURLs = imgs.map((u) => ({
+          img: u,
+          color: { name: 'Mặc định', clrCode: '#000000' },
+          sizes: p.sizes || [],
+        }));
         await Products.updateOne({ _id: p._id }, { $set: { img: imgs[0], imageURLs } });
       }
       result.reimaged += 1;
@@ -91,11 +128,18 @@ if (require.main === module) {
   (async () => {
     const flags = parseFlags();
     await connect();
-    console.log(flags.commit ? '=== POST-MIGRATION PATCH (COMMIT) ===' : '=== POST-MIGRATION PATCH (dry-run) ===');
+    console.log(
+      flags.commit
+        ? '=== POST-MIGRATION PATCH (COMMIT) ==='
+        : '=== POST-MIGRATION PATCH (dry-run) ==='
+    );
     const r = await patch({ commit: flags.commit });
     console.log('Result:', JSON.stringify(r, null, 1));
     await disconnect();
-  })().catch((e) => { console.error('patch FAILED:', e.message); process.exit(1); });
+  })().catch((e) => {
+    console.error('patch FAILED:', e.message);
+    process.exit(1);
+  });
 }
 
 module.exports = { patch };

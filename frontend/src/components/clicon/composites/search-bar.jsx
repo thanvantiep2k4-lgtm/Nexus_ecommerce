@@ -47,7 +47,9 @@ const CliconSearchBar = ({ categories = [], placeholder, onSearch, className = '
         >
           <option value="">{t('search.allCategories', 'All Categories')}</option>
           {categories.map((cat) => (
-            <option key={cat.value} value={cat.value}>{cat.label}</option>
+            <option key={cat.value} value={cat.value}>
+              {cat.label}
+            </option>
           ))}
         </select>
       )}

@@ -14,7 +14,7 @@
  * Activity logging is fire-and-forget — it never blocks or fails the response.
  */
 
-const ActivityLog = require('../model/ActivityLog');
+const ActivityLog = require('../models/ActivityLog');
 
 /**
  * Returns an Express middleware that logs an activity entry after the handler

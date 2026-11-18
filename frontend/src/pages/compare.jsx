@@ -14,10 +14,7 @@ const ComparePage = () => {
       <SEO pageTitle={t('compare.title')} />
       <HeaderClicon />
       <ShopBreadcrumb
-        links={[
-          { label: t('breadcrumb.home'), href: '/' },
-          { label: t('compare.title') },
-        ]}
+        links={[{ label: t('breadcrumb.home'), href: '/' }, { label: t('compare.title') }]}
       />
       <CompareArea />
       <FooterClicon />

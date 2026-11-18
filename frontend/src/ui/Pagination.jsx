@@ -1,12 +1,6 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-const Pagination = ({
-  items = [],
-  countOfPage = 12,
-  paginatedData,
-  currPage,
-  setCurrPage,
-}) => {
+const Pagination = ({ items = [], countOfPage = 12, paginatedData, currPage, setCurrPage }) => {
   const pageStart = (currPage - 1) * countOfPage;
   const totalPage = Math.ceil(items.length / countOfPage);
 

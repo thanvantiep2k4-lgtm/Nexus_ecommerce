@@ -2,8 +2,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const Product = require('../model/Products');
-const ExchangeRate = require('../model/ExchangeRate');
+const Product = require('../models/Products');
+const ExchangeRate = require('../models/ExchangeRate');
 
 const SLUG_RE = /^[a-z0-9-]+$/;
 const SUSPECT_USD_THRESHOLD = 5000;
@@ -125,8 +125,7 @@ async function main() {
         const e = p.offerDate?.end;
         return s && e && new Date(s) > new Date(e);
       },
-      detail: (p) =>
-        `offerDate.start=${p.offerDate?.start} > end=${p.offerDate?.end}`,
+      detail: (p) => `offerDate.start=${p.offerDate?.start} > end=${p.offerDate?.end}`,
     },
     {
       code: 'SUSPECTED_USD',

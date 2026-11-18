@@ -1,6 +1,6 @@
 # NexusMart E-Commerce Platform
 
-> **Thành viên nhóm: đọc [PROJECT_PLAN.md](PROJECT_PLAN.md) trước.** Đó là kế hoạch thống nhất (kiến trúc, port, phân công, quy ước Git).
+> **Thành viên nhóm: đọc [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) trước.** Đó là kế hoạch thống nhất (kiến trúc, port, phân công, quy ước Git).
 > Tên cũ trong code vẫn là "Shofy" (đang đổi tên).
 
 Multi-vendor marketplace with CMS-driven storefront, built with Express.js, Next.js 13, React 19 + Ant Design 6, and MongoDB.
@@ -27,7 +27,7 @@ npm run seed       # nạp dữ liệu mẫu (xoá sạch dữ liệu cũ!)
 npm run dev        # api :4000 · store :3001 · crm :8081 · crm-ui :5173
 ```
 
-Chi tiết, tài khoản dev và xử lý sự cố: xem [PROJECT_PLAN.md](PROJECT_PLAN.md#3-cách-chạy-dự-án-làm-đúng-thứ-tự).
+Chi tiết, tài khoản dev và xử lý sự cố: xem [PROJECT_PLAN.md](docs/PROJECT_PLAN.md#3-cách-chạy-dự-án-làm-đúng-thứ-tự).
 
 ### Docker (toàn bộ stack)
 
@@ -52,29 +52,29 @@ Interactive Swagger UI: `http://localhost:4000/api-docs`
 ## Project Structure
 
 ```
-├── backend/           # Express.js REST API
-│   ├── controller/    # Route handlers (v1/ for versioned API)
-│   ├── model/         # Mongoose schemas (16 collections)
-│   ├── routes/        # Express routers
-│   ├── middleware/     # Auth, validation, activity log
-│   ├── services/      # Payment service
-│   ├── utils/         # Respond, pagination, email
-│   ├── validations/   # Joi schemas
-│   └── seeds/         # Email template seeds
-├── frontend/          # Next.js 13 storefront
-│   ├── src/pages/     # Pages (SSR, ISR)
-│   ├── src/components/# React components
-│   ├── src/redux/     # Redux Toolkit + RTK Query
-│   ├── src/hooks/     # Custom hooks
-│   └── tests/e2e/     # Playwright E2E tests
-├── crm/               # Admin panel
-│   ├── crm-ui/        # React 19 + TypeScript + Ant Design 6
-│   ├── controllers/   # API proxy controllers
-│   ├── routes/        # Proxy routes
-│   └── server.js      # Express proxy server
-├── migration/         # Database migration scripts
-├── scripts/           # Utility scripts (backup)
-└── docker-compose.yml # Full stack Docker setup
+├── backend/            # Express REST API (port 4000)
+│   ├── config/         # db, keycloak, gemini, swagger, secrets
+│   ├── controllers/    # Handlers (v1/ = API versioned; còn lại là logic dùng chung)
+│   ├── models/         # Mongoose schemas
+│   ├── routes/v1/      # auth, store, user, vendor, admin, payment
+│   ├── middleware/     # auth, validate, activity log, error handler
+│   ├── services/       # chatbot/, payment, keycloak, cloudinary, ...
+│   ├── validations/    # Joi schemas
+│   ├── utils/          # respond, pagination, email, vnpay
+│   ├── seeds/          # index.js (seed chính) + data/ + seed CMS/email
+│   ├── scripts/        # backfill embeddings, catalog migration, backup
+│   └── tests/          # Jest
+├── frontend/           # Next.js 13 storefront (port 3001)
+│   ├── src/pages/      # routes (SSR/ISR)
+│   ├── src/components/ # UI theo tính năng
+│   ├── src/redux/      # Redux Toolkit + RTK Query
+│   └── tests/e2e/      # Playwright
+├── crm/                # Admin: server proxy Express (8081) + crm-ui (Vite, 5173)
+├── keycloak/           # realm-export.json (tự import) + theme
+├── nginx/              # reverse proxy production
+├── scripts/            # init-env.js, backup.sh, init-postgres.sql
+├── docs/               # TOÀN BỘ tài liệu (xem docs/README.md)
+└── docker-compose*.yml
 ```
 
 ## Key Features
@@ -93,7 +93,7 @@ Interactive Swagger UI: `http://localhost:4000/api-docs`
 ## AI Chatbot setup
 
 1. Set `GEMINI_API_KEY` in `backend/.env` (free tier works — get one at [aistudio.google.com](https://aistudio.google.com/apikey)).
-2. Create Atlas Vector Search indexes per [docs/atlas-vector-index.md](docs/atlas-vector-index.md).
+2. Create Atlas Vector Search indexes per [docs/guides/atlas-vector-index.md](docs/guides/atlas-vector-index.md).
 3. Backfill embeddings for existing data:
    ```bash
    node backend/scripts/backfill-embeddings.js
@@ -104,7 +104,7 @@ The widget appears on every page of the storefront as a floating bubble (bottom-
 
 ## Documentation
 
-- [Deployment Guide](DEPLOYMENT.md) — Docker, manual deploy, SSL, backups
+- [Deployment Guide](docs/deployment.md) — Docker, manual deploy, SSL, backups
 - [API Docs](http://localhost:4000/api-docs) — Swagger UI (when running)
 
 ## Testing

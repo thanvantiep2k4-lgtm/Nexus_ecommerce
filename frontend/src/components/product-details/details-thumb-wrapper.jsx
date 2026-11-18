@@ -1,6 +1,6 @@
-import { useRef } from "react";
-import { useTranslation } from "react-i18next";
-import SafeImage from "@/components/common/safe-image";
+import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import SafeImage from '@/components/common/safe-image';
 const DetailsThumbWrapper = ({
   imageURLs,
   handleImageActive,
@@ -8,7 +8,7 @@ const DetailsThumbWrapper = ({
   imgWidth = 580,
   imgHeight = 580,
   videoId = false,
-  status
+  status,
 }) => {
   const { t } = useTranslation();
   const thumbsRef = useRef(null);
@@ -83,7 +83,6 @@ const DetailsThumbWrapper = ({
           </div>
         )}
       </div>
-
     </>
   );
 };

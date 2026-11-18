@@ -1,4 +1,4 @@
-import { getTrackBackground, Range } from "react-range";
+import { getTrackBackground, Range } from 'react-range';
 
 const InputRange = ({ STEP, MIN, MAX, values, handleChanges }) => {
   return (
@@ -18,9 +18,9 @@ const InputRange = ({ STEP, MIN, MAX, values, handleChanges }) => {
               width: '100%',
               background: getTrackBackground({
                 values: values,
-                colors: ["#EDEDED", "#0989FF", "#EDEDED"],
+                colors: ['#EDEDED', '#0989FF', '#EDEDED'],
                 min: MIN,
-                max: MAX
+                max: MAX,
               }),
             }}
           >
@@ -35,7 +35,7 @@ const InputRange = ({ STEP, MIN, MAX, values, handleChanges }) => {
               height: '17px',
               width: '5px',
               backgroundColor: '#0989FF',
-              backgroundColor: isDragged ? "#0989FF" : "#0989FF"
+              backgroundColor: isDragged ? '#0989FF' : '#0989FF',
             }}
           />
         )}
@@ -43,6 +43,5 @@ const InputRange = ({ STEP, MIN, MAX, values, handleChanges }) => {
     </>
   );
 };
-
 
 export default InputRange;

@@ -40,7 +40,7 @@ async function streamChat({ systemInstruction, history, userMessage, tools, onTo
     model: config.chatModel,
     systemInstruction,
     tools: tools && tools.length ? [{ functionDeclarations: tools }] : undefined,
-    generationConfig: { temperature: 0.4 }
+    generationConfig: { temperature: 0.4 },
   });
 
   const chat = model.startChat({ history });
@@ -67,7 +67,7 @@ async function streamChat({ systemInstruction, history, userMessage, tools, onTo
       return {
         text,
         toolCalls,
-        usage: final.usageMetadata || { promptTokenCount: 0, candidatesTokenCount: 0 }
+        usage: final.usageMetadata || { promptTokenCount: 0, candidatesTokenCount: 0 },
       };
     } catch (e) {
       lastErr = e;

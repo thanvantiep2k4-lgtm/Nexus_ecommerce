@@ -1,8 +1,8 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import { useGetBannersQuery } from "@/redux/features/cmsApi";
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { useGetBannersQuery } from '@/redux/features/cmsApi';
 
 const SidebarPromoBanner = () => {
   const { t } = useTranslation();
@@ -28,15 +28,9 @@ const SidebarPromoBanner = () => {
           />
         )}
         <div className="cl-shop__sidebar-banner-content">
-          {banner.subtitle && (
-            <p className="cl-shop__sidebar-banner-subtitle">{banner.subtitle}</p>
-          )}
-          {banner.title && (
-            <h4 className="cl-shop__sidebar-banner-title">{banner.title}</h4>
-          )}
-          {banner.price && (
-            <span className="cl-shop__sidebar-banner-price">{banner.price}</span>
-          )}
+          {banner.subtitle && <p className="cl-shop__sidebar-banner-subtitle">{banner.subtitle}</p>}
+          {banner.title && <h4 className="cl-shop__sidebar-banner-title">{banner.title}</h4>}
+          {banner.price && <span className="cl-shop__sidebar-banner-price">{banner.price}</span>}
           <div className="cl-shop__sidebar-banner-actions">
             {banner.link && (
               <Link href={banner.link} className="cl-shop__sidebar-banner-btn">

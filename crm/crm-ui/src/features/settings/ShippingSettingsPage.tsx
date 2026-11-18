@@ -208,7 +208,11 @@ export default function ShippingSettingsPage() {
 
       <Form form={form} layout="vertical">
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Phí vận chuyển chung</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Phí vận chuyển chung
+            </Title>
+          }
           size="small"
           style={{ marginBottom: 16 }}
         >
@@ -247,7 +251,11 @@ export default function ShippingSettingsPage() {
         </Card>
 
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Phương thức vận chuyển</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Phương thức vận chuyển
+            </Title>
+          }
           size="small"
           extra={
             <Button size="small" icon={<PlusOutlined />} onClick={addMethod}>

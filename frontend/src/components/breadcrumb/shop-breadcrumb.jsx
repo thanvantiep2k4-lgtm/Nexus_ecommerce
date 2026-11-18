@@ -11,12 +11,10 @@ const ShopBreadcrumb = ({ links = [] }) => {
             return (
               <React.Fragment key={i}>
                 {i > 0 && <li className="cl-breadcrumb__separator">&gt;</li>}
-                <li className={`cl-breadcrumb__item${isLast ? ' cl-breadcrumb__item--active' : ''}`}>
-                  {item.href && !isLast ? (
-                    <Link href={item.href}>{item.label}</Link>
-                  ) : (
-                    item.label
-                  )}
+                <li
+                  className={`cl-breadcrumb__item${isLast ? ' cl-breadcrumb__item--active' : ''}`}
+                >
+                  {item.href && !isLast ? <Link href={item.href}>{item.label}</Link> : item.label}
                 </li>
               </React.Fragment>
             );

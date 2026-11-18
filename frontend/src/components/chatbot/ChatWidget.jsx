@@ -8,8 +8,7 @@ import ChatInput from './ChatInput';
 export default function ChatWidget() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const { sessionId, messages, isStreaming, error, sendMessage, reset } =
-    useChatSession();
+  const { sessionId, messages, isStreaming, error, sendMessage, reset } = useChatSession();
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -20,8 +19,7 @@ export default function ChatWidget() {
 
   if (!open) return <ChatBubble onClick={() => setOpen(true)} />;
 
-  const lastIsAssistant =
-    messages.length > 0 && messages[messages.length - 1].role === 'assistant';
+  const lastIsAssistant = messages.length > 0 && messages[messages.length - 1].role === 'assistant';
 
   return (
     <div className="shofy-chat__panel" role="dialog" aria-label={t('chat.title')}>
@@ -50,9 +48,7 @@ export default function ChatWidget() {
 
       <div className="shofy-chat__messages" ref={scrollRef}>
         {messages.length === 0 && (
-          <div className="shofy-chat__msg shofy-chat__msg--assistant">
-            {t('chat.welcome')}
-          </div>
+          <div className="shofy-chat__msg shofy-chat__msg--assistant">{t('chat.welcome')}</div>
         )}
         {messages.map((m, i) => (
           <ChatMessage key={i} message={m} sessionId={sessionId} />
@@ -61,10 +57,7 @@ export default function ChatWidget() {
           <div className="shofy-chat__thinking">{t('chat.thinking')}</div>
         )}
         {error && (
-          <div
-            className="shofy-chat__msg shofy-chat__msg--assistant"
-            style={{ color: '#c00' }}
-          >
+          <div className="shofy-chat__msg shofy-chat__msg--assistant" style={{ color: '#c00' }}>
             {t(`chat.${error}`, { defaultValue: t('chat.errorGeneric') })}
           </div>
         )}

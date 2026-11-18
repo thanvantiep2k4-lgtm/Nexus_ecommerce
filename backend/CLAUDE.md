@@ -14,7 +14,7 @@ Package manager is **npm** (Node 18+, see `.nvmrc`).
 npm install                 # Install dependencies
 npm run dev                 # nodemon, port 4000 (watches index.js)
 npm start                   # production
-npm run seed                # node seed.js — DESTRUCTIVELY clears ALL collections then bulk inserts
+npm run seed                # node seeds/index.js — DESTRUCTIVELY clears ALL collections then bulk inserts
 node scripts/backfill-embeddings.js   # one-shot chatbot embedding backfill
 node seeds/email-templates.seed.js    # seed 9 default email templates
 ```
@@ -46,10 +46,10 @@ backend/
 │   └── swagger.js          # OpenAPI 3.0 spec (~40 endpoints)
 ├── routes/
 │   └── v1/                 # auth, store, user, vendor, admin, payment
-├── controller/
+├── controllers/
 │   └── v1/                 # cms, store-cms, wishlist, review, vendor, admin.vendor,
 │                           # analytics, email-template, activityLog, chat
-├── model/                  # Mongoose schemas (User, Product, Order, Coupon, Page,
+├── models/                  # Mongoose schemas (User, Product, Order, Coupon, Page,
 │                           # Menu, Banner, BlogPost, ChatSession, ChatFeedback, …)
 ├── middleware/
 │   ├── verifyToken.js      # JWT auth (ROLE_PRIORITY includes 'vendor')
@@ -136,7 +136,7 @@ Envelope: `{ success: boolean, message: string, data: any, errors?: any[], meta?
 
 - Gemini 2.0 Flash via `services/chatbot/llmProvider.js` — token-bucket rate limit, streaming
 - 11 tools registered in `services/chatbot/tools/` — searchProducts, getProductDetails, getMyOrders, getOrderStatus, validateCoupon, getShippingPolicy, getReturnPolicy, searchFAQ, recommendProducts, proposeAddToCart, proposeApplyCoupon
-- RAG via `$vectorSearch` on `Product.embedding` / `BlogPost.embedding` (Atlas vector index required — see `docs/atlas-vector-index.md`). Falls back to `$text` when not on Atlas
+- RAG via `$vectorSearch` on `Product.embedding` / `BlogPost.embedding` (Atlas vector index required — see `docs/guides/atlas-vector-index.md`). Falls back to `$text` when not on Atlas
 - `embedQueue.js` debounces re-embedding (30s) when products/blogs change
 - Bot **proposes** side effects (`add_to_cart`, `apply_coupon`, `view_product`, `view_order`, `sign_in`); the user confirms via card click — bot never mutates state directly
 
@@ -145,7 +145,7 @@ Envelope: `{ success: boolean, message: string, data: any, errors?: any[], meta?
 ### Adding a new endpoint
 
 1. Define Joi schema in `validations/<resource>.validation.js`
-2. Add controller in `controller/v1/<resource>.controller.js` using `respond.*`
+2. Add controller in `controllers/v1/<resource>.controller.js` using `respond.*`
 3. Wire the route in `routes/v1/<area>.js` with `validate(schema)` + `verifyToken` + `authorization(...)` middleware as needed
 4. Add JSDoc Swagger annotations above the route for `/api-docs`
 5. Emit Socket.io events via `socketEmitter` on writes
@@ -153,7 +153,7 @@ Envelope: `{ success: boolean, message: string, data: any, errors?: any[], meta?
 
 ### Working with Mongoose
 
-- All models live flat under `model/` (CommonJS export)
+- All models live flat under `models/` (CommonJS export)
 - Order invoice numbers auto-increment from 1000 via pre-save hook on `Order`
 - User passwords hashed via bcrypt pre-save hook — never store plaintext
 - Reviews require a delivered Order containing the product → `isVerifiedPurchase` true
@@ -191,7 +191,7 @@ Fire-and-forget — never `await` (it would block the response). Graceful no-op 
 - Never throw raw strings — use `ApiError` from `errors/` so `global-error-handler` formats them
 - All `/api/v1/*` writes must be Joi-validated
 - Fire-and-forget side effects (emails, activity logs, embed re-queue) must never block the response
-- `seed.js` is destructive — never run in production
+- `seeds/index.js` is destructive — never run in production
 
 # MCP routing rules (project-level)
 

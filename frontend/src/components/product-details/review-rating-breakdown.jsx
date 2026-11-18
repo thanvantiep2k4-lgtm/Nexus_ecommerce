@@ -24,7 +24,9 @@ const ReviewRatingBreakdown = ({ reviews = [] }) => {
             {avgRating.toFixed(1)}
           </div>
           <div style={{ fontSize: '12px', color: '#888' }}>out of 5</div>
-          <div style={{ fontSize: '12px', color: '#888' }}>{total} review{total !== 1 ? 's' : ''}</div>
+          <div style={{ fontSize: '12px', color: '#888' }}>
+            {total} review{total !== 1 ? 's' : ''}
+          </div>
         </div>
         <div style={{ flex: 1 }}>
           {counts.map(({ star, count }) => {
@@ -52,9 +54,7 @@ const ReviewRatingBreakdown = ({ reviews = [] }) => {
                     aria-valuemax={100}
                   />
                 </div>
-                <span style={{ fontSize: '12px', minWidth: '28px', color: '#888' }}>
-                  {count}
-                </span>
+                <span style={{ fontSize: '12px', minWidth: '28px', color: '#888' }}>{count}</span>
               </div>
             );
           })}

@@ -117,20 +117,10 @@ interface UserAvatarProps {
 
 function UserAvatar({ user, size = 40 }: UserAvatarProps) {
   if (user.imageURL) {
-    return (
-      <Avatar
-        src={user.imageURL}
-        size={size}
-        alt={user.name}
-        style={{ flexShrink: 0 }}
-      />
-    );
+    return <Avatar src={user.imageURL} size={size} alt={user.name} style={{ flexShrink: 0 }} />;
   }
   return (
-    <Avatar
-      size={size}
-      style={{ backgroundColor: PRIMARY_COLOR, flexShrink: 0, fontWeight: 600 }}
-    >
+    <Avatar size={size} style={{ backgroundColor: PRIMARY_COLOR, flexShrink: 0, fontWeight: 600 }}>
       {getInitial(user.name)}
     </Avatar>
   );
@@ -166,8 +156,7 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
   const isEditing = editingUser !== null;
 
   const createMutation = useMutation({
-    mutationFn: (data: Partial<User> & { password?: string }) =>
-      usersApi.create(data),
+    mutationFn: (data: Partial<User> & { password?: string }) => usersApi.create(data),
     onSuccess: () => {
       toast.success('User created successfully');
       queryClient.invalidateQueries({ queryKey: ['users'] });
@@ -180,13 +169,8 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: Partial<User> & { password?: string };
-    }) => usersApi.update(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<User> & { password?: string } }) =>
+      usersApi.update(id, data),
     onSuccess: () => {
       toast.success('User updated successfully');
       queryClient.invalidateQueries({ queryKey: ['users'] });
@@ -210,9 +194,7 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
         status: editingUser.status,
         gender: editingUser.gender ?? undefined,
         imageURL: editingUser.imageURL ?? '',
-        dateOfBirth: editingUser.dateOfBirth
-          ? dayjs(editingUser.dateOfBirth)
-          : undefined,
+        dateOfBirth: editingUser.dateOfBirth ? dayjs(editingUser.dateOfBirth) : undefined,
         emailVerified: editingUser.emailVerified ?? false,
         address: editingUser.address ?? '',
       });
@@ -230,9 +212,7 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
       status: values.status,
       gender: values.gender || undefined,
       imageURL: values.imageURL || undefined,
-      dateOfBirth: values.dateOfBirth
-        ? values.dateOfBirth.toISOString()
-        : undefined,
+      dateOfBirth: values.dateOfBirth ? values.dateOfBirth.toISOString() : undefined,
       emailVerified: values.emailVerified ?? false,
       address: values.address || undefined,
     };
@@ -304,18 +284,10 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
             <Form.Item
               name="password"
               label="Password"
-              rules={
-                isEditing
-                  ? []
-                  : [{ required: true, message: 'Password is required' }]
-              }
+              rules={isEditing ? [] : [{ required: true, message: 'Password is required' }]}
             >
               <Input.Password
-                placeholder={
-                  isEditing
-                    ? 'Leave blank to keep current'
-                    : 'Enter password'
-                }
+                placeholder={isEditing ? 'Leave blank to keep current' : 'Enter password'}
               />
             </Form.Item>
           </Col>
@@ -351,11 +323,7 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
           </Col>
           <Col span={8}>
             <Form.Item name="gender" label="Gender">
-              <Select
-                placeholder="Select gender"
-                allowClear
-                options={GENDER_OPTIONS}
-              />
+              <Select placeholder="Select gender" allowClear options={GENDER_OPTIONS} />
             </Form.Item>
           </Col>
         </Row>
@@ -373,11 +341,7 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
           </Col>
         </Row>
 
-        <Form.Item
-          name="emailVerified"
-          label="Email Verified"
-          valuePropName="checked"
-        >
+        <Form.Item name="emailVerified" label="Email Verified" valuePropName="checked">
           <Switch />
         </Form.Item>
 
@@ -440,35 +404,25 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
       title: 'Amount',
       key: 'amount',
       render: (_: unknown, record: Order) =>
-        formatCurrency(
-          record.finalAmount ?? record.totalAmount ?? record.subTotal ?? 0,
-        ),
+        formatCurrency(record.finalAmount ?? record.totalAmount ?? record.subTotal ?? 0),
     },
     {
       title: 'Status',
       key: 'status',
       render: (_: unknown, record: Order) => (
-        <StatusBadge
-          status={record.orderStatus ?? record.status ?? 'pending'}
-          type="order"
-        />
+        <StatusBadge status={record.orderStatus ?? record.status ?? 'pending'} type="order" />
       ),
     },
   ];
 
-  const hasAddress =
-    typeof user.address === 'string' && user.address.trim() !== '';
+  const hasAddress = typeof user.address === 'string' && user.address.trim() !== '';
 
   return (
     <Modal
       title="User Details"
       open={open}
       onCancel={onClose}
-      footer={
-        <Button onClick={onClose}>
-          Close
-        </Button>
-      }
+      footer={<Button onClick={onClose}>Close</Button>}
       width={800}
       destroyOnHidden
     >
@@ -485,24 +439,15 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
           }}
         >
           <UserAvatar user={user} size={120} />
-          <Typography.Title
-            level={5}
-            style={{ margin: 0, textAlign: 'center' }}
-          >
+          <Typography.Title level={5} style={{ margin: 0, textAlign: 'center' }}>
             {user.name}
           </Typography.Title>
-          <Text
-            type="secondary"
-            style={{ textAlign: 'center', fontSize: 13 }}
-          >
+          <Text type="secondary" style={{ textAlign: 'center', fontSize: 13 }}>
             {user.email}
           </Text>
           <Space size={6}>
             <StatusBadge status={user.status} />
-            <Tag
-              color={ROLE_TAG_COLORS[user.role] ?? 'default'}
-              style={{ margin: 0 }}
-            >
+            <Tag color={ROLE_TAG_COLORS[user.role] ?? 'default'} style={{ margin: 0 }}>
               {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
             </Tag>
           </Space>
@@ -512,18 +457,12 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
         <Col span={16}>
           <Descriptions column={1} size="small" bordered>
             <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
-            <Descriptions.Item label="Phone">
-              {user.phone ?? '—'}
-            </Descriptions.Item>
+            <Descriptions.Item label="Phone">{user.phone ?? '—'}</Descriptions.Item>
             <Descriptions.Item label="Gender">
-              {user.gender
-                ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1)
-                : '—'}
+              {user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : '—'}
             </Descriptions.Item>
             <Descriptions.Item label="Date of Birth">
-              {user.dateOfBirth
-                ? dayjs(user.dateOfBirth).format('MMM D, YYYY')
-                : '—'}
+              {user.dateOfBirth ? dayjs(user.dateOfBirth).format('MMM D, YYYY') : '—'}
             </Descriptions.Item>
             <Descriptions.Item label="Email Verified">
               {user.emailVerified ? (
@@ -532,9 +471,7 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
                 <CloseCircleFilled style={{ color: '#ff4d4f' }} />
               )}
             </Descriptions.Item>
-            <Descriptions.Item label="Joined">
-              {formatDate(user.createdAt)}
-            </Descriptions.Item>
+            <Descriptions.Item label="Joined">{formatDate(user.createdAt)}</Descriptions.Item>
             <Descriptions.Item label="Last Login">
               {user.lastLogin ? formatDate(user.lastLogin) : '—'}
             </Descriptions.Item>
@@ -546,9 +483,7 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
                 Address
               </Divider>
               <Descriptions column={1} size="small" bordered>
-                <Descriptions.Item label="Address">
-                  {user.address}
-                </Descriptions.Item>
+                <Descriptions.Item label="Address">{user.address}</Descriptions.Item>
               </Descriptions>
             </>
           )}
@@ -556,9 +491,7 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
       </Row>
 
       {/* Order history */}
-      <Divider plain>
-        Recent Orders
-      </Divider>
+      <Divider plain>Recent Orders</Divider>
       <Table<Order>
         dataSource={ordersQuery.data?.data ?? []}
         columns={orderColumns}
@@ -619,10 +552,7 @@ export default function UsersPage() {
     search: debouncedSearch || undefined,
     role: filters.role || undefined,
     status: filters.status || undefined,
-    emailVerified:
-      filters.emailVerified !== ''
-        ? filters.emailVerified === 'true'
-        : undefined,
+    emailVerified: filters.emailVerified !== '' ? filters.emailVerified === 'true' : undefined,
   };
 
   const usersQuery = useQuery({
@@ -635,8 +565,7 @@ export default function UsersPage() {
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       usersApi.updateStatus(id, status),
     onSuccess: (_data, variables) => {
-      const label =
-        variables.status.charAt(0).toUpperCase() + variables.status.slice(1);
+      const label = variables.status.charAt(0).toUpperCase() + variables.status.slice(1);
       toast.success(`User ${label.toLowerCase()}d successfully`);
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
@@ -683,10 +612,7 @@ export default function UsersPage() {
     setPage(1);
   }
 
-  function handleFilterChange<K extends keyof Filters>(
-    key: K,
-    value: Filters[K],
-  ) {
+  function handleFilterChange<K extends keyof Filters>(key: K, value: Filters[K]) {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setPage(1);
   }
@@ -703,8 +629,7 @@ export default function UsersPage() {
       .map((action) => ({
         key: action.value,
         label: action.label,
-        onClick: () =>
-          statusMutation.mutate({ id: user._id, status: action.value }),
+        onClick: () => statusMutation.mutate({ id: user._id, status: action.value }),
       }));
   }
 
@@ -766,8 +691,7 @@ export default function UsersPage() {
           count={record.orders?.length ?? 0}
           showZero
           style={{
-            backgroundColor:
-              (record.orders?.length ?? 0) > 0 ? PRIMARY_COLOR : '#d9d9d9',
+            backgroundColor: (record.orders?.length ?? 0) > 0 ? PRIMARY_COLOR : '#d9d9d9',
           }}
         />
       ),
@@ -811,23 +735,12 @@ export default function UsersPage() {
       render: (_: unknown, record: User) => (
         <Space size={4}>
           <Tooltip title="Edit">
-            <Button
-              icon={<EditOutlined />}
-              size="small"
-              onClick={() => handleOpenEdit(record)}
-            />
+            <Button icon={<EditOutlined />} size="small" onClick={() => handleOpenEdit(record)} />
           </Tooltip>
           <Tooltip title="View">
-            <Button
-              icon={<EyeOutlined />}
-              size="small"
-              onClick={() => handleOpenView(record)}
-            />
+            <Button icon={<EyeOutlined />} size="small" onClick={() => handleOpenView(record)} />
           </Tooltip>
-          <Dropdown
-            menu={{ items: buildStatusMenuItems(record) }}
-            trigger={['click']}
-          >
+          <Dropdown menu={{ items: buildStatusMenuItems(record) }} trigger={['click']}>
             <Button size="small" icon={<DownOutlined />}>
               Status
             </Button>
@@ -845,10 +758,7 @@ export default function UsersPage() {
                 icon={<DeleteOutlined />}
                 size="small"
                 danger
-                loading={
-                  deleteMutation.isPending &&
-                  deletingIdRef.current === record._id
-                }
+                loading={deleteMutation.isPending && deletingIdRef.current === record._id}
               />
             </Popconfirm>
           </Tooltip>
@@ -887,10 +797,7 @@ export default function UsersPage() {
       />
 
       {/* Filters */}
-      <Card
-        style={{ marginBottom: 16 }}
-        styles={{ body: { padding: '16px 24px' } }}
-      >
+      <Card style={{ marginBottom: 16 }} styles={{ body: { padding: '16px 24px' } }}>
         <Row gutter={[12, 12]} align="middle">
           <Col xs={24} sm={12} md={7} lg={6}>
             <Input
@@ -955,8 +862,7 @@ export default function UsersPage() {
             pageSize: PAGE_SIZE,
             total: pagination?.totalItems ?? 0,
             showSizeChanger: false,
-            showTotal: (total, range) =>
-              `${range[0]}–${range[1]} of ${total} users`,
+            showTotal: (total, range) => `${range[0]}–${range[1]} of ${total} users`,
             onChange: (newPage) => setPage(newPage),
           }}
           locale={{

@@ -44,26 +44,28 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Welcome',
-    `      <h2>Welcome to ${d.siteName}!</h2>
+  en: (d) =>
+    layout(
+      'Welcome',
+      `      <h2>Welcome to ${d.siteName}!</h2>
       <p>Hi <strong>${d.customerName}</strong>,</p>
       <p>Thank you for creating an account with us. We're excited to have you on board!</p>
       <p>Start exploring our wide range of products and enjoy exclusive offers for new members.</p>
       <a href="${d.loginUrl}" class="btn">Start Shopping</a>
       <p style="margin-top:24px;">If you did not create this account, please ignore this email.</p>`
-  ),
-  vi: (d) => layout(
-    'Chào mừng',
-    `      <h2>Chào mừng đến với ${d.siteName}!</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Chào mừng',
+      `      <h2>Chào mừng đến với ${d.siteName}!</h2>
       <p>Xin chào <strong>${d.customerName}</strong>,</p>
       <p>Cảm ơn bạn đã tạo tài khoản. Chúng tôi rất vui khi có bạn đồng hành!</p>
       <p>Khám phá hàng nghìn sản phẩm và tận hưởng ưu đãi dành riêng cho thành viên mới.</p>
       <a href="${d.loginUrl}" class="btn">Mua sắm ngay</a>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

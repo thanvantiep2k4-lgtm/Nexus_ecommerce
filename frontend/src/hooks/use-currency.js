@@ -29,12 +29,15 @@ const useCurrency = () => {
     });
   }, [currency, rate, config.locale, config.code, config.decimals]);
 
-  const formatPrice = useCallback((amountVnd) => {
-    const num = Number(amountVnd);
-    if (!Number.isFinite(num)) return '';
-    if (currency === 'VND' || !rate) return formatter.format(num);
-    return formatter.format(num / rate);
-  }, [currency, rate, formatter]);
+  const formatPrice = useCallback(
+    (amountVnd) => {
+      const num = Number(amountVnd);
+      if (!Number.isFinite(num)) return '';
+      if (currency === 'VND' || !rate) return formatter.format(num);
+      return formatter.format(num / rate);
+    },
+    [currency, rate, formatter]
+  );
 
   return {
     formatPrice,

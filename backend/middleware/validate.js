@@ -45,7 +45,12 @@ function validateQuery(schema) {
       convert: true,
     });
     if (error) {
-      return respond.error(res, 'INVALID_QUERY', error.details[0].message.replace(/['"]/g, ''), 400);
+      return respond.error(
+        res,
+        'INVALID_QUERY',
+        error.details[0].message.replace(/['"]/g, ''),
+        400
+      );
     }
     req.query = value;
     next();

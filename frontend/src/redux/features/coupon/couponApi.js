@@ -1,7 +1,7 @@
-import { apiSlice } from "@/redux/api/apiSlice";
+import { apiSlice } from '@/redux/api/apiSlice';
 
 export const authApi = apiSlice.injectEndpoints({
-  overrideExisting:true,
+  overrideExisting: true,
   endpoints: (builder) => ({
     // get offer coupon
     getOfferCoupons: builder.query({
@@ -11,7 +11,7 @@ export const authApi = apiSlice.injectEndpoints({
         if (Array.isArray(response?.data)) return response.data;
         return [];
       },
-      providesTags:['Coupon'],
+      providesTags: ['Coupon'],
       keepUnusedDataFor: 600,
     }),
   }),

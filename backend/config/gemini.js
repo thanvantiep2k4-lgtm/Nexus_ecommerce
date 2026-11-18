@@ -15,5 +15,5 @@ module.exports = {
   rateLimitPer5Min: parseInt(process.env.CHATBOT_RATE_LIMIT_PER_USER_PER_5MIN, 10) || 20,
   maxMessageChars: parseInt(process.env.CHATBOT_MAX_MESSAGE_CHARS, 10) || 2000,
   historyWindow: parseInt(process.env.CHATBOT_HISTORY_WINDOW, 10) || 12,
-  maxToolCallsPerTurn: parseInt(process.env.CHATBOT_MAX_TOOL_CALLS_PER_TURN, 10) || 3
+  maxToolCallsPerTurn: parseInt(process.env.CHATBOT_MAX_TOOL_CALLS_PER_TURN, 10) || 3,
 };

@@ -22,7 +22,7 @@
  * are available.
  */
 
-const SiteSetting = require('../model/SiteSetting');
+const SiteSetting = require('../models/SiteSetting');
 
 class PaymentService {
   /**

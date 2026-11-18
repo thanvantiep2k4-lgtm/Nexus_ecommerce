@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { add_cart_product, decrement, increment, setOrderQuantity } from "@/redux/features/cartSlice";
+import {
+  add_cart_product,
+  decrement,
+  increment,
+  setOrderQuantity,
+} from '@/redux/features/cartSlice';
 import { add_to_compare } from '@/redux/features/compareSlice';
 import { handleModalClose } from '@/redux/features/productModalSlice';
 import useWishlist from '@/hooks/use-wishlist';
@@ -21,8 +26,21 @@ const DetailsWrapper = ({
   const { t } = useTranslation();
   const { formatPrice } = useCurrency();
   const {
-    sku, img, title, imageURLs, category, description, discount, price,
-    status, reviews, tags, offerDate, vendor, brand, quantity
+    sku,
+    img,
+    title,
+    imageURLs,
+    category,
+    description,
+    discount,
+    price,
+    status,
+    reviews,
+    tags,
+    offerDate,
+    vendor,
+    brand,
+    quantity,
   } = productItem || {};
   const [ratingVal, setRatingVal] = useState(0);
   const dispatch = useDispatch();
@@ -42,14 +60,15 @@ const DetailsWrapper = ({
 
   const displayPrice = selectedVariant?.price ?? price;
   const displayStatus = selectedVariant
-    ? (selectedVariant.stock > 0 ? 'in-stock' : 'out-of-stock')
+    ? selectedVariant.stock > 0
+      ? 'in-stock'
+      : 'out-of-stock'
     : status;
   const isOutOfStock = displayStatus === 'out-of-stock';
   const displayStock = selectedVariant?.stock ?? quantity ?? '';
 
-  const discountedPrice = discount > 0
-    ? (Number(price) - (Number(price) * Number(discount)) / 100).toFixed(2)
-    : null;
+  const discountedPrice =
+    discount > 0 ? (Number(price) - (Number(price) * Number(discount)) / 100).toFixed(2) : null;
 
   const handleAddProduct = () => {
     const productToAdd = selectedVariant
@@ -64,7 +83,7 @@ const DetailsWrapper = ({
           },
           price: selectedVariant.price ?? price,
           img: selectedVariant.image || img,
-          quantity: displayStock // strictly set quantity to current active stock
+          quantity: displayStock, // strictly set quantity to current active stock
         }
       : { ...productItem, quantity: displayStock }; // ensure even non-variants cast current stock limit
     dispatch(add_cart_product(productToAdd));
@@ -85,12 +104,16 @@ const DetailsWrapper = ({
       {/* 1. Rating */}
       <div className="cl-pd__rating">
         {Array.from({ length: 5 }, (_, i) => (
-          <span key={i} className={i < Math.round(ratingVal) ? 'cl-star' : 'cl-star cl-star--empty'}>
+          <span
+            key={i}
+            className={i < Math.round(ratingVal) ? 'cl-star' : 'cl-star cl-star--empty'}
+          >
             &#9733;
           </span>
         ))}
         <span className="cl-pd__rating-text">
-          <strong>{ratingVal.toFixed(1)} Star Rating</strong> ({reviewCount.toLocaleString()} User feedback)
+          <strong>{ratingVal.toFixed(1)} Star Rating</strong> ({reviewCount.toLocaleString()} User
+          feedback)
         </span>
       </div>
 
@@ -104,7 +127,9 @@ const DetailsWrapper = ({
         </div>
         <div className="cl-pd__meta-item">
           Availability:{' '}
-          <span className={`cl-pd__meta-badge cl-pd__meta-badge--${isOutOfStock ? 'out-of-stock' : 'in-stock'}`}>
+          <span
+            className={`cl-pd__meta-badge cl-pd__meta-badge--${isOutOfStock ? 'out-of-stock' : 'in-stock'}`}
+          >
             {isOutOfStock ? 'Out of Stock' : `${displayStock} In Stock`}
           </span>
         </div>
@@ -123,9 +148,7 @@ const DetailsWrapper = ({
       {/* 4. Price */}
       <div className="cl-pd__price">
         {selectedVariant ? (
-          <span className="cl-pd__price-current">
-            {formatPrice(displayPrice)}
-          </span>
+          <span className="cl-pd__price-current">{formatPrice(displayPrice)}</span>
         ) : discountedPrice ? (
           <>
             <span className="cl-pd__price-current">{formatPrice(discountedPrice)}</span>
@@ -149,14 +172,11 @@ const DetailsWrapper = ({
 
       {/* 6. Variant selectors */}
       {variants && variants.length > 0 && (
-        <ProductVariantSelector
-          variants={variants}
-          onVariantSelected={onVariantSelected}
-        />
+        <ProductVariantSelector variants={variants} onVariantSelected={onVariantSelected} />
       )}
 
       {/* Legacy color variations (when no variants array) */}
-      {!selectedVariant && !variants?.length && imageURLs?.some(item => item?.color?.name) && (
+      {!selectedVariant && !variants?.length && imageURLs?.some((item) => item?.color?.name) && (
         <div className="cl-pd__color-swatches">
           <span className="cl-pd__color-swatches-label">Color</span>
           <div className="cl-pd__color-swatches-list">
@@ -178,13 +198,19 @@ const DetailsWrapper = ({
       {/* 7. Quantity + Buttons */}
       <div className="cl-pd__actions">
         <div className="cl-pd__quantity">
-          <button type="button" onClick={() => dispatch(decrement())}>&#8722;</button>
-          <input 
-            type="text" 
-            value={orderQuantity} 
-            onChange={(e) => dispatch(setOrderQuantity({ quantity: e.target.value, maxStock: displayStock }))}
+          <button type="button" onClick={() => dispatch(decrement())}>
+            &#8722;
+          </button>
+          <input
+            type="text"
+            value={orderQuantity}
+            onChange={(e) =>
+              dispatch(setOrderQuantity({ quantity: e.target.value, maxStock: displayStock }))
+            }
           />
-          <button type="button" onClick={() => dispatch(increment(displayStock))}>+</button>
+          <button type="button" onClick={() => dispatch(increment(displayStock))}>
+            +
+          </button>
         </div>
         <button
           type="button"
@@ -224,10 +250,18 @@ const DetailsWrapper = ({
         <div className="cl-pd__secondary-action">
           Share product:
           <div className="cl-pd__share-icons">
-            <a href="#" aria-label={t('aria.copyLink')}><i className="fa-regular fa-copy" /></a>
-            <a href="#" aria-label={t('aria.shareOnFacebook')}><i className="fa-brands fa-facebook-f" /></a>
-            <a href="#" aria-label={t('aria.shareOnTwitter')}><i className="fa-brands fa-twitter" /></a>
-            <a href="#" aria-label={t('aria.shareOnPinterest')}><i className="fa-brands fa-pinterest-p" /></a>
+            <a href="#" aria-label={t('aria.copyLink')}>
+              <i className="fa-regular fa-copy" />
+            </a>
+            <a href="#" aria-label={t('aria.shareOnFacebook')}>
+              <i className="fa-brands fa-facebook-f" />
+            </a>
+            <a href="#" aria-label={t('aria.shareOnTwitter')}>
+              <i className="fa-brands fa-twitter" />
+            </a>
+            <a href="#" aria-label={t('aria.shareOnPinterest')}>
+              <i className="fa-brands fa-pinterest-p" />
+            </a>
           </div>
         </div>
       </div>

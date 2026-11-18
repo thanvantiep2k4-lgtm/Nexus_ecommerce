@@ -25,7 +25,9 @@ const CliconMiniCart = ({ className = '' }) => {
 
   return (
     <>
-      <div className={`cl-minicart${cartMiniOpen ? ' cl-minicart--open' : ''}${className ? ` ${className}` : ''}`}>
+      <div
+        className={`cl-minicart${cartMiniOpen ? ' cl-minicart--open' : ''}${className ? ` ${className}` : ''}`}
+      >
         <div className="cl-minicart__inner">
           {/* Header */}
           <div className="cl-minicart__header">
@@ -50,7 +52,11 @@ const CliconMiniCart = ({ className = '' }) => {
           ) : (
             <div className="cl-minicart__empty">
               <p>{t('cart.emptyCart', 'Your cart is empty')}</p>
-              <Link href="/shop" onClick={handleClose} className="cl-btn cl-btn--primary cl-btn--md">
+              <Link
+                href="/shop"
+                onClick={handleClose}
+                className="cl-btn cl-btn--primary cl-btn--md"
+              >
                 {t('cart.goToShop', 'Go to Shop')}
               </Link>
             </div>
@@ -64,10 +70,18 @@ const CliconMiniCart = ({ className = '' }) => {
                 <span className="cl-minicart__subtotal-amount">{formatPrice(total)}</span>
               </div>
               <div className="cl-minicart__actions">
-                <Link href="/cart" onClick={handleClose} className="cl-btn cl-btn--outlined cl-btn--md cl-btn--full">
+                <Link
+                  href="/cart"
+                  onClick={handleClose}
+                  className="cl-btn cl-btn--outlined cl-btn--md cl-btn--full"
+                >
                   {t('cart.viewCart', 'View Cart')}
                 </Link>
-                <Link href="/checkout" onClick={handleClose} className="cl-btn cl-btn--primary cl-btn--md cl-btn--full">
+                <Link
+                  href="/checkout"
+                  onClick={handleClose}
+                  className="cl-btn cl-btn--primary cl-btn--md cl-btn--full"
+                >
                   {t('cart.checkout', 'Checkout')}
                 </Link>
               </div>

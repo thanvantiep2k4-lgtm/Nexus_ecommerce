@@ -10,7 +10,7 @@
 
 const express = require('express');
 const router = express.Router();
-const ctrl = require('../../../controller/v1/vendor.controller');
+const ctrl = require('../../../controllers/v1/vendor.controller');
 const { validate } = require('../../../middleware/validate');
 const v = require('../../../validations');
 
@@ -32,7 +32,7 @@ const v = require('../../../validations');
  *       401:
  *         description: Unauthorized
  */
-router.get('/profile',   ctrl.getProfile);
+router.get('/profile', ctrl.getProfile);
 
 /**
  * @swagger
@@ -76,10 +76,10 @@ router.patch('/profile', validate(v.updateVendorProfile), ctrl.updateProfile);
  *       422:
  *         description: Validation error
  */
-router.get('/products',        ctrl.getProducts);
-router.get('/products/:id',    ctrl.getProductById);
-router.post('/products',       validate(v.createProduct), ctrl.createProduct);
-router.patch('/products/:id',  validate(v.updateProduct), ctrl.updateProduct);
+router.get('/products', ctrl.getProducts);
+router.get('/products/:id', ctrl.getProductById);
+router.post('/products', validate(v.createProduct), ctrl.createProduct);
+router.patch('/products/:id', validate(v.updateProduct), ctrl.updateProduct);
 router.delete('/products/:id', ctrl.deleteProduct);
 
 // ---------------------------------------------------------------------------
@@ -98,9 +98,9 @@ router.delete('/products/:id', ctrl.deleteProduct);
  *       200:
  *         description: Order list
  */
-router.get('/orders',                                  ctrl.getOrders);
-router.get('/orders/:id',                              ctrl.getOrderById);
-router.patch('/orders/:orderId/items/:itemId/status',  ctrl.updateItemStatus);
+router.get('/orders', ctrl.getOrders);
+router.get('/orders/:id', ctrl.getOrderById);
+router.patch('/orders/:orderId/items/:itemId/status', ctrl.updateItemStatus);
 
 // ---------------------------------------------------------------------------
 // Analytics
@@ -118,8 +118,8 @@ router.patch('/orders/:orderId/items/:itemId/status',  ctrl.updateItemStatus);
  *       200:
  *         description: Analytics data
  */
-router.get('/analytics/summary',      ctrl.getSummary);
-router.get('/analytics/revenue',      ctrl.getRevenue);
+router.get('/analytics/summary', ctrl.getSummary);
+router.get('/analytics/revenue', ctrl.getRevenue);
 router.get('/analytics/top-products', ctrl.getTopProducts);
 
 // ---------------------------------------------------------------------------
@@ -151,7 +151,7 @@ router.get('/analytics/top-products', ctrl.getTopProducts);
  *         description: Validation error
  */
 router.post('/payouts/request', validate(v.requestPayout), ctrl.requestPayout);
-router.get('/payouts/:id',      ctrl.getPayoutById);
-router.get('/payouts',          ctrl.getPayouts);
+router.get('/payouts/:id', ctrl.getPayoutById);
+router.get('/payouts', ctrl.getPayouts);
 
 module.exports = router;

@@ -1,39 +1,31 @@
-import ErrorMsg from "@/components/common/error-msg";
-import SearchPrdLoader from "@/components/loader/search-prd-loader";
-import ProductItem from "@/components/clicon/deals/clicon-deal-product-card";
-import SEO from "@/components/seo";
-import HeaderClicon from "@/layout/headers/header-clicon";
-import FooterClicon from "@/layout/footers/footer-clicon";
-import ShopBreadcrumb from "@/components/breadcrumb/shop-breadcrumb";
-import Wrapper from "@/layout/wrapper";
-import { useSearchProductsQuery } from "@/redux/features/cmsApi";
-import { ClButton } from "@/components/clicon/ui";
-import { useMemo, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import ErrorMsg from '@/components/common/error-msg';
+import SearchPrdLoader from '@/components/loader/search-prd-loader';
+import ProductItem from '@/components/clicon/deals/clicon-deal-product-card';
+import SEO from '@/components/seo';
+import HeaderClicon from '@/layout/headers/header-clicon';
+import FooterClicon from '@/layout/footers/footer-clicon';
+import ShopBreadcrumb from '@/components/breadcrumb/shop-breadcrumb';
+import Wrapper from '@/layout/wrapper';
+import { useSearchProductsQuery } from '@/redux/features/cmsApi';
+import { ClButton } from '@/components/clicon/ui';
+import { useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PER_VIEW = 8;
 
 export default function SearchPage({ query }) {
   const { t } = useTranslation();
   const { searchText, productType } = query;
-  const trimmedQuery = (searchText || "").trim();
+  const trimmedQuery = (searchText || '').trim();
 
-  const {
-    data,
-    isFetching,
-    isLoading,
-    isError,
-  } = useSearchProductsQuery(
+  const { data, isFetching, isLoading, isError } = useSearchProductsQuery(
     { q: trimmedQuery, productType: productType || undefined, limit: 60 },
     { skip: !trimmedQuery }
   );
 
-  const allProducts = useMemo(
-    () => (Array.isArray(data?.data) ? data.data : []),
-    [data]
-  );
+  const allProducts = useMemo(() => (Array.isArray(data?.data) ? data.data : []), [data]);
 
-  const [shortValue, setShortValue] = useState("");
+  const [shortValue, setShortValue] = useState('');
   const [next, setNext] = useState(PER_VIEW);
 
   // Reset pagination whenever the query changes
@@ -46,15 +38,11 @@ export default function SearchPage({ query }) {
   };
 
   const sortedProducts = useMemo(() => {
-    if (shortValue === "low") {
-      return [...allProducts].sort(
-        (a, b) => Number(a.price) - Number(b.price)
-      );
+    if (shortValue === 'low') {
+      return [...allProducts].sort((a, b) => Number(a.price) - Number(b.price));
     }
-    if (shortValue === "high") {
-      return [...allProducts].sort(
-        (a, b) => Number(b.price) - Number(a.price)
-      );
+    if (shortValue === 'high') {
+      return [...allProducts].sort((a, b) => Number(b.price) - Number(a.price));
     }
     return allProducts;
   }, [allProducts, shortValue]);
@@ -69,27 +57,30 @@ export default function SearchPage({ query }) {
   if (!trimmedQuery) {
     content = (
       <div className="cl-search__no-match">
-        <h3>{t("search.promptEnter", "Type a search term to find products.")}</h3>
+        <h3>{t('search.promptEnter', 'Type a search term to find products.')}</h3>
       </div>
     );
   } else if (isLoading || isFetching) {
     content = (
       <>
-        <p className="visually-hidden">{t("search.loading", "Searching…")}</p>
+        <p className="visually-hidden">{t('search.loading', 'Searching…')}</p>
         <SearchPrdLoader loading={true} />
       </>
     );
   } else if (isError) {
     content = (
       <ErrorMsg
-        msg={t("search.error", "There was a problem with your search. Please try again.")}
+        msg={t('search.error', 'There was a problem with your search. Please try again.')}
       />
     );
   } else if (sortedProducts.length === 0) {
     content = (
       <div className="cl-search__no-match">
         <h3>
-          {t("search.noResults", { query: trimmedQuery, defaultValue: 'No results for "{{query}}"' })}
+          {t('search.noResults', {
+            query: trimmedQuery,
+            defaultValue: 'No results for "{{query}}"',
+          })}
         </h3>
       </div>
     );
@@ -101,27 +92,23 @@ export default function SearchPage({ query }) {
           <div className="cl-search__topbar">
             <div className="cl-search__results-count">
               <p>
-                {t("search.showingResults", "{{count}} of {{total}} results", {
+                {t('search.showingResults', '{{count}} of {{total}} results', {
                   count: Math.min(next, sortedProducts.length),
                   total: sortedProducts.length,
                 })}
               </p>
             </div>
             <div className="cl-search__sort">
-              <label htmlFor="cl-search-sort">{t("shop.sortBy", "Sort by")}:</label>
+              <label htmlFor="cl-search-sort">{t('shop.sortBy', 'Sort by')}:</label>
               <select
                 id="cl-search-sort"
                 className="cl-search__sort-select"
                 value={shortValue}
                 onChange={shortHandler}
               >
-                <option value="">{t("shop.mostPopular", "Most Popular")}</option>
-                <option value="low">
-                  {t("search.priceLowHigh", "Price low to high")}
-                </option>
-                <option value="high">
-                  {t("search.priceHighLow", "Price high to low")}
-                </option>
+                <option value="">{t('shop.mostPopular', 'Most Popular')}</option>
+                <option value="low">{t('search.priceLowHigh', 'Price low to high')}</option>
+                <option value="high">{t('search.priceHighLow', 'Price high to low')}</option>
               </select>
             </div>
           </div>
@@ -129,10 +116,7 @@ export default function SearchPage({ query }) {
           {/* Product grid */}
           <div className="row g-3">
             {sortedProducts.slice(0, next).map((item) => (
-              <div
-                key={item._id}
-                className="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6"
-              >
+              <div key={item._id} className="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
                 <ProductItem product={item} />
               </div>
             ))}
@@ -142,7 +126,7 @@ export default function SearchPage({ query }) {
           {next < sortedProducts.length && (
             <div className="cl-search__load-more">
               <ClButton variant="outlined" size="md" onClick={handleLoadMore}>
-                {t("search.loadMore", "Load More")}
+                {t('search.loadMore', 'Load More')}
               </ClButton>
             </div>
           )}
@@ -153,12 +137,12 @@ export default function SearchPage({ query }) {
 
   return (
     <Wrapper>
-      <SEO pageTitle={t("search.title", "Search")} />
+      <SEO pageTitle={t('search.title', 'Search')} />
       <HeaderClicon />
       <ShopBreadcrumb
         links={[
-          { label: t("breadcrumb.home", "Home"), href: "/" },
-          { label: t("search.title", "Search") },
+          { label: t('breadcrumb.home', 'Home'), href: '/' },
+          { label: t('search.title', 'Search') },
         ]}
       />
       {content}

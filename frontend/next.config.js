@@ -24,6 +24,6 @@ const nextConfig = {
       { source: '/order', destination: '/track-order', permanent: true },
     ];
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

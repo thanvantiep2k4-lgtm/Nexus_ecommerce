@@ -1,12 +1,12 @@
-import { apiSlice } from "@/redux/api/apiSlice";
-import { userLoggedIn } from "./authSlice";
+import { apiSlice } from '@/redux/api/apiSlice';
+import { userLoggedIn } from './authSlice';
 
 export const authApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     // get user profile from backend (syncs Keycloak user with MongoDB)
     getUserProfile: builder.query({
-      query: () => "/api/v1/user/profile",
+      query: () => '/api/v1/user/profile',
       async onQueryStarted(arg, { queryFulfilled, dispatch, getState }) {
         try {
           const result = await queryFulfilled;
@@ -34,7 +34,7 @@ export const authApi = apiSlice.injectEndpoints({
     updateProfile: builder.mutation({
       query: (data) => ({
         url: `/api/v1/user/profile`,
-        method: "PUT",
+        method: 'PUT',
         body: data,
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
@@ -54,7 +54,4 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {
-  useGetUserProfileQuery,
-  useUpdateProfileMutation,
-} = authApi;
+export const { useGetUserProfileQuery, useUpdateProfileMutation } = authApi;

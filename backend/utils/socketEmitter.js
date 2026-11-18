@@ -27,7 +27,7 @@ const emitEvent = (eventName, data = {}) => {
   if (global.io) {
     global.io.emit(eventName, {
       timestamp: new Date(),
-      ...data
+      ...data,
     });
     console.log(`[Socket.io] Event emitted: ${eventName}`);
   }
@@ -118,5 +118,5 @@ module.exports = {
   emitUserCreated,
   emitUserUpdated,
   emitUserDeleted,
-  emitUsersRefresh
+  emitUsersRefresh,
 };

@@ -1,4 +1,9 @@
-const { scrubPII, checkLength, checkRate, _resetRate } = require('../../services/chatbot/guardrails');
+const {
+  scrubPII,
+  checkLength,
+  checkRate,
+  _resetRate,
+} = require('../../services/chatbot/guardrails');
 
 describe('guardrails', () => {
   beforeEach(() => _resetRate());

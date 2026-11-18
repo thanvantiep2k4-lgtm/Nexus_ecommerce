@@ -40,10 +40,7 @@ const CliconFeaturesBar = () => {
         <div className="cl-features-bar__inner">
           {FEATURES.map((feature, index) => (
             <React.Fragment key={feature.id}>
-              <div
-                className="cl-feature-item"
-                data-testid={`clicon-feature-${feature.id}`}
-              >
+              <div className="cl-feature-item" data-testid={`clicon-feature-${feature.id}`}>
                 <div className="cl-feature-item__icon" aria-hidden="true">
                   <i className={feature.icon} />
                 </div>

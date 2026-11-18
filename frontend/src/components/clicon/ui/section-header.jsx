@@ -33,12 +33,8 @@ const SectionHeader = ({
     >
       <div className="cl-section-header__left">
         <h2 className="cl-section-header__title">{title}</h2>
-        {subtitle && (
-          <p className="cl-section-header__subtitle">{subtitle}</p>
-        )}
-        {rightContent && (
-          <div className="cl-section-header__extra">{rightContent}</div>
-        )}
+        {subtitle && <p className="cl-section-header__subtitle">{subtitle}</p>}
+        {rightContent && <div className="cl-section-header__extra">{rightContent}</div>}
       </div>
 
       {browseLink && (

@@ -1,8 +1,8 @@
-import Image from "next/image";
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
-import useCartInfo from "@/hooks/use-cart-info";
-import useCurrency from "@/hooks/use-currency";
+import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import useCartInfo from '@/hooks/use-cart-info';
+import useCurrency from '@/hooks/use-currency';
 
 const CheckoutOrderArea = ({ checkoutData }) => {
   const { t } = useTranslation();
@@ -37,7 +37,10 @@ const CheckoutOrderArea = ({ checkoutData }) => {
         {/* Product list */}
         <div className="cl-checkout__summary-items">
           {cart_products.map((item) => (
-            <div key={item._id + (item.selectedVariant?.sku || '')} className="cl-checkout__summary-item">
+            <div
+              key={item._id + (item.selectedVariant?.sku || '')}
+              className="cl-checkout__summary-item"
+            >
               <div className="cl-checkout__summary-thumb">
                 <Image
                   src={getThumb(item)}
@@ -52,12 +55,13 @@ const CheckoutOrderArea = ({ checkoutData }) => {
                 <p className="item-title">{item.title}</p>
                 {item.selectedVariant && (
                   <p className="item-variant">
-                    {[item.selectedVariant.color, item.selectedVariant.size].filter(Boolean).join(' / ')}
+                    {[item.selectedVariant.color, item.selectedVariant.size]
+                      .filter(Boolean)
+                      .join(' / ')}
                   </p>
                 )}
                 <p className="item-qty">
-                  {item.orderQuantity} x{" "}
-                  <span>{formatPrice(item.price)}</span>
+                  {item.orderQuantity} x <span>{formatPrice(item.price)}</span>
                 </p>
               </div>
             </div>
@@ -72,7 +76,7 @@ const CheckoutOrderArea = ({ checkoutData }) => {
 
         <div className="cl-checkout__summary-row">
           <span className="label">{t('checkout.shipping')}</span>
-          <span className={shippingCost === 0 ? "value--free" : "value"}>
+          <span className={shippingCost === 0 ? 'value--free' : 'value'}>
             {shippingCost === 0 ? t('checkout.free') : formatPrice(shippingCost)}
           </span>
         </div>
@@ -102,14 +106,17 @@ const CheckoutOrderArea = ({ checkoutData }) => {
         </div>
 
         {/* Place Order button */}
-        <button
-          type="submit"
-          disabled={isCheckoutSubmit}
-          className="cl-checkout__place-order-btn"
-        >
+        <button type="submit" disabled={isCheckoutSubmit} className="cl-checkout__place-order-btn">
           {isCheckoutSubmit ? t('checkout.processing') : t('checkout.placeOrder').toUpperCase()}
           {!isCheckoutSubmit && (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>

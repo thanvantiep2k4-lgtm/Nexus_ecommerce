@@ -28,7 +28,11 @@ const CouponCard = ({ coupon, copied, onCopy, t, formatPrice, locale }) => {
         {coupon.logo ? (
           <img src={coupon.logo} alt={coupon.title || coupon.couponCode} loading="lazy" />
         ) : (
-          <i className="fa-regular fa-ticket" aria-hidden="true" style={{ fontSize: 48, color: 'var(--cl-text-secondary)' }} />
+          <i
+            className="fa-regular fa-ticket"
+            aria-hidden="true"
+            style={{ fontSize: 48, color: 'var(--cl-text-secondary)' }}
+          />
         )}
       </div>
       <span className="cl-coupon-card__perforation" aria-hidden="true" />
@@ -43,7 +47,9 @@ const CouponCard = ({ coupon, copied, onCopy, t, formatPrice, locale }) => {
             {t('coupon.onOrdersOver', { amount: formatPrice(coupon.minimumAmount || 0) })}
           </p>
           {expiry && (
-            <p className={`cl-coupon-card__expires${isExpired ? ' cl-coupon-card__expires--expired' : ''}`}>
+            <p
+              className={`cl-coupon-card__expires${isExpired ? ' cl-coupon-card__expires--expired' : ''}`}
+            >
               <span className="label">{t('coupon.expires')}:</span> {expiry}
             </p>
           )}
@@ -99,14 +105,18 @@ const CouponArea = () => {
   } else if (isError) {
     content = (
       <div className="cl-coupons-empty">
-        <div className="icon"><i className="fa-regular fa-circle-exclamation" aria-hidden="true" /></div>
+        <div className="icon">
+          <i className="fa-regular fa-circle-exclamation" aria-hidden="true" />
+        </div>
         <h3 className="title">{t('error.generic')}</h3>
       </div>
     );
   } else if (!offerCoupons || offerCoupons.length === 0) {
     content = (
       <div className="cl-coupons-empty">
-        <div className="icon"><i className="fa-regular fa-ticket" aria-hidden="true" /></div>
+        <div className="icon">
+          <i className="fa-regular fa-ticket" aria-hidden="true" />
+        </div>
         <h3 className="title">{t('coupon.noCouponsFound')}</h3>
         <p className="text">{t('coupon.noCouponsHint')}</p>
       </div>

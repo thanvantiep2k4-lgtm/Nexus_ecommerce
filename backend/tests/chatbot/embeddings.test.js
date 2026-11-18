@@ -1,5 +1,5 @@
 jest.mock('../../services/chatbot/llmProvider', () => ({
-  embed: jest.fn().mockResolvedValue(new Array(768).fill(0.1))
+  embed: jest.fn().mockResolvedValue(new Array(768).fill(0.1)),
 }));
 const llm = require('../../services/chatbot/llmProvider');
 const emb = require('../../services/chatbot/embeddings');
@@ -12,7 +12,7 @@ describe('embeddings', () => {
       parent: 'Footwear',
       brand: { name: 'Nike' },
       tags: ['running', 'red'],
-      description: 'Comfortable running shoes'
+      description: 'Comfortable running shoes',
     };
     const v = await emb.embedProduct(product);
     expect(v).toHaveLength(768);

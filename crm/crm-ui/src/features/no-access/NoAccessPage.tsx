@@ -65,8 +65,7 @@ export default function NoAccessPage() {
                   }}
                 >
                   <Paragraph style={{ margin: 0, marginBottom: 4 }}>
-                    <Text type="secondary">Tài khoản:</Text>{' '}
-                    <Text strong>{me.name}</Text>
+                    <Text type="secondary">Tài khoản:</Text> <Text strong>{me.name}</Text>
                   </Paragraph>
                   {me.email && (
                     <Paragraph style={{ margin: 0, marginBottom: 8 }}>
@@ -99,11 +98,7 @@ export default function NoAccessPage() {
               </Paragraph>
 
               <Space>
-                <Button
-                  type="primary"
-                  icon={<LogoutOutlined />}
-                  onClick={handleLogout}
-                >
+                <Button type="primary" icon={<LogoutOutlined />} onClick={handleLogout}>
                   Đăng xuất
                 </Button>
                 <Button

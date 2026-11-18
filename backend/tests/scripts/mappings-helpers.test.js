@@ -2,9 +2,9 @@ const { usdToVnd, statusFromStock, slugify, sizesForType } = require('../../scri
 
 describe('mappings helpers', () => {
   it('converts USD to VND rounded to nearest 1000', () => {
-    expect(usdToVnd(9.99)).toBe(250000);    // 249750 -> 250000
+    expect(usdToVnd(9.99)).toBe(250000); // 249750 -> 250000
     expect(usdToVnd(129.99)).toBe(3250000); // 3249750 -> 3250000
-    expect(usdToVnd(0.79)).toBe(20000);     // 19750 -> 20000
+    expect(usdToVnd(0.79)).toBe(20000); // 19750 -> 20000
   });
   it('maps stock to hyphenated status enum', () => {
     expect(statusFromStock(0)).toBe('out-of-stock');

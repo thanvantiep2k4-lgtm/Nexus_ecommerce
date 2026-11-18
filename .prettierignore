@@ -1,0 +1,15 @@
+node_modules
+.next
+dist
+build
+coverage
+package-lock.json
+**/public/**
+**/seeds/data/**
+backend/scripts/data/**
+keycloak/themes/**
+docs/**
+*.md
+*.scss
+*.css
+*.min.js

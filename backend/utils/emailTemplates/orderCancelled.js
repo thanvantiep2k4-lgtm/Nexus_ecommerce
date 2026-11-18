@@ -44,9 +44,10 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Order Cancelled',
-    `      <h2>Order Cancellation Notice</h2>
+  en: (d) =>
+    layout(
+      'Order Cancelled',
+      `      <h2>Order Cancellation Notice</h2>
       <p>Hi <strong>${d.customerName}</strong>,</p>
       <p>We're sorry to inform you that your order <strong>#${d.orderNumber}</strong> has been cancelled.</p>
       <hr class="divider" />
@@ -54,20 +55,21 @@ const bodies = {
       <hr class="divider" />
       <p>If you paid for this order, a refund will be processed within 5–7 business days.</p>
       <p>If you have any questions, please contact our support team.</p>`
-  ),
-  vi: (d) => layout(
-    'Hủy đơn hàng',
-    `      <h2>Thông báo hủy đơn hàng</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Hủy đơn hàng',
+      `      <h2>Thông báo hủy đơn hàng</h2>
       <p>Xin chào <strong>${d.customerName}</strong>,</p>
       <p>Rất tiếc khi thông báo rằng đơn hàng <strong>#${d.orderNumber}</strong> của bạn đã bị hủy.</p>
       <hr class="divider" />
       <div class="info-row"><span class="label">Lý do hủy:</span> ${d.cancellationReason}</div>
       <hr class="divider" />
       <p>Nếu bạn đã thanh toán, tiền sẽ được hoàn lại trong vòng 5–7 ngày làm việc.</p>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

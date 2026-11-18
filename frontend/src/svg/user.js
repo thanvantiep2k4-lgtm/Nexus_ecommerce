@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const User = () => {
   return (
-    <svg
-      width="17"
-      height="21"
-      viewBox="0 0 17 21"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="17" height="21" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle
         cx="8.57894"
         cy="5.77803"

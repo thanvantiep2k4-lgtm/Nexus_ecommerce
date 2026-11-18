@@ -14,14 +14,18 @@ const COOKIE_NAME = 'display_currency';
 
 const currencySlice = createSlice({
   name: 'currency',
-  initialState: { currency: 'VND' },  // SSR-safe default
+  initialState: { currency: 'VND' }, // SSR-safe default
   reducers: {
     setCurrency: (state, action) => {
       const code = action.payload;
       if (CURRENCY_CONFIG[code]) {
         state.currency = code;
         if (typeof window !== 'undefined') {
-          try { Cookies.set(COOKIE_NAME, code, { expires: 365 }); } catch { /* ignore */ }
+          try {
+            Cookies.set(COOKIE_NAME, code, { expires: 365 });
+          } catch {
+            /* ignore */
+          }
         }
       }
     },
@@ -30,7 +34,9 @@ const currencySlice = createSlice({
         try {
           const saved = Cookies.get(COOKIE_NAME);
           if (saved && CURRENCY_CONFIG[saved]) state.currency = saved;
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
       }
     },
   },

@@ -218,8 +218,7 @@ function OrderDetailModal({
       title: 'Total',
       key: 'total',
       width: 100,
-      render: (_, item) =>
-        formatCurrency(item.price * (item.orderQuantity ?? item.quantity ?? 1)),
+      render: (_, item) => formatCurrency(item.price * (item.orderQuantity ?? item.quantity ?? 1)),
     },
   ];
 
@@ -231,17 +230,19 @@ function OrderDetailModal({
       width={860}
       footer={
         <Space>
-          {isShipper && ['pending', 'processing'].includes(effectiveStatus.toLowerCase()) && !order.shipper && (
-            <Button
-              type="primary"
-              icon={<CarryOutOutlined />}
-              onClick={() => onTakeOrder?.(order._id)}
-              loading={isTaking}
-              style={{ background: '#52c41a', borderColor: '#52c41a' }}
-            >
-              Take Order to Ship
-            </Button>
-          )}
+          {isShipper &&
+            ['pending', 'processing'].includes(effectiveStatus.toLowerCase()) &&
+            !order.shipper && (
+              <Button
+                type="primary"
+                icon={<CarryOutOutlined />}
+                onClick={() => onTakeOrder?.(order._id)}
+                loading={isTaking}
+                style={{ background: '#52c41a', borderColor: '#52c41a' }}
+              >
+                Take Order to Ship
+              </Button>
+            )}
           {!isShipper && (
             <Dropdown
               menu={{
@@ -367,25 +368,24 @@ function OrderDetailModal({
               carrier: order.carrier || undefined,
               trackingNumber: order.trackingNumber || '',
               trackingUrl: order.trackingUrl || '',
-              estimatedDelivery: order.estimatedDelivery ? dayjs(order.estimatedDelivery) : undefined,
+              estimatedDelivery: order.estimatedDelivery
+                ? dayjs(order.estimatedDelivery)
+                : undefined,
             }}
             onFinish={(values) => {
               const payload: Record<string, unknown> = {};
               if (values.carrier) payload.carrier = values.carrier;
               if (values.trackingNumber) payload.trackingNumber = values.trackingNumber;
               if (values.trackingUrl) payload.trackingUrl = values.trackingUrl;
-              if (values.estimatedDelivery) payload.estimatedDelivery = values.estimatedDelivery.toISOString();
+              if (values.estimatedDelivery)
+                payload.estimatedDelivery = values.estimatedDelivery.toISOString();
               onTrackingUpdate?.(order._id, payload);
             }}
           >
             <Row gutter={16}>
               <Col xs={24} md={12}>
                 <Form.Item label="Carrier" name="carrier">
-                  <Select
-                    placeholder="Select carrier"
-                    options={CARRIER_OPTIONS}
-                    allowClear
-                  />
+                  <Select placeholder="Select carrier" options={CARRIER_OPTIONS} allowClear />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
@@ -465,19 +465,27 @@ function OrderDetailModal({
                 <Text strong>Total:</Text>
                 <Text strong>{formatCurrency(total)}</Text>
               </Row>
-              {order.displayCurrency && order.displayCurrency !== 'VND' && (order.exchangeRate ?? 0) > 0 && (
-                <Typography.Text type="secondary" style={{ display: 'block', marginTop: 4 }}>
-                  Customer paid:{' '}
-                  {new Intl.NumberFormat(
-                    order.displayCurrency === 'USD' ? 'en-US' :
-                    order.displayCurrency === 'EUR' ? 'de-DE' :
-                    order.displayCurrency === 'GBP' ? 'en-GB' :
-                    order.displayCurrency === 'JPY' ? 'ja-JP' : 'en-US',
-                    { style: 'currency', currency: order.displayCurrency }
-                  ).format((order.totalAmount ?? 0) / (order.exchangeRate ?? 1))}{' '}
-                  ({order.displayCurrency} @ {(order.exchangeRate ?? 1).toLocaleString('vi-VN')} VND)
-                </Typography.Text>
-              )}
+              {order.displayCurrency &&
+                order.displayCurrency !== 'VND' &&
+                (order.exchangeRate ?? 0) > 0 && (
+                  <Typography.Text type="secondary" style={{ display: 'block', marginTop: 4 }}>
+                    Customer paid:{' '}
+                    {new Intl.NumberFormat(
+                      order.displayCurrency === 'USD'
+                        ? 'en-US'
+                        : order.displayCurrency === 'EUR'
+                          ? 'de-DE'
+                          : order.displayCurrency === 'GBP'
+                            ? 'en-GB'
+                            : order.displayCurrency === 'JPY'
+                              ? 'ja-JP'
+                              : 'en-US',
+                      { style: 'currency', currency: order.displayCurrency }
+                    ).format((order.totalAmount ?? 0) / (order.exchangeRate ?? 1))}{' '}
+                    ({order.displayCurrency} @ {(order.exchangeRate ?? 1).toLocaleString('vi-VN')}{' '}
+                    VND)
+                  </Typography.Text>
+                )}
             </Space>
           </Card>
         </Col>
@@ -521,8 +529,9 @@ export default function OrdersPage() {
 
   // Detect shipper-only role
   const roles = user?.roles || [];
-  const isShipper = roles.some(r => r.toLowerCase() === 'shipper') &&
-                    !roles.some(r => ['admin', 'manager', 'staff'].includes(r.toLowerCase()));
+  const isShipper =
+    roles.some((r) => r.toLowerCase() === 'shipper') &&
+    !roles.some((r) => ['admin', 'manager', 'staff'].includes(r.toLowerCase()));
 
   const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
   const [pendingSearch, setPendingSearch] = useState('');
@@ -543,7 +552,7 @@ export default function OrdersPage() {
       }, 400);
       setSearchTimer(timer);
     },
-    [searchTimer],
+    [searchTimer]
   );
 
   const handleFilterChange = (key: keyof Omit<Filters, 'search'>) => (value: string) => {
@@ -780,7 +789,10 @@ export default function OrdersPage() {
           {order.shippedAt && (
             <Text type="secondary" style={{ fontSize: 10 }}>
               {new Date(order.shippedAt).toLocaleString('en-US', {
-                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
               })}
             </Text>
           )}
@@ -814,7 +826,8 @@ export default function OrdersPage() {
       fixed: 'right',
       render: (_, order) => {
         const effectiveStatus = getEffectiveStatus(order).toLowerCase();
-        const canTake = isShipper && ['pending', 'processing'].includes(effectiveStatus) && !order.shipper;
+        const canTake =
+          isShipper && ['pending', 'processing'].includes(effectiveStatus) && !order.shipper;
 
         const statusMenuItems: MenuProps['items'] = [
           { key: 'pending', label: 'Pending' },
@@ -832,11 +845,7 @@ export default function OrdersPage() {
 
         return (
           <Space size="small">
-            <Button
-              size="small"
-              icon={<EyeOutlined />}
-              onClick={() => handleViewOrder(order)}
-            >
+            <Button size="small" icon={<EyeOutlined />} onClick={() => handleViewOrder(order)}>
               View
             </Button>
             {canTake ? (

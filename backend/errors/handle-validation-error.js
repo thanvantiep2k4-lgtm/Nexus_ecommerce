@@ -1,4 +1,3 @@
-
 const handleValidationError = (err) => {
   const errors = Object.values(err.errors).map((el) => {
     return {
@@ -9,7 +8,7 @@ const handleValidationError = (err) => {
   const statusCode = 400;
   return {
     statusCode,
-    message: "Validation Error",
+    message: 'Validation Error',
     errorMessages: errors,
   };
 };

@@ -39,10 +39,7 @@ export default function useChatSession() {
       setMessages((prev) => {
         const last = prev[prev.length - 1];
         if (last && last.role === 'assistant' && last.streaming) {
-          return [
-            ...prev.slice(0, -1),
-            { ...last, content: streamingTextRef.current },
-          ];
+          return [...prev.slice(0, -1), { ...last, content: streamingTextRef.current }];
         }
         return [
           ...prev,
@@ -125,9 +122,7 @@ export default function useChatSession() {
         }).unwrap();
       } catch (e) {
         setIsStreaming(false);
-        setError(
-          e?.data?.error?.code || e?.data?.message || 'errorGeneric'
-        );
+        setError(e?.data?.error?.code || e?.data?.message || 'errorGeneric');
       }
     },
     [sessionId, i18n.language, cart, sendMessageMutation, isStreaming]

@@ -53,7 +53,9 @@ const CheckoutCouponSuggestions = ({ onApplyCoupon }) => {
                     : ''}
                 </p>
                 {coupon.productType && (
-                  <p className="coupon-meta">{t('coupon.appliesTo')}: {coupon.productType}</p>
+                  <p className="coupon-meta">
+                    {t('coupon.appliesTo')}: {coupon.productType}
+                  </p>
                 )}
                 {coupon.endTime && (
                   <p className="coupon-meta">

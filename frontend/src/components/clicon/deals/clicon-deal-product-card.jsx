@@ -9,7 +9,18 @@ const CliconDealProductCard = ({ product }) => {
 
   if (!product) return null;
 
-  const { _id, title, img, imageURLs, price = 0, discount = 0, quantity = 0, reviews = [], featured, tags } = product;
+  const {
+    _id,
+    title,
+    img,
+    imageURLs,
+    price = 0,
+    discount = 0,
+    quantity = 0,
+    reviews = [],
+    featured,
+    tags,
+  } = product;
   const productImage = img || imageURLs?.[0]?.img || null;
 
   return (
@@ -33,7 +44,12 @@ const CliconDealProductCard = ({ product }) => {
 
         {/* Badge — top-left */}
         <div className="cl-deal-card__badge-wrap">
-          <ProductBadgeAuto discount={discount} quantity={quantity} featured={featured} tags={tags} />
+          <ProductBadgeAuto
+            discount={discount}
+            quantity={quantity}
+            featured={featured}
+            tags={tags}
+          />
         </div>
 
         {/* Hover action buttons — right side */}

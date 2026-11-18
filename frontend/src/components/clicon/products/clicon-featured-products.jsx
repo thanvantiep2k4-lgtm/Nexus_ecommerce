@@ -29,13 +29,11 @@ const CliconFeaturedProducts = () => {
     activeTab === 'all'
       ? allProducts
       : allProducts.filter((p) => {
-          const catName =
-            typeof p.category === 'object' ? p.category?.name : p.category;
+          const catName = typeof p.category === 'object' ? p.category?.name : p.category;
           const activeCategory = categories.find((c) => c._id === activeTab);
           return (
             catName === activeCategory?.parent ||
-            (Array.isArray(p.category?.children) &&
-              p.category.children.includes(activeTab))
+            (Array.isArray(p.category?.children) && p.category.children.includes(activeTab))
           );
         });
 
@@ -51,11 +49,7 @@ const CliconFeaturedProducts = () => {
   } else if (prdError) {
     gridContent = <ErrorMsg msg={t('error.products', 'Could not load products.')} />;
   } else if (filteredProducts.length === 0) {
-    gridContent = (
-      <p className="cl-featured__empty">
-        {t('products.empty', 'No products found.')}
-      </p>
-    );
+    gridContent = <p className="cl-featured__empty">{t('products.empty', 'No products found.')}</p>;
   } else {
     gridContent = (
       <div className="row g-3">
@@ -75,9 +69,7 @@ const CliconFeaturedProducts = () => {
           {/* Left promo column */}
           <div className="col-xl-3 d-none d-xl-flex">
             <div className="cl-featured__promo">
-              <div className="cl-featured__promo-tag">
-                {t('featured.badge', 'SPECIAL OFFER')}
-              </div>
+              <div className="cl-featured__promo-tag">{t('featured.badge', 'SPECIAL OFFER')}</div>
               <p className="cl-featured__promo-discount">
                 {t('featured.discount', '32% Discount')}
               </p>
@@ -93,7 +85,14 @@ const CliconFeaturedProducts = () => {
                 data-testid="cl-featured-shop-now"
               >
                 {t('featured.shop_now', 'SHOP NOW')}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </Link>
@@ -135,16 +134,21 @@ const CliconFeaturedProducts = () => {
               </div>
               <Link href="/shop" className="cl-featured__browse" data-testid="cl-featured-browse">
                 {t('featured.browse_all', 'Browse All Product')}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </Link>
             </div>
 
             {/* Product grid */}
-            <div className="cl-featured__grid">
-              {gridContent}
-            </div>
+            <div className="cl-featured__grid">{gridContent}</div>
           </div>
         </div>
       </div>

@@ -1,10 +1,10 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { useTranslation } from "react-i18next";
-import ErrorMsg from "@/components/common/error-msg";
-import { useGetActiveBrandsQuery } from "@/redux/features/brandApi";
-import { handleFilterSidebarClose } from "@/redux/features/shop-filter-slice";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import ErrorMsg from '@/components/common/error-msg';
+import { useGetActiveBrandsQuery } from '@/redux/features/brandApi';
+import { handleFilterSidebarClose } from '@/redux/features/shop-filter-slice';
 
 const ProductBrand = ({ setCurrPage }) => {
   const { t } = useTranslation();
@@ -14,7 +14,7 @@ const ProductBrand = ({ setCurrPage }) => {
 
   const handleBrandRoute = (brand) => {
     setCurrPage(1);
-    const slug = brand.toLowerCase().replace("&", "").split(" ").join("-");
+    const slug = brand.toLowerCase().replace('&', '').split(' ').join('-');
     router.push(`/shop?brand=${slug}`);
     dispatch(handleFilterSidebarClose());
   };
@@ -42,15 +42,11 @@ const ProductBrand = ({ setCurrPage }) => {
     content = (
       <div className="cl-shop__brand-grid">
         {sortedBrands.map((b) => {
-          const slug = b.name.toLowerCase().replace("&", "").split(" ").join("-");
+          const slug = b.name.toLowerCase().replace('&', '').split(' ').join('-');
           const isActive = activeBrand === slug;
           return (
             <label key={b._id} className="cl-shop__brand-item">
-              <input
-                type="checkbox"
-                checked={isActive}
-                onChange={() => handleBrandRoute(b.name)}
-              />
+              <input type="checkbox" checked={isActive} onChange={() => handleBrandRoute(b.name)} />
               {b.name}
             </label>
           );

@@ -7,21 +7,22 @@ const Joi = require('joi');
 // ---------------------------------------------------------------------------
 
 const seoSchema = Joi.object({
-  metaTitle:       Joi.string().max(70).allow('', null).optional(),
+  metaTitle: Joi.string().max(70).allow('', null).optional(),
   metaDescription: Joi.string().max(160).allow('', null).optional(),
-  metaKeywords:    Joi.alternatives().try(
-    Joi.array().items(Joi.string()),
-    Joi.string().allow('', null)
-  ).optional(),
+  metaKeywords: Joi.alternatives()
+    .try(Joi.array().items(Joi.string()), Joi.string().allow('', null))
+    .optional(),
   ogImage: Joi.string().allow('', null).optional(),
-}).options({ stripUnknown: true }).optional();
+})
+  .options({ stripUnknown: true })
+  .optional();
 
 const blockSchema = Joi.object({
   blockType: Joi.string().required(),
-  order:     Joi.number().integer().min(0).optional(),
-  visible:   Joi.boolean().optional(),
-  content:   Joi.object().unknown(true).optional(),
-  settings:  Joi.object().unknown(true).optional(),
+  order: Joi.number().integer().min(0).optional(),
+  visible: Joi.boolean().optional(),
+  content: Joi.object().unknown(true).optional(),
+  settings: Joi.object().unknown(true).optional(),
 }).options({ allowUnknown: true });
 
 // ---------------------------------------------------------------------------
@@ -29,12 +30,14 @@ const blockSchema = Joi.object({
 // ---------------------------------------------------------------------------
 
 const createPage = Joi.object({
-  title:  Joi.string().required(),
-  slug:   Joi.string().allow('', null).optional(),
-  type:   Joi.string().valid('home', 'landing', 'custom', 'blog', 'shop', 'about', 'contact').optional(),
+  title: Joi.string().required(),
+  slug: Joi.string().allow('', null).optional(),
+  type: Joi.string()
+    .valid('home', 'landing', 'custom', 'blog', 'shop', 'about', 'contact')
+    .optional(),
   status: Joi.string().valid('draft', 'published', 'archived').optional(),
   blocks: Joi.array().items(blockSchema).optional(),
-  seo:    seoSchema,
+  seo: seoSchema,
   layout: Joi.string().allow('', null).optional(),
 }).options({ stripUnknown: true });
 
@@ -45,19 +48,19 @@ const updatePage = createPage.fork(['title'], (f) => f.optional());
 // ---------------------------------------------------------------------------
 
 const menuItemSchema = Joi.object({
-  label:    Joi.string().required(),
-  url:      Joi.string().allow('', null).optional(),
-  target:   Joi.string().valid('_self', '_blank').optional(),
-  icon:     Joi.string().allow('', null).optional(),
-  order:    Joi.number().integer().min(0).optional(),
+  label: Joi.string().required(),
+  url: Joi.string().allow('', null).optional(),
+  target: Joi.string().valid('_self', '_blank').optional(),
+  icon: Joi.string().allow('', null).optional(),
+  order: Joi.number().integer().min(0).optional(),
   children: Joi.array().items(Joi.object().unknown(true)).optional(),
 }).options({ allowUnknown: true });
 
 const createMenu = Joi.object({
-  name:     Joi.string().required(),
+  name: Joi.string().required(),
   location: Joi.string().required(),
-  items:    Joi.array().items(menuItemSchema).optional(),
-  status:   Joi.string().valid('active', 'inactive').optional(),
+  items: Joi.array().items(menuItemSchema).optional(),
+  status: Joi.string().valid('active', 'inactive').optional(),
 }).options({ stripUnknown: true });
 
 const updateMenu = createMenu.fork(['name', 'location'], (f) => f.optional());
@@ -68,19 +71,19 @@ const updateMenu = createMenu.fork(['name', 'location'], (f) => f.optional());
 
 const schedulingSchema = Joi.object({
   startDate: Joi.alternatives().try(Joi.date(), Joi.string().allow('', null)).optional(),
-  endDate:   Joi.alternatives().try(Joi.date(), Joi.string().allow('', null)).optional(),
+  endDate: Joi.alternatives().try(Joi.date(), Joi.string().allow('', null)).optional(),
 }).options({ stripUnknown: true });
 
 const createBanner = Joi.object({
-  title:      Joi.string().required(),
-  type:       Joi.string().valid('hero', 'promo', 'sidebar', 'popup', 'announcement').optional(),
-  content:    Joi.object().unknown(true).optional(),
+  title: Joi.string().required(),
+  type: Joi.string().valid('hero', 'promo', 'sidebar', 'popup', 'announcement').optional(),
+  content: Joi.object().unknown(true).optional(),
   scheduling: schedulingSchema.optional(),
-  status:     Joi.string().valid('active', 'inactive', 'scheduled').optional(),
-  priority:   Joi.number().integer().min(0).optional(),
-  imageUrl:   Joi.string().allow('', null).optional(),
-  link:       Joi.string().allow('', null).optional(),
-  position:   Joi.string().allow('', null).optional(),
+  status: Joi.string().valid('active', 'inactive', 'scheduled').optional(),
+  priority: Joi.number().integer().min(0).optional(),
+  imageUrl: Joi.string().allow('', null).optional(),
+  link: Joi.string().allow('', null).optional(),
+  position: Joi.string().allow('', null).optional(),
 }).options({ stripUnknown: true });
 
 const updateBanner = createBanner.fork(['title'], (f) => f.optional());
@@ -90,18 +93,18 @@ const updateBanner = createBanner.fork(['title'], (f) => f.optional());
 // ---------------------------------------------------------------------------
 
 const createBlogPost = Joi.object({
-  title:    Joi.string().required(),
-  content:  Joi.string().allow('', null).optional(),
-  slug:     Joi.string().allow('', null).optional(),
-  excerpt:  Joi.string().max(500).allow('', null).optional(),
+  title: Joi.string().required(),
+  content: Joi.string().allow('', null).optional(),
+  slug: Joi.string().allow('', null).optional(),
+  excerpt: Joi.string().max(500).allow('', null).optional(),
   category: Joi.string().allow('', null).optional(),
-  tags:     Joi.array().items(Joi.string()).optional(),
-  status:   Joi.string().valid('draft', 'published', 'archived').optional(),
-  seo:      seoSchema,
+  tags: Joi.array().items(Joi.string()).optional(),
+  status: Joi.string().valid('draft', 'published', 'archived').optional(),
+  seo: seoSchema,
   featuredImage: Joi.string().allow('', null).optional(),
-  author:        Joi.string().allow('', null).optional(),
-  featured:      Joi.boolean().optional(),
-  publishedAt:   Joi.alternatives().try(Joi.date(), Joi.string().allow('', null)).optional(),
+  author: Joi.string().allow('', null).optional(),
+  featured: Joi.boolean().optional(),
+  publishedAt: Joi.alternatives().try(Joi.date(), Joi.string().allow('', null)).optional(),
 }).options({ stripUnknown: true });
 
 const updateBlogPost = createBlogPost.fork(['title'], (f) => f.optional());

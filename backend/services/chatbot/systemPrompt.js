@@ -55,7 +55,7 @@ function build(locale, context) {
     cartItemCount: (context.cartSnapshot || []).length,
     cartTotal: (context.cartSnapshot || []).reduce((s, i) => s + (i.price * i.qty || 0), 0),
     isAuthenticated: !!context.userId,
-    recentlyViewedCount: (context.recentlyViewedProducts || []).length
+    recentlyViewedCount: (context.recentlyViewedProducts || []).length,
   };
   return `${base}\n\nCONTEXT:\n${JSON.stringify(ctx, null, 2)}`;
 }

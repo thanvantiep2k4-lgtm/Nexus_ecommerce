@@ -18,14 +18,17 @@ export default function useSetCurrency() {
   const dispatch = useDispatch();
   const [patchPrefs] = usePatchUserPreferencesMutation();
 
-  return useCallback(async (code) => {
-    dispatch(setCurrencyAction(code));
-    if (!keycloak.authenticated) return;
-    try {
-      await patchPrefs({ currency: code }).unwrap();
-    } catch {
-      // Server sync failure is non-fatal — the Redux update already took
-      // effect, and the cookie persists the choice for this device.
-    }
-  }, [dispatch, patchPrefs]);
+  return useCallback(
+    async (code) => {
+      dispatch(setCurrencyAction(code));
+      if (!keycloak.authenticated) return;
+      try {
+        await patchPrefs({ currency: code }).unwrap();
+      } catch {
+        // Server sync failure is non-fatal — the Redux update already took
+        // effect, and the cookie persists the choice for this device.
+      }
+    },
+    [dispatch, patchPrefs]
+  );
 }

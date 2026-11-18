@@ -5,7 +5,9 @@ const catalog = require('../../scripts/data/dummyjson-catalog.json');
 it('selects the target count per vertical, no dupes, no excluded categories', () => {
   const sel = buildSelection(catalog);
   const byType = {};
-  sel.forEach((s) => { byType[s.productType] = (byType[s.productType] || 0) + 1; });
+  sel.forEach((s) => {
+    byType[s.productType] = (byType[s.productType] || 0) + 1;
+  });
   expect(byType).toEqual(TARGETS);
   const ids = sel.map((s) => s.id);
   expect(new Set(ids).size).toBe(ids.length);

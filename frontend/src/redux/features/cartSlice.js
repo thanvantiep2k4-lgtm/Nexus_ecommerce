@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
-import { notifyError, notifySuccess } from "@/utils/toast";
+import { createSlice } from '@reduxjs/toolkit';
+import { getLocalStorage, setLocalStorage } from '@/utils/localstorage';
+import { notifyError, notifySuccess } from '@/utils/toast';
 
 const initialState = {
   cart_products: [],
   orderQuantity: 1,
-  cartMiniOpen:false,
+  cartMiniOpen: false,
 };
 
 export const cartSlice = createSlice({
-  name: "cart",
+  name: 'cart',
   initialState,
   reducers: {
     add_cart_product: (state, { payload }) => {
@@ -44,14 +44,14 @@ export const cartSlice = createSlice({
                   : item.orderQuantity + 1;
               notifySuccess(`${currentOrderQty} ${item.title} added to cart`);
             } else {
-              notifyError("No more quantity available for this product!");
+              notifyError('No more quantity available for this product!');
               state.orderQuantity = 1;
             }
           }
           return { ...item };
         });
       }
-      setLocalStorage("cart_products", state.cart_products);
+      setLocalStorage('cart_products', state.cart_products);
     },
     increment: (state, { payload }) => {
       // payload represents the absolute global stock capacity for the item being viewed
@@ -68,9 +68,7 @@ export const cartSlice = createSlice({
     },
     decrement: (state, { payload }) => {
       state.orderQuantity =
-        state.orderQuantity > 1
-          ? state.orderQuantity - 1
-          : (state.orderQuantity = 1);
+        state.orderQuantity > 1 ? state.orderQuantity - 1 : (state.orderQuantity = 1);
     },
     quantityDecrement: (state, { payload }) => {
       state.cart_products.map((item) => {
@@ -81,12 +79,12 @@ export const cartSlice = createSlice({
         }
         return { ...item };
       });
-      setLocalStorage("cart_products", state.cart_products);
+      setLocalStorage('cart_products', state.cart_products);
     },
     setOrderQuantity: (state, { payload }) => {
       const { quantity, maxStock } = payload;
-      if (quantity === "" || isNaN(quantity)) {
-        state.orderQuantity = "";
+      if (quantity === '' || isNaN(quantity)) {
+        state.orderQuantity = '';
       } else {
         const numQty = Number(quantity);
         if (typeof maxStock === 'number' && numQty > maxStock) {
@@ -101,8 +99,8 @@ export const cartSlice = createSlice({
       const { _id, quantity, maxStock, sku = '' } = payload;
       state.cart_products = state.cart_products.map((item) => {
         if (item._id === _id && (item.selectedVariant?.sku || '') === sku) {
-          if (quantity === "" || isNaN(quantity)) {
-            item.orderQuantity = "";
+          if (quantity === '' || isNaN(quantity)) {
+            item.orderQuantity = '';
           } else {
             const numQty = Number(quantity);
             if (typeof maxStock === 'number' && numQty > maxStock) {
@@ -115,34 +113,34 @@ export const cartSlice = createSlice({
         }
         return item;
       });
-      setLocalStorage("cart_products", state.cart_products);
+      setLocalStorage('cart_products', state.cart_products);
     },
     remove_product: (state, { payload }) => {
       const sku = payload.sku || '';
       state.cart_products = state.cart_products.filter(
         (item) => !(item._id === payload.id && (item.selectedVariant?.sku || '') === sku)
       );
-      setLocalStorage("cart_products", state.cart_products);
+      setLocalStorage('cart_products', state.cart_products);
       notifyError(`${payload.title} Remove from cart`);
     },
     get_cart_products: (state, action) => {
-      state.cart_products = getLocalStorage("cart_products");
+      state.cart_products = getLocalStorage('cart_products');
     },
     initialOrderQuantity: (state, { payload }) => {
       state.orderQuantity = 1;
     },
-    clearCart:(state) => {
+    clearCart: (state) => {
       const isClearCart = window.confirm('Are you sure you want to remove all items ?');
-      if(isClearCart){
-        state.cart_products = []
+      if (isClearCart) {
+        state.cart_products = [];
       }
-      setLocalStorage("cart_products", state.cart_products);
+      setLocalStorage('cart_products', state.cart_products);
     },
-    openCartMini:(state,{payload}) => {
-      state.cartMiniOpen = true
+    openCartMini: (state, { payload }) => {
+      state.cartMiniOpen = true;
     },
-    closeCartMini:(state,{payload}) => {
-      state.cartMiniOpen = false
+    closeCartMini: (state, { payload }) => {
+      state.cartMiniOpen = false;
     },
   },
 });

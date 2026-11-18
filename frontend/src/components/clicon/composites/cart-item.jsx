@@ -3,7 +3,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { add_cart_product, quantityDecrement, remove_product, setCartItemQuantity } from '@/redux/features/cartSlice';
+import {
+  add_cart_product,
+  quantityDecrement,
+  remove_product,
+  setCartItemQuantity,
+} from '@/redux/features/cartSlice';
 import { PriceDisplay, QuantitySelector } from '@/components/clicon/ui';
 import useCurrency from '@/hooks/use-currency';
 
@@ -22,7 +27,16 @@ const CliconCartItem = ({ item, variant = 'row', className = '' }) => {
 
   if (!item) return null;
 
-  const { _id, img, title, price = 0, discount = 0, orderQuantity = 1, quantity: maxStock, selectedVariant } = item;
+  const {
+    _id,
+    img,
+    title,
+    price = 0,
+    discount = 0,
+    orderQuantity = 1,
+    quantity: maxStock,
+    selectedVariant,
+  } = item;
   const unitPrice = discount > 0 ? Number((price - (price * discount) / 100).toFixed(2)) : price;
   const lineTotal = unitPrice * orderQuantity;
   const variantLabel = selectedVariant
@@ -74,7 +88,14 @@ const CliconCartItem = ({ item, variant = 'row', className = '' }) => {
       <td className="cl-cart-item__img-cell">
         <Link href={`/product-details/${_id}`}>
           {img ? (
-            <Image src={img} alt={title || 'product'} width={80} height={80} style={{ objectFit: 'contain' }} unoptimized />
+            <Image
+              src={img}
+              alt={title || 'product'}
+              width={80}
+              height={80}
+              style={{ objectFit: 'contain' }}
+              unoptimized
+            />
           ) : (
             <div className="cl-cart-item__no-img" style={{ width: 80, height: 80 }} />
           )}
@@ -82,9 +103,7 @@ const CliconCartItem = ({ item, variant = 'row', className = '' }) => {
       </td>
       <td className="cl-cart-item__title-cell">
         <Link href={`/product-details/${_id}`}>{title}</Link>
-        {variantLabel && (
-          <span className="cl-cart-item__variant">{variantLabel}</span>
-        )}
+        {variantLabel && <span className="cl-cart-item__variant">{variantLabel}</span>}
       </td>
       <td className="cl-cart-item__price-cell">
         <span>{formatPrice(unitPrice)}</span>
@@ -94,7 +113,16 @@ const CliconCartItem = ({ item, variant = 'row', className = '' }) => {
           value={orderQuantity}
           min={1}
           max={maxStock || 99}
-          onChange={(qty) => dispatch(setCartItemQuantity({ _id, quantity: qty, maxStock: maxStock || 99, sku: selectedVariant?.sku }))}
+          onChange={(qty) =>
+            dispatch(
+              setCartItemQuantity({
+                _id,
+                quantity: qty,
+                maxStock: maxStock || 99,
+                sku: selectedVariant?.sku,
+              })
+            )
+          }
         />
       </td>
       <td className="cl-cart-item__total-cell">

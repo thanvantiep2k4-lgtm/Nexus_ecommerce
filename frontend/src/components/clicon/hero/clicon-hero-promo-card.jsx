@@ -34,10 +34,16 @@ const CliconHeroPromoCard = ({
       data-testid="clicon-hero-promo-card"
     >
       <div className="cl-hero-promo-card__body">
-        <p className="cl-hero-promo-card__subtitle" style={textColor ? { color: textColor } : undefined}>
+        <p
+          className="cl-hero-promo-card__subtitle"
+          style={textColor ? { color: textColor } : undefined}
+        >
           {subtitle}
         </p>
-        <h3 className="cl-hero-promo-card__title" style={textColor ? { color: textColor } : undefined}>
+        <h3
+          className="cl-hero-promo-card__title"
+          style={textColor ? { color: textColor } : undefined}
+        >
           {title}
         </h3>
         {price != null && (

@@ -1,18 +1,21 @@
-import React, { useState, useCallback } from "react";
-import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
+import React, { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 const ShopTopLeft = ({ handleFilterChange }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(router.query.search || '');
 
-  const handleSearch = useCallback((e) => {
-    e.preventDefault();
-    if (handleFilterChange) {
-      handleFilterChange({ search: searchValue || undefined, page: 1 });
-    }
-  }, [searchValue, handleFilterChange]);
+  const handleSearch = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (handleFilterChange) {
+        handleFilterChange({ search: searchValue || undefined, page: 1 });
+      }
+    },
+    [searchValue, handleFilterChange]
+  );
 
   return (
     <div className="cl-shop__topbar-search">

@@ -12,7 +12,9 @@ export const userPreferencesApi = createApi({
           await keycloak.updateToken(30);
           headers.set('Authorization', `Bearer ${keycloak.token}`);
         }
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       return headers;
     },
   }),

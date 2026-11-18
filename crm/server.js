@@ -47,16 +47,19 @@ app.use(
   })
 );
 
-const keycloak = new Keycloak({ store: memoryStore }, {
-  realm: process.env.KEYCLOAK_REALM || 'shofy',
-  'auth-server-url': process.env.KEYCLOAK_BASE_URL || 'http://localhost:8180',
-  resource: process.env.KEYCLOAK_CRM_CLIENT_ID || 'shofy-crm',
-  'ssl-required': 'none',
-  'confidential-port': 0,
-  credentials: {
-    secret: process.env.KEYCLOAK_CRM_SECRET || '',
-  },
-});
+const keycloak = new Keycloak(
+  { store: memoryStore },
+  {
+    realm: process.env.KEYCLOAK_REALM || 'shofy',
+    'auth-server-url': process.env.KEYCLOAK_BASE_URL || 'http://localhost:8180',
+    resource: process.env.KEYCLOAK_CRM_CLIENT_ID || 'shofy-crm',
+    'ssl-required': 'none',
+    'confidential-port': 0,
+    credentials: {
+      secret: process.env.KEYCLOAK_CRM_SECRET || '',
+    },
+  }
+);
 
 // Disable keycloak-connect's built-in logout handler — it builds the
 // post_logout_redirect_uri without the /admin prefix, so after Keycloak signs
@@ -130,7 +133,11 @@ const crmProtect = (req, res, next) => {
 const apiProtect = (req, res, next) => {
   const originalRedirect = res.redirect.bind(res);
   res.redirect = (url) => {
-    if (req.path.startsWith('/api/') || req.xhr || req.headers.accept?.includes('application/json')) {
+    if (
+      req.path.startsWith('/api/') ||
+      req.xhr ||
+      req.headers.accept?.includes('application/json')
+    ) {
       return res.status(401).json({ success: false, message: 'Unauthorized — please login' });
     }
     return originalRedirect(url);
@@ -210,14 +217,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : {}
+    error: process.env.NODE_ENV === 'development' ? err.message : {},
   });
 });
 
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: 'Route not found',
   });
 });
 

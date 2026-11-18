@@ -44,25 +44,27 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Order Delivered',
-    `      <h2>Your order has been delivered!</h2>
+  en: (d) =>
+    layout(
+      'Order Delivered',
+      `      <h2>Your order has been delivered!</h2>
       <p>Hi <strong>${d.customerName}</strong>,</p>
       <p>We're happy to let you know that your order <strong>#${d.orderNumber}</strong> was delivered on <strong>${d.deliveredDate}</strong>.</p>
       <p>We hope you love your purchase! If anything is not right, please reach out to our support team within 30 days.</p>
       <p>Thank you for shopping with Shofy!</p>`
-  ),
-  vi: (d) => layout(
-    'Đơn hàng đã giao thành công',
-    `      <h2>Đơn hàng đã được giao thành công!</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Đơn hàng đã giao thành công',
+      `      <h2>Đơn hàng đã được giao thành công!</h2>
       <p>Xin chào <strong>${d.customerName}</strong>,</p>
       <p>Đơn hàng <strong>#${d.orderNumber}</strong> của bạn đã được giao vào ngày <strong>${d.deliveredDate}</strong>.</p>
       <p>Chúc bạn hài lòng với sản phẩm! Nếu có vấn đề, vui lòng liên hệ bộ phận hỗ trợ trong vòng 30 ngày.</p>
       <p>Cảm ơn bạn đã mua sắm tại Shofy!</p>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

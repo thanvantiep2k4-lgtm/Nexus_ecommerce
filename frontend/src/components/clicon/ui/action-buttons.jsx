@@ -33,8 +33,7 @@ const ActionButtons = ({
 
   if (!product) return null;
 
-  const isOutOfStock =
-    product.quantity === 0 || product.status === 'out-of-stock';
+  const isOutOfStock = product.quantity === 0 || product.status === 'out-of-stock';
 
   const handleWishlist = (e) => {
     e.preventDefault();

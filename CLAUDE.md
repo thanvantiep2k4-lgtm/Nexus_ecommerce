@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-> **ĐỌC [PROJECT_PLAN.md](PROJECT_PLAN.md) TRƯỚC KHI LÀM BẤT CỨ VIỆC GÌ.** Đó là kế hoạch thống nhất của cả nhóm: kiến trúc, chuẩn port/env, phân công từng người, quy ước Git. Mọi thay đổi phải bám theo file đó.
+> **ĐỌC [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) TRƯỚC KHI LÀM BẤT CỨ VIỆC GÌ.** Đó là kế hoạch thống nhất của cả nhóm: kiến trúc, chuẩn port/env, phân công từng người, quy ước Git. Mọi thay đổi phải bám theo file đó.
 
 ## Tổng quan
 
@@ -35,7 +35,7 @@ cd crm/crm-ui && npx tsc --noEmit
 - **i18n:** mọi chữ hiển thị trên storefront dùng `t("namespace.key")`, thêm key vào cả `frontend/src/locales/en/common.json` và `vi/common.json`.
 - **Đa tiền tệ:** không hardcode ký hiệu tiền. Dùng bộ format tiền tệ của dự án.
 - Không commit file `.env`. Chỉ sửa `.env.example` khi thêm biến mới.
-- Port và biến môi trường theo bảng trong PROJECT_PLAN.md. Không tự đổi.
+- Port và biến môi trường theo bảng trong docs/PROJECT_PLAN.md. Không tự đổi.
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence

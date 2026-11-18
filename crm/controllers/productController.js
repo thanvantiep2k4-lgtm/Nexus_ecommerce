@@ -73,7 +73,10 @@ exports.listCurrencyAudit = async (req, res) => {
 
 exports.normalizeCurrencyOne = async (req, res) => {
   try {
-    const result = await req.api.post(`/api/v1/admin/products/${req.params.id}/normalize-currency`, req.body);
+    const result = await req.api.post(
+      `/api/v1/admin/products/${req.params.id}/normalize-currency`,
+      req.body
+    );
     res.json(result);
   } catch (error) {
     handleError(res, error);

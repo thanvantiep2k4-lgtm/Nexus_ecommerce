@@ -62,7 +62,6 @@ const GATEWAYS = [
   },
 ];
 
-
 export default function PaymentSettingsPage() {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
@@ -135,7 +134,11 @@ export default function PaymentSettingsPage() {
       <Form form={form} layout="vertical">
         {/* Gateways */}
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Payment Gateways</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Payment Gateways
+            </Title>
+          }
           size="small"
           style={{ marginBottom: 16 }}
         >
@@ -143,11 +146,7 @@ export default function PaymentSettingsPage() {
             <Checkbox.Group style={{ width: '100%' }}>
               <Space direction="vertical" style={{ width: '100%' }}>
                 {GATEWAYS.map((gw) => (
-                  <Card
-                    key={gw.value}
-                    size="small"
-                    style={{ background: '#fafafa' }}
-                  >
+                  <Card key={gw.value} size="small" style={{ background: '#fafafa' }}>
                     <div
                       style={{
                         display: 'flex',
@@ -176,18 +175,13 @@ export default function PaymentSettingsPage() {
 
         <Form.Item
           noStyle
-          shouldUpdate={(prev, curr) =>
-            prev.enabledGateways !== curr.enabledGateways
-          }
+          shouldUpdate={(prev, curr) => prev.enabledGateways !== curr.enabledGateways}
         >
           {({ getFieldValue }) => {
             const gateways: string[] = getFieldValue('enabledGateways') ?? [];
             if (!gateways.includes('bank-transfer')) return null;
             return (
-              <Card
-                title="Bank Transfer Details"
-                style={{ marginTop: 16 }}
-              >
+              <Card title="Bank Transfer Details" style={{ marginTop: 16 }}>
                 <Alert
                   type="info"
                   showIcon
@@ -220,10 +214,7 @@ export default function PaymentSettingsPage() {
                   />
                 </Form.Item>
 
-                <Form.Item
-                  name={['bankTransfer', 'vietqrBankBin']}
-                  hidden
-                >
+                <Form.Item name={['bankTransfer', 'vietqrBankBin']} hidden>
                   <Input />
                 </Form.Item>
 
@@ -243,10 +234,7 @@ export default function PaymentSettingsPage() {
                   <Input placeholder="e.g. SHOFY CO., LTD" />
                 </Form.Item>
 
-                <Form.Item
-                  label="Branch (optional)"
-                  name={['bankTransfer', 'branch']}
-                >
+                <Form.Item label="Branch (optional)" name={['bankTransfer', 'branch']}>
                   <Input placeholder="e.g. Hanoi Branch" />
                 </Form.Item>
 
@@ -269,7 +257,6 @@ export default function PaymentSettingsPage() {
             );
           }}
         </Form.Item>
-
       </Form>
     </div>
   );

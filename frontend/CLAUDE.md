@@ -28,7 +28,7 @@ UI verification: see playwright.config.js. Always test in a real browser before 
 - **Framework**: Next.js 13 (Pages Router, `src/pages/`)
 - **State**: Redux Toolkit + RTK Query (`src/redux/`)
 - **Auth**: JWT in `userInfo` cookie (legacy) + Keycloak OIDC (current). NEVER touch the Keycloak flow without approval
-- **UI**: Bootstrap 5 + custom SCSS (`public/assets/scss/`). Some pages migrated to Clicon design system (see `docs/Clicon-design-system.md` + memory `project_clicon_redesign`)
+- **UI**: Bootstrap 5 + custom SCSS (`public/assets/scss/`). Some pages migrated to Clicon design system (see `docs/design/clicon-design-system.md` + memory `project_clicon_redesign`)
 - **i18n**: i18next via `next-i18next` (EN/VI). All user-facing text MUST use `t('namespace.key')`
 - **Realtime**: socket.io-client in `src/lib/socketClient.js` — invalidates RTK Query tags on backend events
 - **Payments**: Stripe Elements (`@stripe/react-stripe-js`), plus COD / bank-transfer / VNPay / MoMo selector

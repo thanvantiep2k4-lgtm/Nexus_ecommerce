@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const ChatSession = require('../../model/ChatSession');
+const ChatSession = require('../../models/ChatSession');
 const store = require('../../services/chatbot/sessionStore');
 
 let mongo;
@@ -14,7 +14,9 @@ describe('sessionStore', () => {
     await mongoose.disconnect();
     await mongo.stop();
   });
-  beforeEach(async () => { await ChatSession.deleteMany({}); });
+  beforeEach(async () => {
+    await ChatSession.deleteMany({});
+  });
 
   it('creates a session on first message', async () => {
     const s = await store.getOrCreate({ sessionId: 'new', locale: 'en' });

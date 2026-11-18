@@ -13,7 +13,11 @@ export const VN_BANKS: VnBank[] = [
   { bin: '970422', shortName: 'MB Bank', fullName: 'Ngân hàng TMCP Quân Đội' },
   { bin: '970418', shortName: 'BIDV', fullName: 'Ngân hàng TMCP Đầu tư và Phát triển Việt Nam' },
   { bin: '970415', shortName: 'Vietinbank', fullName: 'Ngân hàng TMCP Công Thương Việt Nam' },
-  { bin: '970405', shortName: 'Agribank', fullName: 'Ngân hàng Nông nghiệp và Phát triển Nông thôn' },
+  {
+    bin: '970405',
+    shortName: 'Agribank',
+    fullName: 'Ngân hàng Nông nghiệp và Phát triển Nông thôn',
+  },
   { bin: '970432', shortName: 'VPBank', fullName: 'Ngân hàng TMCP Việt Nam Thịnh Vượng' },
   { bin: '970416', shortName: 'ACB', fullName: 'Ngân hàng TMCP Á Châu' },
   { bin: '970423', shortName: 'TPBank', fullName: 'Ngân hàng TMCP Tiên Phong' },

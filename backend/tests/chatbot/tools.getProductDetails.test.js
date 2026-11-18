@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const Product = require('../../model/Products');
+const Product = require('../../models/Products');
 const factory = require('../../services/chatbot/tools/getProductDetails');
 
 let mongo;
@@ -27,7 +27,9 @@ describe('getProductDetails tool', () => {
   beforeAll(async () => {
     mongo = await MongoMemoryServer.create();
     await mongoose.connect(mongo.getUri());
-    factory((t) => { tool = t; });
+    factory((t) => {
+      tool = t;
+    });
   });
   afterAll(async () => {
     await mongoose.disconnect();

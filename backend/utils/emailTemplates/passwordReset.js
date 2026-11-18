@@ -44,27 +44,29 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Password Reset',
-    `      <h2>Password Reset Request</h2>
+  en: (d) =>
+    layout(
+      'Password Reset',
+      `      <h2>Password Reset Request</h2>
       <p>Hi <strong>${d.customerName}</strong>,</p>
       <p>We received a request to reset your password. Click the button below to choose a new password.</p>
       <a href="${d.resetLink}" class="btn">Reset Password</a>
       <p style="margin-top:24px;">This link expires in <strong>${d.expiryTime}</strong>.</p>
       <p>If you did not request a password reset, you can safely ignore this email — your password will not change.</p>`
-  ),
-  vi: (d) => layout(
-    'Đặt lại mật khẩu',
-    `      <h2>Yêu cầu đặt lại mật khẩu</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Đặt lại mật khẩu',
+      `      <h2>Yêu cầu đặt lại mật khẩu</h2>
       <p>Xin chào <strong>${d.customerName}</strong>,</p>
       <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu của bạn. Nhấn vào nút bên dưới để chọn mật khẩu mới.</p>
       <a href="${d.resetLink}" class="btn">Đặt lại mật khẩu</a>
       <p style="margin-top:24px;">Liên kết này hết hạn sau <strong>${d.expiryTime}</strong>.</p>
       <p>Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.</p>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

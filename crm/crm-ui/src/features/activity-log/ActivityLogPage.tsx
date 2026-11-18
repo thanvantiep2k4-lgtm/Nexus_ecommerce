@@ -14,10 +14,7 @@ import {
   Empty,
 } from 'antd';
 import type { TableProps } from 'antd';
-import {
-  DownloadOutlined,
-  HistoryOutlined,
-} from '@ant-design/icons';
+import { DownloadOutlined, HistoryOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import type { RangePickerProps } from 'antd/es/date-picker';
@@ -67,27 +64,43 @@ const RESOURCE_TYPE_OPTIONS = [
 
 function actionColor(action: string): string {
   switch (action) {
-    case 'create': return 'green';
-    case 'update': return 'blue';
-    case 'delete': return 'red';
-    case 'status-change': return 'orange';
-    case 'approve': return 'cyan';
-    case 'reject': return 'volcano';
-    case 'login': return 'purple';
-    case 'logout': return 'default';
-    default: return 'geekblue';
+    case 'create':
+      return 'green';
+    case 'update':
+      return 'blue';
+    case 'delete':
+      return 'red';
+    case 'status-change':
+      return 'orange';
+    case 'approve':
+      return 'cyan';
+    case 'reject':
+      return 'volcano';
+    case 'login':
+      return 'purple';
+    case 'logout':
+      return 'default';
+    default:
+      return 'geekblue';
   }
 }
 
 function resourceColor(type: string): string {
   switch (type) {
-    case 'product': return 'magenta';
-    case 'order': return 'gold';
-    case 'user': return 'blue';
-    case 'review': return 'orange';
-    case 'vendor': return 'purple';
-    case 'category': return 'cyan';
-    default: return 'default';
+    case 'product':
+      return 'magenta';
+    case 'order':
+      return 'gold';
+    case 'user':
+      return 'blue';
+    case 'review':
+      return 'orange';
+    case 'vendor':
+      return 'purple';
+    case 'category':
+      return 'cyan';
+    default:
+      return 'default';
   }
 }
 
@@ -122,9 +135,7 @@ function DetailDrawer({ entry, open, onClose }: DetailDrawerProps) {
       destroyOnHidden
     >
       <Descriptions column={1} bordered size="small" style={{ marginBottom: 16 }}>
-        <Descriptions.Item label="Timestamp">
-          {formatTimestamp(entry.timestamp)}
-        </Descriptions.Item>
+        <Descriptions.Item label="Timestamp">{formatTimestamp(entry.timestamp)}</Descriptions.Item>
         <Descriptions.Item label="Action">
           <Tag color={actionColor(entry.action)} style={{ textTransform: 'capitalize' }}>
             {entry.action}
@@ -135,14 +146,9 @@ function DetailDrawer({ entry, open, onClose }: DetailDrawerProps) {
           <Tag style={{ textTransform: 'capitalize' }}>{entry.actor.role}</Tag>
         </Descriptions.Item>
         <Descriptions.Item label="Actor Type">{entry.actor.type}</Descriptions.Item>
-        <Descriptions.Item label="IP Address">
-          {entry.ipAddress ?? '—'}
-        </Descriptions.Item>
+        <Descriptions.Item label="IP Address">{entry.ipAddress ?? '—'}</Descriptions.Item>
         <Descriptions.Item label="User Agent">
-          <Paragraph
-            ellipsis={{ rows: 2, expandable: true }}
-            style={{ margin: 0, fontSize: 12 }}
-          >
+          <Paragraph ellipsis={{ rows: 2, expandable: true }} style={{ margin: 0, fontSize: 12 }}>
             {entry.userAgent ?? '—'}
           </Paragraph>
         </Descriptions.Item>
@@ -156,13 +162,13 @@ function DetailDrawer({ entry, open, onClose }: DetailDrawerProps) {
         </Descriptions.Item>
         {entry.resource.id && (
           <Descriptions.Item label="Resource ID">
-            <Text code style={{ fontSize: 12 }}>{entry.resource.id}</Text>
+            <Text code style={{ fontSize: 12 }}>
+              {entry.resource.id}
+            </Text>
           </Descriptions.Item>
         )}
         {entry.resource.name && (
-          <Descriptions.Item label="Resource Name">
-            {entry.resource.name}
-          </Descriptions.Item>
+          <Descriptions.Item label="Resource Name">{entry.resource.name}</Descriptions.Item>
         )}
       </Descriptions>
 
@@ -296,9 +302,7 @@ export default function ActivityLogPage() {
       key: 'timestamp',
       width: 175,
       render: (_: unknown, record: ActivityLogEntry) => (
-        <Text style={{ fontSize: 12 }}>
-          {formatTimestamp(record.timestamp)}
-        </Text>
+        <Text style={{ fontSize: 12 }}>{formatTimestamp(record.timestamp)}</Text>
       ),
       sorter: false,
     },
@@ -331,7 +335,10 @@ export default function ActivityLogPage() {
       width: 200,
       render: (_: unknown, record: ActivityLogEntry) => (
         <Space size={4} wrap>
-          <Tag color={resourceColor(record.resource.type)} style={{ textTransform: 'capitalize', fontSize: 11 }}>
+          <Tag
+            color={resourceColor(record.resource.type)}
+            style={{ textTransform: 'capitalize', fontSize: 11 }}
+          >
             {record.resource.type}
           </Tag>
           {record.resource.name && (
@@ -363,11 +370,7 @@ export default function ActivityLogPage() {
         title="Activity Log"
         extra={
           <Tooltip title="Export current filters to CSV">
-            <Button
-              icon={<DownloadOutlined />}
-              loading={exporting}
-              onClick={handleExport}
-            >
+            <Button icon={<DownloadOutlined />} loading={exporting} onClick={handleExport}>
               Export CSV
             </Button>
           </Tooltip>

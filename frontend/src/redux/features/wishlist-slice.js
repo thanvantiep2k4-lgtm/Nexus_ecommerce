@@ -1,13 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { getLocalStorage, setLocalStorage } from "@/utils/localstorage";
-import { notifyError, notifySuccess } from "@/utils/toast";
+import { createSlice } from '@reduxjs/toolkit';
+import { getLocalStorage, setLocalStorage } from '@/utils/localstorage';
+import { notifyError, notifySuccess } from '@/utils/toast';
 
 const initialState = {
   wishlist: [],
 };
 
 export const wishlistSlice = createSlice({
-  name: "wishlist",
+  name: 'wishlist',
   initialState,
   reducers: {
     add_to_wishlist: (state, { payload }) => {
@@ -16,21 +16,19 @@ export const wishlistSlice = createSlice({
         state.wishlist.push(payload);
         notifySuccess(`${payload.title} added to wishlist`);
       } else {
-        state.wishlist = state.wishlist.filter(
-          (item) => item._id !== payload._id
-        );
+        state.wishlist = state.wishlist.filter((item) => item._id !== payload._id);
         notifyError(`${payload.title} removed from wishlist`);
       }
-      setLocalStorage("wishlist_items", state.wishlist);
+      setLocalStorage('wishlist_items', state.wishlist);
     },
     remove_wishlist_product: (state, { payload }) => {
       state.wishlist = state.wishlist.filter((item) => item._id !== payload.id);
       notifyError(`${payload.title} removed from wishlist`);
-      setLocalStorage("wishlist_items", state.wishlist);
+      setLocalStorage('wishlist_items', state.wishlist);
       notifyError(`${payload.title} removed from wishlist`);
     },
     get_wishlist_products: (state, { payload }) => {
-      state.wishlist = getLocalStorage("wishlist_items");
+      state.wishlist = getLocalStorage('wishlist_items');
     },
     set_wishlist: (state, { payload }) => {
       // Replace entire wishlist from server data (authenticated users)
@@ -39,10 +37,6 @@ export const wishlistSlice = createSlice({
   },
 });
 
-export const {
-  add_to_wishlist,
-  remove_wishlist_product,
-  get_wishlist_products,
-  set_wishlist,
-} = wishlistSlice.actions;
+export const { add_to_wishlist, remove_wishlist_product, get_wishlist_products, set_wishlist } =
+  wishlistSlice.actions;
 export default wishlistSlice.reducer;

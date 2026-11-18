@@ -1,17 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import keycloak from "@/lib/keycloak";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import keycloak from '@/lib/keycloak';
 
 const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
 
 export const apiSlice = createApi({
-  reducerPath: "api",
+  reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: async (headers) => {
       try {
         if (keycloak.authenticated) {
           await keycloak.updateToken(30);
-          headers.set("Authorization", `Bearer ${keycloak.token}`);
+          headers.set('Authorization', `Bearer ${keycloak.token}`);
         }
       } catch (error) {
         // Auth header preparation failed — request will proceed unauthenticated
@@ -20,5 +20,27 @@ export const apiSlice = createApi({
     },
   }),
   endpoints: (builder) => ({}),
-  tagTypes: ["Products","Coupon","Product","RelatedProducts","UserOrder","UserOrders","ProductType","OfferProducts","PopularProducts","TopRatedProducts","Page","Menu","Banners","BlogPosts","BlogPost","SiteSettings","Categories","Wishlist","Addresses","Reviews","Vendor"]
+  tagTypes: [
+    'Products',
+    'Coupon',
+    'Product',
+    'RelatedProducts',
+    'UserOrder',
+    'UserOrders',
+    'ProductType',
+    'OfferProducts',
+    'PopularProducts',
+    'TopRatedProducts',
+    'Page',
+    'Menu',
+    'Banners',
+    'BlogPosts',
+    'BlogPost',
+    'SiteSettings',
+    'Categories',
+    'Wishlist',
+    'Addresses',
+    'Reviews',
+    'Vendor',
+  ],
 });

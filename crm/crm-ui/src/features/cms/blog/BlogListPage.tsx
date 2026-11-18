@@ -130,7 +130,7 @@ export default function BlogListPage() {
       dataIndex: 'category',
       key: 'category',
       width: 130,
-      render: (cat: string) => cat ? <Tag>{cat}</Tag> : <Text type="secondary">—</Text>,
+      render: (cat: string) => (cat ? <Tag>{cat}</Tag> : <Text type="secondary">—</Text>),
     },
     {
       title: 'Tags',
@@ -165,18 +165,18 @@ export default function BlogListPage() {
       title: 'Author',
       key: 'author',
       width: 130,
-      render: (_: unknown, record: BlogPost) => (
-        <Text>{record.author?.name ?? '—'}</Text>
-      ),
+      render: (_: unknown, record: BlogPost) => <Text>{record.author?.name ?? '—'}</Text>,
     },
     {
       title: 'Published',
       key: 'publishedAt',
       width: 130,
       render: (_: unknown, record: BlogPost) =>
-        record.publishedAt
-          ? dayjs(record.publishedAt).format('MMM D, YYYY')
-          : <Text type="secondary">—</Text>,
+        record.publishedAt ? (
+          dayjs(record.publishedAt).format('MMM D, YYYY')
+        ) : (
+          <Text type="secondary">—</Text>
+        ),
     },
     {
       title: 'Views',
@@ -192,10 +192,7 @@ export default function BlogListPage() {
       fixed: 'right' as const,
       render: (_: unknown, record: BlogPost) => (
         <Button.Group size="small">
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => navigate(`/cms/blog/${record._id}`)}
-          />
+          <Button icon={<EditOutlined />} onClick={() => navigate(`/cms/blog/${record._id}`)} />
           <Button
             icon={<EyeOutlined />}
             onClick={() =>
@@ -224,11 +221,7 @@ export default function BlogListPage() {
       <PageHeader
         title="Blog Posts"
         extra={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => navigate('/cms/blog/new')}
-          >
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/cms/blog/new')}>
             New Post
           </Button>
         }

@@ -1,4 +1,4 @@
-import { apiSlice } from "../api/apiSlice";
+import { apiSlice } from '../api/apiSlice';
 
 export const cmsApi = apiSlice.injectEndpoints({
   overrideExisting: true,
@@ -152,7 +152,6 @@ export const cmsApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-
   }),
 });
 

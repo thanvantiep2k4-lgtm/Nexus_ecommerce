@@ -1,12 +1,11 @@
-import React from "react";
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import { useGetShowCategoryQuery } from "@/redux/features/categoryApi";
+import React from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { useGetShowCategoryQuery } from '@/redux/features/categoryApi';
 
 const MAX_MENU_CATEGORIES = 5;
 
-const buildCategorySlug = (title) =>
-  title.toLowerCase().replace("&", "").split(" ").join("-");
+const buildCategorySlug = (title) => title.toLowerCase().replace('&', '').split(' ').join('-');
 
 const Menus = () => {
   const { t } = useTranslation();
@@ -23,26 +22,27 @@ const Menus = () => {
 
   return (
     <ul>
-      {!isLoading && !isError && menuCategories.map((item) => (
-        <li key={item._id} className={item.children && item.children.length > 0 ? "has-dropdown" : ""}>
-          <Link href={`/shop?category=${buildCategorySlug(item.parent)}`}>
-            {item.parent}
-          </Link>
-          {item.children && item.children.length > 0 && (
-            <ul className="tp-submenu">
-              {item.children.map((child, i) => (
-                <li key={i}>
-                  <Link href={`/shop?subCategory=${buildCategorySlug(child)}`}>
-                    {child}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
+      {!isLoading &&
+        !isError &&
+        menuCategories.map((item) => (
+          <li
+            key={item._id}
+            className={item.children && item.children.length > 0 ? 'has-dropdown' : ''}
+          >
+            <Link href={`/shop?category=${buildCategorySlug(item.parent)}`}>{item.parent}</Link>
+            {item.children && item.children.length > 0 && (
+              <ul className="tp-submenu">
+                {item.children.map((child, i) => (
+                  <li key={i}>
+                    <Link href={`/shop?subCategory=${buildCategorySlug(child)}`}>{child}</Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
       <li>
-        <Link href="/coupon">{t("nav.coupons")}</Link>
+        <Link href="/coupon">{t('nav.coupons')}</Link>
       </li>
     </ul>
   );

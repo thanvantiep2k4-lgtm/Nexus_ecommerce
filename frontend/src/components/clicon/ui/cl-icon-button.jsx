@@ -12,37 +12,44 @@ import React, { forwardRef } from 'react';
  * @param {string} [props.ariaLabel] - Required for accessibility
  * @param {string} [props.className]
  */
-const ClIconButton = forwardRef(({
-  icon,
-  size = 'md',
-  shape = 'circle',
-  variant = 'default',
-  disabled = false,
-  ariaLabel,
-  className = '',
-  ...rest
-}, ref) => {
-  const classes = [
-    'cl-icon-btn',
-    `cl-icon-btn--${size}`,
-    `cl-icon-btn--${shape}`,
-    `cl-icon-btn--${variant}`,
-    className,
-  ].filter(Boolean).join(' ');
+const ClIconButton = forwardRef(
+  (
+    {
+      icon,
+      size = 'md',
+      shape = 'circle',
+      variant = 'default',
+      disabled = false,
+      ariaLabel,
+      className = '',
+      ...rest
+    },
+    ref
+  ) => {
+    const classes = [
+      'cl-icon-btn',
+      `cl-icon-btn--${size}`,
+      `cl-icon-btn--${shape}`,
+      `cl-icon-btn--${variant}`,
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
 
-  return (
-    <button
-      ref={ref}
-      type="button"
-      className={classes}
-      disabled={disabled}
-      aria-label={ariaLabel}
-      {...rest}
-    >
-      {icon}
-    </button>
-  );
-});
+    return (
+      <button
+        ref={ref}
+        type="button"
+        className={classes}
+        disabled={disabled}
+        aria-label={ariaLabel}
+        {...rest}
+      >
+        {icon}
+      </button>
+    );
+  }
+);
 
 ClIconButton.displayName = 'ClIconButton';
 

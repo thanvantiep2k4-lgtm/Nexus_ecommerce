@@ -13,31 +13,36 @@
 
 const express = require('express');
 const router = express.Router();
-const verifyToken   = require('../../middleware/verifyToken');
+const verifyToken = require('../../middleware/verifyToken');
 const authorization = require('../../middleware/authorization');
 
-const authRoutes    = require('./auth.routes');
-const storeRoutes   = require('./store/index');
-const userRoutes    = require('./user/index');
-const vendorRoutes  = require('./vendor/index');
-const adminRoutes   = require('./admin/index');
+const authRoutes = require('./auth.routes');
+const storeRoutes = require('./store/index');
+const userRoutes = require('./user/index');
+const vendorRoutes = require('./vendor/index');
+const adminRoutes = require('./admin/index');
 const paymentRoutes = require('./payment');
 
 // Public
 // Payment webhooks MUST be mounted before the general /auth router so that
 // /auth/payment/* is matched here and does not fall through to auth.routes.js
-router.use('/auth/payment',   paymentRoutes);
-router.use('/auth',           authRoutes);
-router.use('/store',          storeRoutes);
+router.use('/auth/payment', paymentRoutes);
+router.use('/auth', authRoutes);
+router.use('/store', storeRoutes);
 
 // Authenticated — user owns their data
-router.use('/user',   verifyToken, userRoutes);
+router.use('/user', verifyToken, userRoutes);
 
 // Authenticated — vendor role required
 router.use('/vendor', verifyToken, authorization('vendor'), vendorRoutes);
 
 // Authenticated — at least staff role required
 // (finer-grained admin/manager checks are enforced inside adminRoutes)
-router.use('/admin',  verifyToken, authorization('admin', 'manager', 'staff', 'shipper'), adminRoutes);
+router.use(
+  '/admin',
+  verifyToken,
+  authorization('admin', 'manager', 'staff', 'shipper'),
+  adminRoutes
+);
 
 module.exports = router;

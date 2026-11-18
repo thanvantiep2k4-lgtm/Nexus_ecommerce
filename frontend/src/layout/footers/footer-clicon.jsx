@@ -1,25 +1,24 @@
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useTranslation } from "react-i18next";
-import { useGetSettingsQuery } from "@/redux/features/cmsApi";
-import { useGetShowCategoryQuery } from "@/redux/features/categoryApi";
-import logo from "@assets/img/logo/logo.svg";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
+import { useGetSettingsQuery } from '@/redux/features/cmsApi';
+import { useGetShowCategoryQuery } from '@/redux/features/categoryApi';
+import logo from '@assets/img/logo/logo.svg';
 
 const FooterClicon = () => {
   const { t } = useTranslation();
   const { data: settingsData } = useGetSettingsQuery();
   const { data: categories } = useGetShowCategoryQuery();
   const settings = settingsData?.data;
-  const phone = settings?.contact?.phone || "+84 28 7106 1234";
-  const email = settings?.contact?.email || "support@tychicus.id.vn";
-  const address = settings?.contact?.address || "Hồ Chí Minh, Việt Nam";
+  const phone = settings?.contact?.phone || '+84 28 7106 1234';
+  const email = settings?.contact?.email || 'support@tychicus.id.vn';
+  const address = settings?.contact?.address || 'Hồ Chí Minh, Việt Nam';
 
   const categoryItems = (categories?.result || []).slice(0, 6);
   const year = new Date().getFullYear();
 
-  const buildCategorySlug = (title) =>
-    title.toLowerCase().replace("&", "").split(" ").join("-");
+  const buildCategorySlug = (title) => title.toLowerCase().replace('&', '').split(' ').join('-');
 
   return (
     <footer className="cl-footer">
@@ -35,9 +34,13 @@ const FooterClicon = () => {
                 </Link>
                 <div className="cl-footer__contact">
                   <p className="cl-footer__contact-label">Customer Supports:</p>
-                  <a href={`tel:${phone}`} className="cl-footer__contact-phone">{phone}</a>
+                  <a href={`tel:${phone}`} className="cl-footer__contact-phone">
+                    {phone}
+                  </a>
                   <p className="cl-footer__contact-address">{address}</p>
-                  <a href={`mailto:${email}`} className="cl-footer__contact-email">{email}</a>
+                  <a href={`mailto:${email}`} className="cl-footer__contact-email">
+                    {email}
+                  </a>
                 </div>
               </div>
             </div>
@@ -68,12 +71,24 @@ const FooterClicon = () => {
               <div className="cl-footer__widget">
                 <h4 className="cl-footer__widget-title">QUICK LINKS</h4>
                 <ul className="cl-footer__links">
-                  <li><Link href="/shop">Shop Product</Link></li>
-                  <li><Link href="/cart">{t("header.cart")}</Link></li>
-                  <li><Link href="/wishlist">{t("header.wishlist")}</Link></li>
-                  <li><Link href="/compare">Compare</Link></li>
-                  <li><Link href="/track-order">Track Order</Link></li>
-                  <li><Link href="/contact">Customer Help</Link></li>
+                  <li>
+                    <Link href="/shop">Shop Product</Link>
+                  </li>
+                  <li>
+                    <Link href="/cart">{t('header.cart')}</Link>
+                  </li>
+                  <li>
+                    <Link href="/wishlist">{t('header.wishlist')}</Link>
+                  </li>
+                  <li>
+                    <Link href="/compare">Compare</Link>
+                  </li>
+                  <li>
+                    <Link href="/track-order">Track Order</Link>
+                  </li>
+                  <li>
+                    <Link href="/contact">Customer Help</Link>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -110,9 +125,26 @@ const FooterClicon = () => {
               <div className="cl-footer__widget">
                 <h4 className="cl-footer__widget-title">POPULAR TAG</h4>
                 <div className="cl-footer__tags">
-                  {["Game", "iPhone", "TV", "Asus Laptops", "Macbook", "SSD", "Graphics Card",
-                    "Power Bank", "Smart TV", "Speaker", "Tablet", "Microwave", "Samsung"].map((tag) => (
-                    <Link key={tag} href={`/shop?tag=${tag.toLowerCase()}`} className="cl-footer__tag">
+                  {[
+                    'Game',
+                    'iPhone',
+                    'TV',
+                    'Asus Laptops',
+                    'Macbook',
+                    'SSD',
+                    'Graphics Card',
+                    'Power Bank',
+                    'Smart TV',
+                    'Speaker',
+                    'Tablet',
+                    'Microwave',
+                    'Samsung',
+                  ].map((tag) => (
+                    <Link
+                      key={tag}
+                      href={`/shop?tag=${tag.toLowerCase()}`}
+                      className="cl-footer__tag"
+                    >
                       {tag}
                     </Link>
                   ))}
@@ -127,7 +159,7 @@ const FooterClicon = () => {
       <div className="cl-footer__bottom">
         <div className="container">
           <p className="cl-footer__copyright">
-            Shofy eCommerce &copy; {year}. {t("footer.allRightsReserved")}
+            Shofy eCommerce &copy; {year}. {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

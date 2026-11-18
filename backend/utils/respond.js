@@ -76,7 +76,11 @@ const notFound = (res, code = 'NOT_FOUND', message = 'Resource not found') => {
  * @param {string} [code='FORBIDDEN']
  * @param {string} [message='You are not authorized to perform this action']
  */
-const forbidden = (res, code = 'FORBIDDEN', message = 'You are not authorized to perform this action') => {
+const forbidden = (
+  res,
+  code = 'FORBIDDEN',
+  message = 'You are not authorized to perform this action'
+) => {
   return error(res, code, message, 403);
 };
 

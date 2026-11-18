@@ -12,7 +12,14 @@ import { useTranslation } from 'react-i18next';
  * @param {function} [props.onClick] - Makes tag clickable
  * @param {string} [props.className]
  */
-const ClTag = ({ label, variant = 'default', removable = false, onRemove, onClick, className = '' }) => {
+const ClTag = ({
+  label,
+  variant = 'default',
+  removable = false,
+  onRemove,
+  onClick,
+  className = '',
+}) => {
   const { t } = useTranslation();
   const Tag = onClick ? 'button' : 'span';
 

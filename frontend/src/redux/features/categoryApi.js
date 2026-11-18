@@ -1,7 +1,7 @@
-import { apiSlice } from "../api/apiSlice";
+import { apiSlice } from '../api/apiSlice';
 
 export const categoryApi = apiSlice.injectEndpoints({
-  overrideExisting:true,
+  overrideExisting: true,
   endpoints: (builder) => ({
     getShowCategory: builder.query({
       query: () => `/api/v1/store/categories/show`,
@@ -18,7 +18,4 @@ export const categoryApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {
- useGetProductTypeCategoryQuery,
- useGetShowCategoryQuery,
-} = categoryApi;
+export const { useGetProductTypeCategoryQuery, useGetShowCategoryQuery } = categoryApi;

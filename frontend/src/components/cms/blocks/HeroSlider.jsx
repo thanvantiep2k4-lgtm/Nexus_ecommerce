@@ -30,12 +30,8 @@ const HeroSlider = ({ settings = {}, title, subtitle }) => {
           <div className="row align-items-center">
             <div className="col-xl-6 col-lg-7">
               <div className="tp-slider-content p-relative z-index-1">
-                {slide.title && (
-                  <h3 className="tp-slider-title">{slide.title}</h3>
-                )}
-                {slide.subtitle && (
-                  <p>{slide.subtitle}</p>
-                )}
+                {slide.title && <h3 className="tp-slider-title">{slide.title}</h3>}
+                {slide.subtitle && <p>{slide.subtitle}</p>}
                 {slide.buttonText && slide.buttonUrl && (
                   <div className="tp-slider-btn mt-25">
                     <Link href={slide.buttonUrl} className="tp-btn tp-btn-2 tp-btn-white">
@@ -82,12 +78,8 @@ const HeroSlider = ({ settings = {}, title, subtitle }) => {
               <div className="row align-items-center">
                 <div className="col-xl-6 col-lg-7">
                   <div className="tp-slider-content p-relative z-index-1">
-                    {slide.title && (
-                      <h3 className="tp-slider-title">{slide.title}</h3>
-                    )}
-                    {slide.subtitle && (
-                      <p>{slide.subtitle}</p>
-                    )}
+                    {slide.title && <h3 className="tp-slider-title">{slide.title}</h3>}
+                    {slide.subtitle && <p>{slide.subtitle}</p>}
                     {slide.buttonText && slide.buttonUrl && (
                       <div className="tp-slider-btn mt-25">
                         <Link href={slide.buttonUrl} className="tp-btn tp-btn-2 tp-btn-white">

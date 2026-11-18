@@ -38,8 +38,7 @@ const CliconProductSectionWithPromo = ({
     activeTab === 'all'
       ? gridProducts
       : gridProducts.filter((p) => {
-          const catName =
-            typeof p.category === 'object' ? p.category?.name : p.category;
+          const catName = typeof p.category === 'object' ? p.category?.name : p.category;
           const activeCategory = categories.find((c) => c._id === activeTab);
           return catName === activeCategory?.parent;
         });
@@ -59,9 +58,7 @@ const CliconProductSectionWithPromo = ({
     gridContent = <ErrorMsg msg={t('error.products', 'Could not load products.')} />;
   } else if (filteredProducts.length === 0) {
     gridContent = (
-      <p className="cl-product-section__empty">
-        {t('products.empty', 'No products found.')}
-      </p>
+      <p className="cl-product-section__empty">{t('products.empty', 'No products found.')}</p>
     );
   } else {
     gridContent = (
@@ -106,7 +103,14 @@ const CliconProductSectionWithPromo = ({
           </div>
           <Link href="/shop" className="cl-product-section__browse">
             {t('featured.browse_all', 'Browse All Product')}
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </Link>
@@ -114,9 +118,7 @@ const CliconProductSectionWithPromo = ({
 
         <div className="row g-4">
           {/* Left: product grid */}
-          <div className="col-xl-9">
-            {gridContent}
-          </div>
+          <div className="col-xl-9">{gridContent}</div>
 
           {/* Right: promo column */}
           <div className="col-xl-3 d-none d-xl-flex">
@@ -127,9 +129,7 @@ const CliconProductSectionWithPromo = ({
                     <p className="cl-product-section__promo-label">
                       {t('promo.featured', 'Featured Product')}
                     </p>
-                    <h4 className="cl-product-section__promo-name">
-                      {promoProduct.title}
-                    </h4>
+                    <h4 className="cl-product-section__promo-name">{promoProduct.title}</h4>
                     <p className="cl-product-section__promo-price">
                       {formatPrice(promoProduct.price)}
                     </p>

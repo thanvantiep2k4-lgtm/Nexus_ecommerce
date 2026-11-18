@@ -1,23 +1,23 @@
-import SEO from "@/components/seo";
-import Wrapper from "@/layout/wrapper";
-import HeaderClicon from "@/layout/headers/header-clicon";
-import FooterClicon from "@/layout/footers/footer-clicon";
-import JsonLd from "@/components/seo/JsonLd";
-import { organizationJsonLd } from "@/utils/structuredData";
+import SEO from '@/components/seo';
+import Wrapper from '@/layout/wrapper';
+import HeaderClicon from '@/layout/headers/header-clicon';
+import FooterClicon from '@/layout/footers/footer-clicon';
+import JsonLd from '@/components/seo/JsonLd';
+import { organizationJsonLd } from '@/utils/structuredData';
 // Clicon homepage sections
-import CliconHeroArea from "@/components/clicon/hero/clicon-hero-area";
-import CliconFeaturesBar from "@/components/clicon/features/clicon-features-bar";
-import CliconBestDeals from "@/components/clicon/deals/clicon-best-deals";
-import CliconCategoryShowcase from "@/components/clicon/categories/clicon-category-showcase";
-import CliconFeaturedProducts from "@/components/clicon/products/clicon-featured-products";
-import CliconDoubleBanner from "@/components/clicon/banners/clicon-double-banner";
-import CliconProductSectionWithPromo from "@/components/clicon/products/clicon-product-section-with-promo";
-import CliconFullWidthBanner from "@/components/clicon/banners/clicon-full-width-banner";
-import CliconProductColumns from "@/components/clicon/products/clicon-product-columns";
-import CliconBlogArea from "@/components/clicon/blog/clicon-blog-area";
-import CliconNewsletter from "@/components/clicon/newsletter/clicon-newsletter";
+import CliconHeroArea from '@/components/clicon/hero/clicon-hero-area';
+import CliconFeaturesBar from '@/components/clicon/features/clicon-features-bar';
+import CliconBestDeals from '@/components/clicon/deals/clicon-best-deals';
+import CliconCategoryShowcase from '@/components/clicon/categories/clicon-category-showcase';
+import CliconFeaturedProducts from '@/components/clicon/products/clicon-featured-products';
+import CliconDoubleBanner from '@/components/clicon/banners/clicon-double-banner';
+import CliconProductSectionWithPromo from '@/components/clicon/products/clicon-product-section-with-promo';
+import CliconFullWidthBanner from '@/components/clicon/banners/clicon-full-width-banner';
+import CliconProductColumns from '@/components/clicon/products/clicon-product-columns';
+import CliconBlogArea from '@/components/clicon/blog/clicon-blog-area';
+import CliconNewsletter from '@/components/clicon/newsletter/clicon-newsletter';
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
+const API = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
 
 async function safeFetch(url) {
   try {
@@ -40,15 +40,14 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ settings }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
 
   return (
     <Wrapper>
       <SEO
-        pageTitle={settings?.siteName || "Home"}
+        pageTitle={settings?.siteName || 'Home'}
         description={
-          settings?.siteDescription ||
-          "Shop electronics, fashion, beauty and more at Shofy"
+          settings?.siteDescription || 'Shop electronics, fashion, beauty and more at Shofy'
         }
         url="/"
       />
@@ -61,10 +60,7 @@ export default function Home({ settings }) {
         <CliconCategoryShowcase />
         <CliconFeaturedProducts />
         <CliconDoubleBanner />
-        <CliconProductSectionWithPromo
-          productType="electronics"
-          queryType="new"
-        />
+        <CliconProductSectionWithPromo productType="electronics" queryType="new" />
         <CliconFullWidthBanner />
         <CliconProductColumns />
         <CliconBlogArea />

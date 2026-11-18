@@ -14,6 +14,6 @@ export const useCurrencyStore = create<State>()(
       currency: 'VND',
       setCurrency: (c) => set({ currency: c }),
     }),
-    { name: 'crm_display_currency' },
-  ),
+    { name: 'crm_display_currency' }
+  )
 );

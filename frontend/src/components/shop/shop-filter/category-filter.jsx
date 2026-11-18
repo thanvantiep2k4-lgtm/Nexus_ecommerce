@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { useTranslation } from "react-i18next";
-import ErrorMsg from "@/components/common/error-msg";
-import { useGetShowCategoryQuery } from "@/redux/features/categoryApi";
-import { handleFilterSidebarClose } from "@/redux/features/shop-filter-slice";
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import ErrorMsg from '@/components/common/error-msg';
+import { useGetShowCategoryQuery } from '@/redux/features/categoryApi';
+import { handleFilterSidebarClose } from '@/redux/features/shop-filter-slice';
 
 // Match the backend category/subCategory resolver (store.controller): lowercase,
 // strip '&', collapse whitespace, join with '-'. Keeps sidebar slugs resolvable.
 const slugify = (s) =>
-  String(s).toLowerCase().replace(/&/g, "").split(/\s+/).filter(Boolean).join("-");
+  String(s).toLowerCase().replace(/&/g, '').split(/\s+/).filter(Boolean).join('-');
 
 const CategoryFilter = ({ setCurrPage }) => {
   const { t } = useTranslation();
@@ -19,8 +19,8 @@ const CategoryFilter = ({ setCurrPage }) => {
   // undefined = follow the active category; otherwise the parent the user toggled open
   const [openId, setOpenId] = useState(undefined);
 
-  const activeCat = router.query.category || "";
-  const activeSub = router.query.subCategory || "";
+  const activeCat = router.query.category || '';
+  const activeSub = router.query.subCategory || '';
 
   // Merge into the existing query (preserve price/brand/sort/search) instead of
   // replacing the URL. category and subCategory are mutually exclusive.
@@ -30,14 +30,13 @@ const CategoryFilter = ({ setCurrPage }) => {
     Object.keys(nextQuery).forEach((key) => {
       if (!nextQuery[key]) delete nextQuery[key];
     });
-    router.push({ pathname: "/shop", query: nextQuery }, undefined, { shallow: true });
+    router.push({ pathname: '/shop', query: nextQuery }, undefined, { shallow: true });
     dispatch(handleFilterSidebarClose());
   };
 
   const selectParent = (parent) =>
     applyFilter({ category: slugify(parent), subCategory: undefined });
-  const selectChild = (child) =>
-    applyFilter({ subCategory: slugify(child), category: undefined });
+  const selectChild = (child) => applyFilter({ subCategory: slugify(child), category: undefined });
   const clearAll = () => applyFilter({ category: undefined, subCategory: undefined });
 
   let content = null;
@@ -47,15 +46,15 @@ const CategoryFilter = ({ setCurrPage }) => {
       <ul className="cl-shop__category-list">
         {[...Array(6)].map((_, i) => (
           <li key={i} className="cl-shop__category-item">
-            <div className="cl-skeleton cl-skeleton--line" style={{ width: "100%", height: 16 }} />
+            <div className="cl-skeleton cl-skeleton--line" style={{ width: '100%', height: 16 }} />
           </li>
         ))}
       </ul>
     );
   } else if (isError) {
-    content = <ErrorMsg msg={t("error.generic")} />;
+    content = <ErrorMsg msg={t('error.generic')} />;
   } else if (!categories?.result?.length) {
-    content = <ErrorMsg msg={t("error.noCategoryFound")} />;
+    content = <ErrorMsg msg={t('error.noCategoryFound')} />;
   } else {
     const hasFilter = Boolean(activeCat || activeSub);
     content = (
@@ -63,10 +62,10 @@ const CategoryFilter = ({ setCurrPage }) => {
         <li>
           <button
             type="button"
-            className={`cl-shop__category-row${!hasFilter ? " cl-shop__category-row--active" : ""}`}
+            className={`cl-shop__category-row${!hasFilter ? ' cl-shop__category-row--active' : ''}`}
             onClick={clearAll}
           >
-            {t("shop.allCategories")}
+            {t('shop.allCategories')}
           </button>
         </li>
 
@@ -83,7 +82,7 @@ const CategoryFilter = ({ setCurrPage }) => {
               <div className="cl-shop__category-row-wrap">
                 <button
                   type="button"
-                  className={`cl-shop__category-row${isParentActive ? " cl-shop__category-row--active" : ""}`}
+                  className={`cl-shop__category-row${isParentActive ? ' cl-shop__category-row--active' : ''}`}
                   onClick={() => selectParent(item.parent)}
                 >
                   {item.parent}
@@ -96,7 +95,7 @@ const CategoryFilter = ({ setCurrPage }) => {
                     aria-expanded={isOpen}
                     onClick={() => setOpenId(isOpen ? null : item._id)}
                   >
-                    <i className={`fas fa-chevron-${isOpen ? "down" : "right"}`} />
+                    <i className={`fas fa-chevron-${isOpen ? 'down' : 'right'}`} />
                   </button>
                 )}
               </div>
@@ -109,7 +108,7 @@ const CategoryFilter = ({ setCurrPage }) => {
                       <li key={i}>
                         <button
                           type="button"
-                          className={`cl-shop__subcategory-item${isChildActive ? " cl-shop__subcategory-item--active" : ""}`}
+                          className={`cl-shop__subcategory-item${isChildActive ? ' cl-shop__subcategory-item--active' : ''}`}
                           onClick={() => selectChild(child)}
                         >
                           {child}
@@ -128,7 +127,7 @@ const CategoryFilter = ({ setCurrPage }) => {
 
   return (
     <div className="cl-shop__widget">
-      <h3 className="cl-shop__widget-title">{t("shop.categories")}</h3>
+      <h3 className="cl-shop__widget-title">{t('shop.categories')}</h3>
       {content}
     </div>
   );

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // internal
-import { Search } from "@/svg";
-import NiceSelect from "@/ui/nice-select";
-import useSearchFormSubmit from "@/hooks/use-search-form-submit";
+import { Search } from '@/svg';
+import NiceSelect from '@/ui/nice-select';
+import useSearchFormSubmit from '@/hooks/use-search-form-submit';
 
 const HeaderSearchForm = () => {
   const { t } = useTranslation();
@@ -22,17 +22,17 @@ const HeaderSearchForm = () => {
             onChange={(e) => setSearchText(e.target.value)}
             value={searchText}
             type="text"
-            placeholder={t("common.search")}
+            placeholder={t('common.search')}
           />
         </div>
         <div className="tp-header-search-category">
           <NiceSelect
             options={[
-              { value: "Select Category", text: "Select Category" },
-              { value: "electronics", text: "electronics" },
-              { value: "fashion", text: "fashion" },
-              { value: "beauty", text: "beauty" },
-              { value: "jewelry", text: "jewelry" },
+              { value: 'Select Category', text: 'Select Category' },
+              { value: 'electronics', text: 'electronics' },
+              { value: 'fashion', text: 'fashion' },
+              { value: 'beauty', text: 'beauty' },
+              { value: 'jewelry', text: 'jewelry' },
             ]}
             defaultCurrent={0}
             onChange={selectCategoryHandle}

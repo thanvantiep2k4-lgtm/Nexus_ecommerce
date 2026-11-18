@@ -15,8 +15,7 @@ interface AppStore {
 
 const useAppStore = create<AppStore>((set) => ({
   sidebarCollapsed: false,
-  toggleSidebar: () =>
-    set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+  toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   user: null,
   setUser: (user) => set({ user }),
 }));

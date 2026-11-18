@@ -5,9 +5,9 @@ jest.mock('../../services/chatbot/llmProvider', () => ({
   streamChat: jest.fn().mockResolvedValue({
     text: 'Here are some shoes.',
     toolCalls: [],
-    usage: { promptTokenCount: 10, candidatesTokenCount: 5 }
+    usage: { promptTokenCount: 10, candidatesTokenCount: 5 },
   }),
-  embed: jest.fn()
+  embed: jest.fn(),
 }));
 
 const request = require('supertest');
@@ -53,35 +53,29 @@ describe('POST /api/v1/store/chat/message', () => {
   });
 
   it('rejects missing sessionId', async () => {
-    const r = await request(app)
-      .post('/api/v1/store/chat/message')
-      .send({ message: 'hello' });
+    const r = await request(app).post('/api/v1/store/chat/message').send({ message: 'hello' });
     expect(r.status).toBe(422);
   });
 });
 
 describe('POST /api/v1/store/chat/feedback', () => {
   it('records feedback for a message', async () => {
-    const r = await request(app)
-      .post('/api/v1/store/chat/feedback')
-      .send({
-        sessionId: 'sess-abc-12345678',
-        messageId: new mongoose.Types.ObjectId().toString(),
-        rating: 'up'
-      });
+    const r = await request(app).post('/api/v1/store/chat/feedback').send({
+      sessionId: 'sess-abc-12345678',
+      messageId: new mongoose.Types.ObjectId().toString(),
+      rating: 'up',
+    });
     expect(r.status).toBe(200);
     expect(r.body.success).toBe(true);
     expect(r.body.data.feedback.rating).toBe('up');
   });
 
   it('rejects invalid rating', async () => {
-    const r = await request(app)
-      .post('/api/v1/store/chat/feedback')
-      .send({
-        sessionId: 'sess-abc-12345678',
-        messageId: new mongoose.Types.ObjectId().toString(),
-        rating: 'meh'
-      });
+    const r = await request(app).post('/api/v1/store/chat/feedback').send({
+      sessionId: 'sess-abc-12345678',
+      messageId: new mongoose.Types.ObjectId().toString(),
+      rating: 'meh',
+    });
     expect(r.status).toBe(422);
   });
 });

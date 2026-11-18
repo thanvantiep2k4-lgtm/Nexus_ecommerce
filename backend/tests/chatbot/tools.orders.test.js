@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const Order = require('../../model/Order');
+const Order = require('../../models/Order');
 const myOrdersFactory = require('../../services/chatbot/tools/getMyOrders');
 const orderStatusFactory = require('../../services/chatbot/tools/getOrderStatus');
 
@@ -28,14 +28,20 @@ describe('orders tools', () => {
   beforeAll(async () => {
     mongo = await MongoMemoryServer.create();
     await mongoose.connect(mongo.getUri());
-    myOrdersFactory((t) => { myOrders = t; });
-    orderStatusFactory((t) => { orderStatus = t; });
+    myOrdersFactory((t) => {
+      myOrders = t;
+    });
+    orderStatusFactory((t) => {
+      orderStatus = t;
+    });
   });
   afterAll(async () => {
     await mongoose.disconnect();
     await mongo.stop();
   });
-  beforeEach(async () => { await Order.deleteMany({}); });
+  beforeEach(async () => {
+    await Order.deleteMany({});
+  });
 
   it('requires auth', () => {
     expect(myOrders.requiresAuth).toBe(true);
@@ -51,7 +57,10 @@ describe('orders tools', () => {
   it("refuses to return another user's order", async () => {
     const other = new mongoose.Types.ObjectId();
     const o = await Order.create({ ...baseOrder, user: other });
-    const out = await orderStatus.handler({ orderId: String(o._id) }, { isAuthenticated: true, userId });
+    const out = await orderStatus.handler(
+      { orderId: String(o._id) },
+      { isAuthenticated: true, userId }
+    );
     expect(out.error).toBe('forbidden');
   });
 });

@@ -1,21 +1,21 @@
-require("dotenv").config();
-const express = require("express");
+require('dotenv').config();
+const express = require('express');
 const app = express();
 const path = require('path');
-const cors = require("cors");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 const http = require('http');
 const { Server } = require('socket.io');
-const connectDB = require("./config/db");
-const { secret } = require("./config/secret");
+const connectDB = require('./config/db');
+const { secret } = require('./config/secret');
 const PORT = process.env.PORT || secret.port || 4000;
 const morgan = require('morgan');
 // error handler
-const globalErrorHandler = require("./middleware/global-error-handler");
+const globalErrorHandler = require('./middleware/global-error-handler');
 // routes — v1 (canonical)
-const v1Routes = require("./routes/v1");
+const v1Routes = require('./routes/v1');
 // exchange rate cron
 const { startCron: startExchangeRateCron } = require('./services/exchangeRateService');
 
@@ -24,35 +24,41 @@ const { startCron: startExchangeRateCron } = require('./services/exchangeRateSer
 // ---------------------------------------------------------------------------
 
 const allowedOrigins = [
-  ...new Set([
-    process.env.STORE_URL || 'http://localhost:3001',
-    process.env.ADMIN_URL || 'http://localhost:8081',
-    'http://localhost:3001',
-    'http://localhost:8081',
-    // secret.* are the same env vars — included as a safety net in case
-    // STORE_URL / ADMIN_URL differ from what secret.js reads
-    secret.client_url,
-    secret.admin_url,
-  ].filter(Boolean)),
+  ...new Set(
+    [
+      process.env.STORE_URL || 'http://localhost:3001',
+      process.env.ADMIN_URL || 'http://localhost:8081',
+      'http://localhost:3001',
+      'http://localhost:8081',
+      // secret.* are the same env vars — included as a safety net in case
+      // STORE_URL / ADMIN_URL differ from what secret.js reads
+      secret.client_url,
+      secret.admin_url,
+    ].filter(Boolean)
+  ),
 ];
 
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
 // ---------------------------------------------------------------------------
 // Security headers
 // ---------------------------------------------------------------------------
 
-app.use(helmet({
-  // Allow Cloudinary images and Swagger UI assets to load in browsers
-  crossOriginEmbedderPolicy: false,
-  // No HTML pages served from this API — skip CSP (avoids blocking Swagger UI)
-  contentSecurityPolicy: false,
-}));
+app.use(
+  helmet({
+    // Allow Cloudinary images and Swagger UI assets to load in browsers
+    crossOriginEmbedderPolicy: false,
+    // No HTML pages served from this API — skip CSP (avoids blocking Swagger UI)
+    contentSecurityPolicy: false,
+  })
+);
 
 // ---------------------------------------------------------------------------
 // Body parsing + sanitization
@@ -67,9 +73,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Health check — liveness probe (no auth, outside rate limiter)
 // ---------------------------------------------------------------------------
 
-app.get("/health", (req, res) => {
+app.get('/health', (req, res) => {
   res.status(200).json({
-    status: "ok",
+    status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
@@ -82,13 +88,17 @@ app.get("/health", (req, res) => {
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Shofy API Documentation',
-  swaggerOptions: {
-    persistAuthorization: true,
-  },
-}));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Shofy API Documentation',
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  })
+);
 
 // Serve raw OpenAPI JSON for tooling (Postman, code-gen, etc.)
 app.get('/api-docs.json', (req, res) => {
@@ -106,7 +116,7 @@ const globalLimiter = rateLimit({
   max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { status: "fail", error: "Too many requests, please try again later" },
+  message: { status: 'fail', error: 'Too many requests, please try again later' },
 });
 app.use(globalLimiter);
 
@@ -116,9 +126,9 @@ const authLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { status: "fail", error: "Too many authentication attempts, please try again later" },
+  message: { status: 'fail', error: 'Too many authentication attempts, please try again later' },
 });
-app.use("/api/v1/auth", authLimiter);
+app.use('/api/v1/auth', authLimiter);
 
 // Payment / order creation — 20 req / 15 min per IP
 const paymentLimiter = rateLimit({
@@ -126,9 +136,9 @@ const paymentLimiter = rateLimit({
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { status: "fail", error: "Too many payment attempts, please try again later" },
+  message: { status: 'fail', error: 'Too many payment attempts, please try again later' },
 });
-app.use("/api/v1/user/orders", paymentLimiter);
+app.use('/api/v1/user/orders', paymentLimiter);
 
 // Media upload — 30 req / 15 min per IP
 const uploadLimiter = rateLimit({
@@ -136,9 +146,9 @@ const uploadLimiter = rateLimit({
   max: 30,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { status: "fail", error: "Too many upload requests, please try again later" },
+  message: { status: 'fail', error: 'Too many upload requests, please try again later' },
 });
-app.use("/api/v1/admin/media", uploadLimiter);
+app.use('/api/v1/admin/media', uploadLimiter);
 
 // ---------------------------------------------------------------------------
 // Socket.io
@@ -156,9 +166,9 @@ const io = new Server(server, {
 global.io = io;
 
 // Socket.io authentication middleware (Keycloak JWT)
-const jwksRsa = require("jwks-rsa");
-const jwt = require("jsonwebtoken");
-const { keycloakConfig } = require("./config/keycloak");
+const jwksRsa = require('jwks-rsa');
+const jwt = require('jsonwebtoken');
+const { keycloakConfig } = require('./config/keycloak');
 
 const socketJwksClient = jwksRsa({
   cache: true,
@@ -176,10 +186,10 @@ io.use(async (socket, next) => {
   }
   try {
     const decoded = jwt.decode(token, { complete: true });
-    if (!decoded) return next(new Error("Authentication error"));
+    if (!decoded) return next(new Error('Authentication error'));
     const key = await socketJwksClient.getSigningKey(decoded.header.kid);
     const verified = jwt.verify(token, key.getPublicKey(), {
-      algorithms: ["RS256"],
+      algorithms: ['RS256'],
       issuer: keycloakConfig.authority,
     });
     socket.user = {
@@ -190,14 +200,18 @@ io.use(async (socket, next) => {
     };
     next();
   } catch (err) {
-    console.error("[Socket.io] Auth error:", err.message);
-    next(new Error("Authentication error"));
+    console.error('[Socket.io] Auth error:', err.message);
+    next(new Error('Authentication error'));
   }
 });
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id, socket.user ? `(${socket.user.email})` : '(anonymous)');
+  console.log(
+    'Client connected:',
+    socket.id,
+    socket.user ? `(${socket.user.email})` : '(anonymous)'
+  );
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
@@ -232,10 +246,10 @@ connectDB().then(() => {
 // longer mounted. All consumers must use /api/v1/* paths.
 // ---------------------------------------------------------------------------
 
-app.use("/api/v1", v1Routes);
+app.use('/api/v1', v1Routes);
 
 // Root route
-app.get("/", (req, res) => res.send("Shofy API is running. Documentation: /api-docs"));
+app.get('/', (req, res) => res.send('Shofy API is running. Documentation: /api-docs'));
 
 // ---------------------------------------------------------------------------
 // 404 handler (must be after all routes)
@@ -270,4 +284,3 @@ if (require.main === module) {
 
 module.exports = app;
 // Force nodemon reload to read new return URL
-

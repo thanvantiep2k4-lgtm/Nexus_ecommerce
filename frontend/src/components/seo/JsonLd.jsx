@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from 'next/head';
 
 /**
  * Renders a JSON-LD structured data script tag inside <Head>.

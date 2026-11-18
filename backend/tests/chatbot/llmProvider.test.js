@@ -5,8 +5,8 @@ jest.mock('@google/generative-ai', () => {
     })(),
     response: Promise.resolve({
       usageMetadata: { promptTokenCount: 10, candidatesTokenCount: 5 },
-      candidates: [{ content: { parts: [{ text: 'hello' }] } }]
-    })
+      candidates: [{ content: { parts: [{ text: 'hello' }] } }],
+    }),
   });
   const startChat = jest.fn().mockReturnValue({ sendMessageStream });
   const getGenerativeModel = jest.fn().mockReturnValue({ startChat });
@@ -16,7 +16,9 @@ jest.mock('@google/generative-ai', () => {
 const provider = require('../../services/chatbot/llmProvider');
 
 describe('llmProvider', () => {
-  beforeAll(() => { process.env.GEMINI_API_KEY = 'test-key'; });
+  beforeAll(() => {
+    process.env.GEMINI_API_KEY = 'test-key';
+  });
 
   it('streams text and returns usage', async () => {
     const chunks = [];
@@ -25,7 +27,7 @@ describe('llmProvider', () => {
       history: [],
       userMessage: 'hi',
       tools: [],
-      onToken: (t) => chunks.push(t)
+      onToken: (t) => chunks.push(t),
     });
     expect(chunks).toContain('hello');
     expect(result.usage.promptTokenCount).toBe(10);

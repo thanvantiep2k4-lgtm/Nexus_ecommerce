@@ -1,9 +1,9 @@
-import React from "react";
-import ClButton from "@/components/clicon/ui/cl-button";
+import React from 'react';
+import ClButton from '@/components/clicon/ui/cl-button';
 
 // Inline SVG illustrations — crisp at any size, themeable via CSS vars.
 const illustrations = {
-  "no-products": (
+  'no-products': (
     <svg
       viewBox="0 0 240 200"
       width="200"
@@ -30,11 +30,7 @@ const illustrations = {
         strokeLinejoin="round"
       />
       {/* folded flap */}
-      <path
-        d="M139 80h23l-11 46-12-46z"
-        fill="var(--tp-theme-accent, #0989FF)"
-        fillOpacity="0.5"
-      />
+      <path d="M139 80h23l-11 46-12-46z" fill="var(--tp-theme-accent, #0989FF)" fillOpacity="0.5" />
       {/* sad face */}
       <circle cx="108" cy="116" r="4" fill="var(--tp-gray-400, #9ca3af)" />
       <circle cx="132" cy="116" r="4" fill="var(--tp-gray-400, #9ca3af)" />
@@ -46,36 +42,21 @@ const illustrations = {
         fill="none"
       />
       {/* sparkle */}
-      <path
-        d="M120 150l3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8z"
-        fill="var(--tp-theme-accent, #0989FF)"
-      />
+      <path d="M120 150l3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8z" fill="var(--tp-theme-accent, #0989FF)" />
     </svg>
   ),
 };
 
-const EmptyState = ({
-  illustration = "no-products",
-  title,
-  description,
-  actionText,
-  onAction,
-}) => {
+const EmptyState = ({ illustration = 'no-products', title, description, actionText, onAction }) => {
   return (
     <div className="tp-empty-state">
       <div className="tp-empty-state__icon">
-        {illustrations[illustration] || illustrations["no-products"]}
+        {illustrations[illustration] || illustrations['no-products']}
       </div>
       {title && <h2 className="tp-empty-state__title">{title}</h2>}
-      {description && (
-        <p className="tp-empty-state__description">{description}</p>
-      )}
+      {description && <p className="tp-empty-state__description">{description}</p>}
       {actionText && onAction && (
-        <ClButton
-          variant="primary"
-          className="tp-empty-state__action"
-          onClick={onAction}
-        >
+        <ClButton variant="primary" className="tp-empty-state__action" onClick={onAction}>
           {actionText}
         </ClButton>
       )}

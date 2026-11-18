@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { Rating } from "react-simple-star-rating";
-import * as Yup from "yup";
-import Link from "next/link";
+import React, { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { Rating } from 'react-simple-star-rating';
+import * as Yup from 'yup';
+import Link from 'next/link';
 // internal
-import ErrorMsg from "../common/error-msg";
-import { useAddReviewMutation } from "@/redux/features/reviewApi";
-import { notifyError } from "@/utils/toast";
+import ErrorMsg from '../common/error-msg';
+import { useAddReviewMutation } from '@/redux/features/reviewApi';
+import { notifyError } from '@/utils/toast';
 
 // schema
 const schema = Yup.object().shape({
-  name: Yup.string().required().label("Name"),
-  email: Yup.string().required().email().label("Email"),
-  comment: Yup.string().required().label("Comment"),
+  name: Yup.string().required().label('Name'),
+  email: Yup.string().required().email().label('Email'),
+  comment: Yup.string().required().label('Comment'),
 });
 
 const ReviewForm = ({ product_id }) => {
@@ -118,7 +118,7 @@ const ReviewForm = ({ product_id }) => {
         <div className="tp-product-details-review-input-box">
           <div className="tp-product-details-review-input">
             <textarea
-              {...register("comment", { required: `Comment is required!` })}
+              {...register('comment', { required: `Comment is required!` })}
               id="comment"
               name="comment"
               placeholder={t('review.writePlaceholder')}
@@ -132,7 +132,7 @@ const ReviewForm = ({ product_id }) => {
         <div className="tp-product-details-review-input-box">
           <div className="tp-product-details-review-input">
             <input
-              {...register("name", { required: `Name is required!` })}
+              {...register('name', { required: `Name is required!` })}
               name="name"
               id="name"
               type="text"
@@ -148,7 +148,7 @@ const ReviewForm = ({ product_id }) => {
         <div className="tp-product-details-review-input-box">
           <div className="tp-product-details-review-input">
             <input
-              {...register("email", { required: `Email is required!` })}
+              {...register('email', { required: `Email is required!` })}
               name="email"
               id="email"
               type="email"
@@ -163,11 +163,7 @@ const ReviewForm = ({ product_id }) => {
         </div>
       </div>
       <div className="tp-product-details-review-btn-wrapper">
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="tp-product-details-review-btn"
-        >
+        <button type="submit" disabled={isLoading} className="tp-product-details-review-btn">
           {isLoading ? t('review.submitting') : t('review.submit')}
         </button>
       </div>

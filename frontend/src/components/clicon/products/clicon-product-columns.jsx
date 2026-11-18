@@ -26,9 +26,7 @@ const ProductColumn = ({ title, products, isLoading, isError, t }) => {
   } else if (!products || products.length === 0) {
     content = <p className="cl-product-columns__empty">{t('products.empty', 'No products.')}</p>;
   } else {
-    content = products.map((p) => (
-      <CliconProductSmRow key={p._id} product={p} />
-    ));
+    content = products.map((p) => <CliconProductSmRow key={p._id} product={p} />);
   }
 
   return (

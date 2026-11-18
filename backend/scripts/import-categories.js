@@ -21,13 +21,19 @@ async function importCategories({ commit = true } = {}) {
     // 1) rename in place if an oldParent doc exists (preserve _id)
     let doc = node.oldParent ? await Category.findOne({ parent: node.oldParent }) : null;
     if (doc) {
-      if (commit) { Object.assign(doc, fields); await doc.save(); }
+      if (commit) {
+        Object.assign(doc, fields);
+        await doc.save();
+      }
       result.renamed += 1;
     } else {
       // 2) upsert by the new parent
       const existing = await Category.findOne({ parent: node.parent });
       if (existing) {
-        if (commit) { Object.assign(existing, fields); await existing.save(); }
+        if (commit) {
+          Object.assign(existing, fields);
+          await existing.save();
+        }
         result.updated += 1;
       } else {
         if (commit) await Category.create(fields);
@@ -45,7 +51,10 @@ async function importCategories({ commit = true } = {}) {
   for (const c of toHide) {
     const inTree = CATEGORY_TREE.some((n) => n.parent === c.parent);
     if (!inTree && (SOFT_DELETE_PARENTS.includes(c.parent) || !keep.has(c.parent))) {
-      if (commit) { c.status = 'Hide'; await c.save(); }
+      if (commit) {
+        c.status = 'Hide';
+        await c.save();
+      }
       result.hidden += 1;
     }
   }
@@ -60,7 +69,10 @@ if (require.main === module) {
     const r = await importCategories({ commit: flags.commit });
     console.log(flags.commit ? 'Categories:' : '[dry-run] categories:', r);
     await disconnect();
-  })().catch((e) => { console.error('import-categories FAILED:', e.message); process.exit(1); });
+  })().catch((e) => {
+    console.error('import-categories FAILED:', e.message);
+    process.exit(1);
+  });
 }
 
 module.exports = { importCategories };

@@ -5,11 +5,11 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 const axios = require('axios');
-const { secret } = require('./config/secret');
-const connectDB = require('./config/db');
-const Order = require('./model/Order');
-const User = require('./model/User');
-const { buildPaymentUrl, createSecureHash } = require('./utils/vnpay');
+const { secret } = require('../config/secret');
+const connectDB = require('../config/db');
+const Order = require('../models/Order');
+const User = require('../models/User');
+const { buildPaymentUrl, createSecureHash } = require('../utils/vnpay');
 
 async function runTest() {
   console.log('==================================================');
@@ -57,7 +57,7 @@ async function runTest() {
           title: 'Sony headphones',
           price: totalAmountVal,
           orderQuantity: 1,
-        }
+        },
       ],
       paymentMethod: 'vnpay',
       paymentGateway: 'vnpay',
@@ -68,8 +68,10 @@ async function runTest() {
       totalAmount: totalAmountVal,
       status: 'pending',
     });
-    console.log(`Mock order created successfully. ID: ${mockOrder._id}, Invoice: ${mockOrder.invoice}`);
- 
+    console.log(
+      `Mock order created successfully. ID: ${mockOrder._id}, Invoice: ${mockOrder.invoice}`
+    );
+
     // 4. Test buildPaymentUrl
     console.log('\nGenerating VNPay Sandbox URL...');
     const paymentUrl = buildPaymentUrl({
@@ -80,7 +82,7 @@ async function runTest() {
     });
     console.log('Generated payment URL successfully:');
     console.log(paymentUrl);
- 
+
     // 5. Build parameters for a simulated successful IPN callback
     console.log('\nGenerating mock successful IPN request query parameters...');
     const nowStr = '20260518101500';
@@ -116,7 +118,7 @@ async function runTest() {
     const response = await axios.get('http://localhost:4000/api/v1/auth/payment/vnpay/ipn', {
       params: ipnParams,
     });
-    
+
     console.log('IPN Response Status:', response.status);
     console.log('IPN Response Data:', response.data);
 
@@ -135,11 +137,12 @@ async function runTest() {
     console.log(`- transactionId: "${updatedOrder.transactionId}" (Expected: "13547367")`);
 
     if (updatedOrder.paymentStatus === 'paid' && updatedOrder.status === 'confirmed') {
-      console.log('\n🏆 VNPay E2E Test PASSED! Signature verification and state mutations are 100% correct!');
+      console.log(
+        '\n🏆 VNPay E2E Test PASSED! Signature verification and state mutations are 100% correct!'
+      );
     } else {
       throw new Error('🔴 VNPay DB verification FAILED: Order state was not updated correctly!');
     }
-
   } catch (error) {
     console.error('\n❌ E2E TEST CRASHED/FAILED:', error.message);
     if (error.response) {

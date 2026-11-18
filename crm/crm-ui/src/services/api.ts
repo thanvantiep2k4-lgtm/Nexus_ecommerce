@@ -59,8 +59,7 @@ export const productsApi = {
   getAll: (params?: ProductQuery) =>
     api.get<ApiResponse<Product[]>>('/api/products', { params }).then((r) => r.data),
 
-  getById: (id: string) =>
-    api.get<ApiResponse<Product>>(`/api/products/${id}`).then((r) => r.data),
+  getById: (id: string) => api.get<ApiResponse<Product>>(`/api/products/${id}`).then((r) => r.data),
 
   create: (data: Partial<Product>) =>
     api.post<ApiResponse<Product>>('/api/products', data).then((r) => r.data),
@@ -68,11 +67,9 @@ export const productsApi = {
   update: (id: string, data: Partial<Product>) =>
     api.put<ApiResponse<Product>>(`/api/products/${id}`, data).then((r) => r.data),
 
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/products/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/products/${id}`).then((r) => r.data),
 
-  getStats: () =>
-    api.get<ApiResponse<ProductStats>>('/api/products/stats').then((r) => r.data),
+  getStats: () => api.get<ApiResponse<ProductStats>>('/api/products/stats').then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -103,11 +100,9 @@ export const categoriesApi = {
   delete: (id: string) =>
     api.delete<ApiResponse<null>>(`/api/categories/${id}`).then((r) => r.data),
 
-  getStats: () =>
-    api.get<ApiResponse<CategoryStats>>('/api/categories/stats').then((r) => r.data),
+  getStats: () => api.get<ApiResponse<CategoryStats>>('/api/categories/stats').then((r) => r.data),
 
-  getTree: () =>
-    api.get<ApiResponse<Category[]>>('/api/categories/tree').then((r) => r.data),
+  getTree: () => api.get<ApiResponse<Category[]>>('/api/categories/tree').then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -130,8 +125,7 @@ export const ordersApi = {
   getAll: (params?: OrderQuery) =>
     api.get<ApiResponse<Order[]>>('/api/orders', { params }).then((r) => r.data),
 
-  getById: (id: string) =>
-    api.get<ApiResponse<Order>>(`/api/orders/${id}`).then((r) => r.data),
+  getById: (id: string) => api.get<ApiResponse<Order>>(`/api/orders/${id}`).then((r) => r.data),
 
   create: (data: Partial<Order>) =>
     api.post<ApiResponse<Order>>('/api/orders', data).then((r) => r.data),
@@ -140,9 +134,7 @@ export const ordersApi = {
     api.put<ApiResponse<Order>>(`/api/orders/${id}`, data).then((r) => r.data),
 
   updateStatus: (id: string, status: string) =>
-    api
-      .patch<ApiResponse<Order>>(`/api/orders/${id}/status`, { status })
-      .then((r) => r.data),
+    api.patch<ApiResponse<Order>>(`/api/orders/${id}/status`, { status }).then((r) => r.data),
 
   updateTracking: (
     id: string,
@@ -151,14 +143,12 @@ export const ordersApi = {
       carrier?: string;
       trackingUrl?: string;
       estimatedDelivery?: string;
-    },
+    }
   ) => api.patch<ApiResponse<Order>>(`/api/orders/${id}`, data).then((r) => r.data),
 
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/orders/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/orders/${id}`).then((r) => r.data),
 
-  getStats: () =>
-    api.get<ApiResponse<OrderStats>>('/api/orders/stats').then((r) => r.data),
+  getStats: () => api.get<ApiResponse<OrderStats>>('/api/orders/stats').then((r) => r.data),
 
   takeOrder: (id: string) =>
     api.patch<ApiResponse<Order>>(`/api/orders/${id}/take`).then((r) => r.data),
@@ -191,8 +181,7 @@ export const usersApi = {
   getAll: (params?: UserQuery) =>
     api.get<ApiResponse<User[]>>('/api/users', { params }).then((r) => r.data),
 
-  getById: (id: string) =>
-    api.get<ApiResponse<User>>(`/api/users/${id}`).then((r) => r.data),
+  getById: (id: string) => api.get<ApiResponse<User>>(`/api/users/${id}`).then((r) => r.data),
 
   create: (data: Partial<User>) =>
     api.post<ApiResponse<User>>('/api/users', data).then((r) => r.data),
@@ -201,20 +190,14 @@ export const usersApi = {
     api.put<ApiResponse<User>>(`/api/users/${id}`, data).then((r) => r.data),
 
   updateStatus: (id: string, status: string) =>
-    api
-      .patch<ApiResponse<User>>(`/api/users/${id}/status`, { status })
-      .then((r) => r.data),
+    api.patch<ApiResponse<User>>(`/api/users/${id}/status`, { status }).then((r) => r.data),
 
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/users/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/users/${id}`).then((r) => r.data),
 
-  getStats: () =>
-    api.get<ApiResponse<UserStats>>('/api/users/stats').then((r) => r.data),
+  getStats: () => api.get<ApiResponse<UserStats>>('/api/users/stats').then((r) => r.data),
 
   getUserOrders: (id: string, params?: { page?: number; limit?: number }) =>
-    api
-      .get<ApiResponse<Order[]>>(`/api/users/${id}/orders`, { params })
-      .then((r) => r.data),
+    api.get<ApiResponse<Order[]>>(`/api/users/${id}/orders`, { params }).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -222,35 +205,31 @@ export const usersApi = {
 // ---------------------------------------------------------------------------
 export const pagesApi = {
   getAll: (params?: { page?: number; limit?: number; status?: string; search?: string }) =>
-    api.get<ApiResponse<Page[]>>('/api/cms/pages', { params }).then(r => r.data),
-  getById: (id: string) =>
-    api.get<ApiResponse<Page>>(`/api/cms/pages/${id}`).then(r => r.data),
+    api.get<ApiResponse<Page[]>>('/api/cms/pages', { params }).then((r) => r.data),
+  getById: (id: string) => api.get<ApiResponse<Page>>(`/api/cms/pages/${id}`).then((r) => r.data),
   create: (data: Partial<Page>) =>
-    api.post<ApiResponse<Page>>('/api/cms/pages', data).then(r => r.data),
+    api.post<ApiResponse<Page>>('/api/cms/pages', data).then((r) => r.data),
   update: (id: string, data: Partial<Page>) =>
-    api.patch<ApiResponse<Page>>(`/api/cms/pages/${id}`, data).then(r => r.data),
+    api.patch<ApiResponse<Page>>(`/api/cms/pages/${id}`, data).then((r) => r.data),
   updateBlocks: (id: string, blocks: ContentBlock[]) =>
-    api.patch<ApiResponse<Page>>(`/api/cms/pages/${id}/blocks`, { blocks }).then(r => r.data),
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/cms/pages/${id}`).then(r => r.data),
+    api.patch<ApiResponse<Page>>(`/api/cms/pages/${id}/blocks`, { blocks }).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/cms/pages/${id}`).then((r) => r.data),
   duplicate: (id: string) =>
-    api.post<ApiResponse<Page>>(`/api/cms/pages/${id}/duplicate`).then(r => r.data),
+    api.post<ApiResponse<Page>>(`/api/cms/pages/${id}/duplicate`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
 // CMS — Menus
 // ---------------------------------------------------------------------------
 export const menusApi = {
-  getAll: () =>
-    api.get<ApiResponse<CmsMenu[]>>('/api/cms/menus').then(r => r.data),
+  getAll: () => api.get<ApiResponse<CmsMenu[]>>('/api/cms/menus').then((r) => r.data),
   getById: (id: string) =>
-    api.get<ApiResponse<CmsMenu>>(`/api/cms/menus/${id}`).then(r => r.data),
+    api.get<ApiResponse<CmsMenu>>(`/api/cms/menus/${id}`).then((r) => r.data),
   create: (data: Partial<CmsMenu>) =>
-    api.post<ApiResponse<CmsMenu>>('/api/cms/menus', data).then(r => r.data),
+    api.post<ApiResponse<CmsMenu>>('/api/cms/menus', data).then((r) => r.data),
   update: (id: string, data: Partial<CmsMenu>) =>
-    api.patch<ApiResponse<CmsMenu>>(`/api/cms/menus/${id}`, data).then(r => r.data),
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/cms/menus/${id}`).then(r => r.data),
+    api.patch<ApiResponse<CmsMenu>>(`/api/cms/menus/${id}`, data).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/cms/menus/${id}`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -258,63 +237,69 @@ export const menusApi = {
 // ---------------------------------------------------------------------------
 export const bannersApi = {
   getAll: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
-    api.get<ApiResponse<Banner[]>>('/api/cms/banners', { params }).then(r => r.data),
+    api.get<ApiResponse<Banner[]>>('/api/cms/banners', { params }).then((r) => r.data),
   getById: (id: string) =>
-    api.get<ApiResponse<Banner>>(`/api/cms/banners/${id}`).then(r => r.data),
+    api.get<ApiResponse<Banner>>(`/api/cms/banners/${id}`).then((r) => r.data),
   create: (data: Partial<Banner>) =>
-    api.post<ApiResponse<Banner>>('/api/cms/banners', data).then(r => r.data),
+    api.post<ApiResponse<Banner>>('/api/cms/banners', data).then((r) => r.data),
   update: (id: string, data: Partial<Banner>) =>
-    api.patch<ApiResponse<Banner>>(`/api/cms/banners/${id}`, data).then(r => r.data),
+    api.patch<ApiResponse<Banner>>(`/api/cms/banners/${id}`, data).then((r) => r.data),
   delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/cms/banners/${id}`).then(r => r.data),
+    api.delete<ApiResponse<null>>(`/api/cms/banners/${id}`).then((r) => r.data),
   updatePriority: (items: Array<{ id: string; priority: number }>) =>
-    api.patch<ApiResponse<null>>('/api/cms/banners/priority', { items }).then(r => r.data),
+    api.patch<ApiResponse<null>>('/api/cms/banners/priority', { items }).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
 // CMS — Blog
 // ---------------------------------------------------------------------------
 export const blogApi = {
-  getAll: (params?: { page?: number; limit?: number; status?: string; category?: string; search?: string }) =>
-    api.get<ApiResponse<BlogPost[]>>('/api/cms/blog', { params }).then(r => r.data),
+  getAll: (params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    category?: string;
+    search?: string;
+  }) => api.get<ApiResponse<BlogPost[]>>('/api/cms/blog', { params }).then((r) => r.data),
   getById: (id: string) =>
-    api.get<ApiResponse<BlogPost>>(`/api/cms/blog/${id}`).then(r => r.data),
+    api.get<ApiResponse<BlogPost>>(`/api/cms/blog/${id}`).then((r) => r.data),
   create: (data: Partial<BlogPost>) =>
-    api.post<ApiResponse<BlogPost>>('/api/cms/blog', data).then(r => r.data),
+    api.post<ApiResponse<BlogPost>>('/api/cms/blog', data).then((r) => r.data),
   update: (id: string, data: Partial<BlogPost>) =>
-    api.patch<ApiResponse<BlogPost>>(`/api/cms/blog/${id}`, data).then(r => r.data),
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/cms/blog/${id}`).then(r => r.data),
+    api.patch<ApiResponse<BlogPost>>(`/api/cms/blog/${id}`, data).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/cms/blog/${id}`).then((r) => r.data),
   publish: (id: string) =>
-    api.patch<ApiResponse<BlogPost>>(`/api/cms/blog/${id}/publish`).then(r => r.data),
+    api.patch<ApiResponse<BlogPost>>(`/api/cms/blog/${id}/publish`).then((r) => r.data),
   unpublish: (id: string) =>
-    api.patch<ApiResponse<BlogPost>>(`/api/cms/blog/${id}/unpublish`).then(r => r.data),
+    api.patch<ApiResponse<BlogPost>>(`/api/cms/blog/${id}/unpublish`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
 // CMS — Settings
 // ---------------------------------------------------------------------------
 export const settingsApi = {
-  get: () =>
-    api.get<ApiResponse<SiteSettings>>('/api/cms/settings').then(r => r.data),
+  get: () => api.get<ApiResponse<SiteSettings>>('/api/cms/settings').then((r) => r.data),
   update: (data: Partial<SiteSettings>) =>
-    api.patch<ApiResponse<SiteSettings>>('/api/cms/settings', data).then(r => r.data),
+    api.patch<ApiResponse<SiteSettings>>('/api/cms/settings', data).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
 // Coupons
 // ---------------------------------------------------------------------------
 export const couponsApi = {
-  getAll: (params?: { page?: number; limit?: number; status?: string; productType?: string; search?: string }) =>
-    api.get<ApiResponse<Coupon[]>>('/api/coupons', { params }).then(r => r.data),
-  getById: (id: string) =>
-    api.get<ApiResponse<Coupon>>(`/api/coupons/${id}`).then(r => r.data),
+  getAll: (params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    productType?: string;
+    search?: string;
+  }) => api.get<ApiResponse<Coupon[]>>('/api/coupons', { params }).then((r) => r.data),
+  getById: (id: string) => api.get<ApiResponse<Coupon>>(`/api/coupons/${id}`).then((r) => r.data),
   create: (data: Partial<Coupon>) =>
-    api.post<ApiResponse<Coupon>>('/api/coupons', data).then(r => r.data),
+    api.post<ApiResponse<Coupon>>('/api/coupons', data).then((r) => r.data),
   update: (id: string, data: Partial<Coupon>) =>
-    api.patch<ApiResponse<Coupon>>(`/api/coupons/${id}`, data).then(r => r.data),
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/coupons/${id}`).then(r => r.data),
+    api.patch<ApiResponse<Coupon>>(`/api/coupons/${id}`, data).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/coupons/${id}`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -334,8 +319,7 @@ export const reviewsApi = {
   getAll: (params?: ReviewQuery) =>
     api.get<ApiResponse<Review[]>>('/api/reviews', { params }).then((r) => r.data),
 
-  getById: (id: string) =>
-    api.get<ApiResponse<Review>>(`/api/reviews/${id}`).then((r) => r.data),
+  getById: (id: string) => api.get<ApiResponse<Review>>(`/api/reviews/${id}`).then((r) => r.data),
 
   approve: (id: string) =>
     api.patch<ApiResponse<Review>>(`/api/reviews/${id}/approve`).then((r) => r.data),
@@ -346,8 +330,7 @@ export const reviewsApi = {
   reply: (id: string, text: string) =>
     api.post<ApiResponse<Review>>(`/api/reviews/${id}/reply`, { text }).then((r) => r.data),
 
-  delete: (id: string) =>
-    api.delete<ApiResponse<null>>(`/api/reviews/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete<ApiResponse<null>>(`/api/reviews/${id}`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -358,11 +341,9 @@ export const vendorsApi = {
   getAll: (params?: { page?: number; limit?: number; status?: string; search?: string }) =>
     api.get<ApiResponse<Vendor[]>>('/api/vendors', { params }).then((r) => r.data),
 
-  getStats: () =>
-    api.get<ApiResponse<VendorStats>>('/api/vendors/stats').then((r) => r.data),
+  getStats: () => api.get<ApiResponse<VendorStats>>('/api/vendors/stats').then((r) => r.data),
 
-  getById: (id: string) =>
-    api.get<ApiResponse<Vendor>>(`/api/vendors/${id}`).then((r) => r.data),
+  getById: (id: string) => api.get<ApiResponse<Vendor>>(`/api/vendors/${id}`).then((r) => r.data),
 
   getProducts: (id: string, params?: { page?: number; limit?: number }) =>
     api.get<ApiResponse<Product[]>>(`/api/vendors/${id}/products`, { params }).then((r) => r.data),
@@ -383,7 +364,9 @@ export const vendorsApi = {
     api.patch<ApiResponse<Vendor>>(`/api/vendors/${id}/suspend`).then((r) => r.data),
 
   updateCommission: (id: string, commissionRate: number) =>
-    api.patch<ApiResponse<Vendor>>(`/api/vendors/${id}/commission`, { commissionRate }).then((r) => r.data),
+    api
+      .patch<ApiResponse<Vendor>>(`/api/vendors/${id}/commission`, { commissionRate })
+      .then((r) => r.data),
 
   processPayout: (
     vendorId: string,
@@ -404,9 +387,7 @@ export const analyticsApi = {
     api.get<ApiResponse<DashboardAnalytics>>('/api/analytics').then((r) => r.data),
 
   getRevenue: (params: { groupBy: string; startDate?: string; endDate?: string }) =>
-    api
-      .get<ApiResponse<RevenueResponse>>('/api/analytics/revenue', { params })
-      .then((r) => r.data),
+    api.get<ApiResponse<RevenueResponse>>('/api/analytics/revenue', { params }).then((r) => r.data),
 
   getTopProducts: (params?: { sortBy?: string; period?: string }) =>
     api
@@ -449,16 +430,16 @@ export interface ChatbotAnalytics {
 
 export const chatbotApi = {
   getAnalytics: () =>
-    api
-      .get<ApiResponse<ChatbotAnalytics>>('/api/chat/analytics')
-      .then((r) => r.data),
+    api.get<ApiResponse<ChatbotAnalytics>>('/api/chat/analytics').then((r) => r.data),
 
   listSessions: (params?: { page?: number; limit?: number }) =>
     api
-      .get<ApiResponse<{ sessions: ChatbotSessionRow[]; pagination: { page: number; limit: number; total: number } }>>(
-        '/api/chat/sessions',
-        { params }
-      )
+      .get<
+        ApiResponse<{
+          sessions: ChatbotSessionRow[];
+          pagination: { page: number; limit: number; total: number };
+        }>
+      >('/api/chat/sessions', { params })
       .then((r) => r.data),
 };
 
@@ -467,8 +448,7 @@ export const chatbotApi = {
 // ---------------------------------------------------------------------------
 
 export const emailTemplatesApi = {
-  getAll: () =>
-    api.get<ApiResponse<EmailTemplate[]>>('/api/email-templates').then((r) => r.data),
+  getAll: () => api.get<ApiResponse<EmailTemplate[]>>('/api/email-templates').then((r) => r.data),
 
   getById: (id: string) =>
     api.get<ApiResponse<EmailTemplate>>(`/api/email-templates/${id}`).then((r) => r.data),

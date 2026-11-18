@@ -17,19 +17,19 @@ const authorization = require('../../../middleware/authorization');
 const { validate } = require('../../../middleware/validate');
 const v = require('../../../validations');
 const cmsValidation = require('../../../validations/cms.validation');
-const ctrl = require('../../../controller/v1/admin.controller');
-const cmsCtrl = require('../../../controller/v1/cms.controller');
-const currencyAuditCtrl = require('../../../controller/v1/currencyAudit.controller');
-const analyticsCtrl = require('../../../controller/v1/analytics.controller');
-const activityLogCtrl = require('../../../controller/v1/activityLog.controller');
-const chatbotAdminCtrl = require('../../../controller/v1/chatbot-admin.controller');
+const ctrl = require('../../../controllers/v1/admin.controller');
+const cmsCtrl = require('../../../controllers/v1/cms.controller');
+const currencyAuditCtrl = require('../../../controllers/v1/currencyAudit.controller');
+const analyticsCtrl = require('../../../controllers/v1/analytics.controller');
+const activityLogCtrl = require('../../../controllers/v1/activityLog.controller');
+const chatbotAdminCtrl = require('../../../controllers/v1/chatbot-admin.controller');
 const { logActivity } = require('../../../middleware/activityLog');
 const respond = require('../../../utils/respond');
 
 // Vendor controller is optional — guard against missing file during early dev
 let vendorCtrl;
 try {
-  vendorCtrl = require('../../../controller/v1/admin.vendor.controller');
+  vendorCtrl = require('../../../controllers/v1/admin.vendor.controller');
 } catch (_) {
   vendorCtrl = null;
 }
@@ -54,7 +54,12 @@ const handleUploadErrors = (err, req, res, next) => {
   if (!err) return next();
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return respond.error(res, 'FILE_TOO_LARGE', `File exceeds maximum size of ${MAX_IMAGE_SIZE_BYTES / 1024 / 1024}MB`, 413);
+      return respond.error(
+        res,
+        'FILE_TOO_LARGE',
+        `File exceeds maximum size of ${MAX_IMAGE_SIZE_BYTES / 1024 / 1024}MB`,
+        413
+      );
     }
     return respond.error(res, 'UPLOAD_ERROR', err.message, 400);
   }
@@ -96,7 +101,7 @@ router.use((req, res, next) => {
  *       401:
  *         description: Unauthorized
  */
-router.get('/products/stats',  ctrl.getProductStats);
+router.get('/products/stats', ctrl.getProductStats);
 
 // Currency audit — must be declared before /products/:id to avoid `:id` capturing the literal segments
 /**
@@ -126,7 +131,11 @@ router.get('/products/stats',  ctrl.getProductStats);
  *       403:
  *         description: Forbidden (admin/manager only)
  */
-router.get('/products/currency-audit',              authorization('admin', 'manager'), currencyAuditCtrl.listAuditCandidates);
+router.get(
+  '/products/currency-audit',
+  authorization('admin', 'manager'),
+  currencyAuditCtrl.listAuditCandidates
+);
 /**
  * @swagger
  * /api/v1/admin/products/bulk-normalize-currency:
@@ -161,7 +170,13 @@ router.get('/products/currency-audit',              authorization('admin', 'mana
  *       422:
  *         description: Validation failed (e.g. > 100 ids)
  */
-router.post('/products/bulk-normalize-currency',    authorization('admin', 'manager'), validate(v.bulkNormalizeCurrency), logActivity('currency-normalize', 'product'), currencyAuditCtrl.normalizeBulk);
+router.post(
+  '/products/bulk-normalize-currency',
+  authorization('admin', 'manager'),
+  validate(v.bulkNormalizeCurrency),
+  logActivity('currency-normalize', 'product'),
+  currencyAuditCtrl.normalizeBulk
+);
 /**
  * @swagger
  * /api/v1/admin/products/{id}/normalize-currency:
@@ -199,7 +214,13 @@ router.post('/products/bulk-normalize-currency',    authorization('admin', 'mana
  *       422:
  *         description: Validation failed
  */
-router.post('/products/:id/normalize-currency',     authorization('admin', 'manager'), validate(v.normalizeCurrency), logActivity('currency-normalize', 'product'), currencyAuditCtrl.normalizeOne);
+router.post(
+  '/products/:id/normalize-currency',
+  authorization('admin', 'manager'),
+  validate(v.normalizeCurrency),
+  logActivity('currency-normalize', 'product'),
+  currencyAuditCtrl.normalizeOne
+);
 
 /**
  * @swagger
@@ -221,7 +242,7 @@ router.post('/products/:id/normalize-currency',     authorization('admin', 'mana
  *       404:
  *         description: Not found
  */
-router.get('/products/:id',    ctrl.getProductById);
+router.get('/products/:id', ctrl.getProductById);
 
 /**
  * @swagger
@@ -252,7 +273,7 @@ router.get('/products/:id',    ctrl.getProductById);
  *       200:
  *         description: Paginated product list
  */
-router.get('/products',        ctrl.getAllProducts);
+router.get('/products', ctrl.getAllProducts);
 
 /**
  * @swagger
@@ -284,7 +305,13 @@ router.get('/products',        ctrl.getAllProducts);
  *       422:
  *         description: Validation error
  */
-router.post('/products',       authorization('admin', 'manager'), validate(v.createProduct), logActivity('create', 'product'), ctrl.createProduct);
+router.post(
+  '/products',
+  authorization('admin', 'manager'),
+  validate(v.createProduct),
+  logActivity('create', 'product'),
+  ctrl.createProduct
+);
 
 /**
  * @swagger
@@ -306,7 +333,13 @@ router.post('/products',       authorization('admin', 'manager'), validate(v.cre
  *       422:
  *         description: Validation error
  */
-router.patch('/products/:id',  authorization('admin', 'manager'), validate(v.updateProduct), logActivity('update', 'product'), ctrl.updateProduct);
+router.patch(
+  '/products/:id',
+  authorization('admin', 'manager'),
+  validate(v.updateProduct),
+  logActivity('update', 'product'),
+  ctrl.updateProduct
+);
 
 /**
  * @swagger
@@ -326,19 +359,39 @@ router.patch('/products/:id',  authorization('admin', 'manager'), validate(v.upd
  *       200:
  *         description: Product deleted
  */
-router.delete('/products/:id', authorization('admin', 'manager'), logActivity('delete', 'product'), ctrl.deleteProduct);
+router.delete(
+  '/products/:id',
+  authorization('admin', 'manager'),
+  logActivity('delete', 'product'),
+  ctrl.deleteProduct
+);
 
 // ---------------------------------------------------------------------------
 // Categories
 // ---------------------------------------------------------------------------
 
 router.get('/categories/stats', ctrl.getCategoryStats);
-router.get('/categories/tree',  ctrl.getCategoryTree);
-router.get('/categories/:id',   ctrl.getCategoryById);
-router.get('/categories',       ctrl.getAllCategories);
-router.post('/categories',      authorization('admin', 'manager'), logActivity('create', 'category'), ctrl.createCategory);
-router.patch('/categories/:id', authorization('admin', 'manager'), logActivity('update', 'category'), ctrl.updateCategory);
-router.delete('/categories/:id', authorization('admin', 'manager'), logActivity('delete', 'category'), ctrl.deleteCategory);
+router.get('/categories/tree', ctrl.getCategoryTree);
+router.get('/categories/:id', ctrl.getCategoryById);
+router.get('/categories', ctrl.getAllCategories);
+router.post(
+  '/categories',
+  authorization('admin', 'manager'),
+  logActivity('create', 'category'),
+  ctrl.createCategory
+);
+router.patch(
+  '/categories/:id',
+  authorization('admin', 'manager'),
+  logActivity('update', 'category'),
+  ctrl.updateCategory
+);
+router.delete(
+  '/categories/:id',
+  authorization('admin', 'manager'),
+  logActivity('delete', 'category'),
+  ctrl.deleteCategory
+);
 
 // ---------------------------------------------------------------------------
 // Orders
@@ -356,8 +409,8 @@ router.delete('/categories/:id', authorization('admin', 'manager'), logActivity(
  *       200:
  *         description: Order stats
  */
-router.get('/orders/stats',          ctrl.getOrderStats);
-router.get('/orders/:id',            ctrl.getOrderById);
+router.get('/orders/stats', ctrl.getOrderStats);
+router.get('/orders/:id', ctrl.getOrderById);
 
 /**
  * @swagger
@@ -388,9 +441,19 @@ router.get('/orders/:id',            ctrl.getOrderById);
  *       200:
  *         description: Paginated order list
  */
-router.get('/orders',                ctrl.getAllOrders);
-router.post('/orders',               authorization('admin', 'manager'), logActivity('create', 'order'), ctrl.createOrder);
-router.patch('/orders/:id/take',     authorization('shipper', 'admin'), logActivity('status-change', 'order'), ctrl.takeOrder);
+router.get('/orders', ctrl.getAllOrders);
+router.post(
+  '/orders',
+  authorization('admin', 'manager'),
+  logActivity('create', 'order'),
+  ctrl.createOrder
+);
+router.patch(
+  '/orders/:id/take',
+  authorization('shipper', 'admin'),
+  logActivity('status-change', 'order'),
+  ctrl.takeOrder
+);
 
 /**
  * @swagger
@@ -423,33 +486,66 @@ router.patch('/orders/:id/take',     authorization('shipper', 'admin'), logActiv
  *       200:
  *         description: Status updated
  */
-router.patch('/orders/:id/status',   logActivity('status-change', 'order'), ctrl.updateOrderStatus);
-router.patch('/orders/:id',          authorization('admin', 'manager'), logActivity('update', 'order'), ctrl.updateOrder);
-router.delete('/orders/:id',         authorization('admin', 'manager'), logActivity('delete', 'order'), ctrl.deleteOrder);
+router.patch('/orders/:id/status', logActivity('status-change', 'order'), ctrl.updateOrderStatus);
+router.patch(
+  '/orders/:id',
+  authorization('admin', 'manager'),
+  logActivity('update', 'order'),
+  ctrl.updateOrder
+);
+router.delete(
+  '/orders/:id',
+  authorization('admin', 'manager'),
+  logActivity('delete', 'order'),
+  ctrl.deleteOrder
+);
 
 // ---------------------------------------------------------------------------
 // Users
 // ---------------------------------------------------------------------------
 
-router.get('/users/stats',          ctrl.getUserStats);
-router.get('/users/:id/orders',     ctrl.getUserOrders);
-router.get('/users/:id',            ctrl.getUserById);
-router.get('/users',                ctrl.getAllUsers);
-router.post('/users',               authorization('admin', 'manager'), validate(v.createUser), logActivity('create', 'user'), ctrl.createUser);
-router.patch('/users/:id/status',   authorization('admin', 'manager'), validate(v.updateUserStatus), logActivity('status-change', 'user'), ctrl.updateUserStatus);
-router.patch('/users/:id',          authorization('admin', 'manager'), validate(v.adminUpdateUser), logActivity('update', 'user'), ctrl.updateUser);
-router.delete('/users/:id',         authorization('admin', 'manager'), logActivity('delete', 'user'), ctrl.deleteUser);
+router.get('/users/stats', ctrl.getUserStats);
+router.get('/users/:id/orders', ctrl.getUserOrders);
+router.get('/users/:id', ctrl.getUserById);
+router.get('/users', ctrl.getAllUsers);
+router.post(
+  '/users',
+  authorization('admin', 'manager'),
+  validate(v.createUser),
+  logActivity('create', 'user'),
+  ctrl.createUser
+);
+router.patch(
+  '/users/:id/status',
+  authorization('admin', 'manager'),
+  validate(v.updateUserStatus),
+  logActivity('status-change', 'user'),
+  ctrl.updateUserStatus
+);
+router.patch(
+  '/users/:id',
+  authorization('admin', 'manager'),
+  validate(v.adminUpdateUser),
+  logActivity('update', 'user'),
+  ctrl.updateUser
+);
+router.delete(
+  '/users/:id',
+  authorization('admin', 'manager'),
+  logActivity('delete', 'user'),
+  ctrl.deleteUser
+);
 
 // ---------------------------------------------------------------------------
 // Staff — admin/manager only (Keycloak-integrated)
 // ---------------------------------------------------------------------------
 
-router.post('/staff',             authorization('admin', 'manager'), validate(v.addStaff), ctrl.addStaff);
-router.get('/staff',              authorization('admin', 'manager'), ctrl.getAllStaff);
-router.get('/staff/:id',          authorization('admin', 'manager'), ctrl.getStaffById);
-router.patch('/staff/:id',        authorization('admin', 'manager'), ctrl.updateStaff);
+router.post('/staff', authorization('admin', 'manager'), validate(v.addStaff), ctrl.addStaff);
+router.get('/staff', authorization('admin', 'manager'), ctrl.getAllStaff);
+router.get('/staff/:id', authorization('admin', 'manager'), ctrl.getStaffById);
+router.patch('/staff/:id', authorization('admin', 'manager'), ctrl.updateStaff);
 router.patch('/staff/:id/status', authorization('admin', 'manager'), ctrl.updatedStatus);
-router.delete('/staff/:id',       authorization('admin', 'manager'), ctrl.deleteStaff);
+router.delete('/staff/:id', authorization('admin', 'manager'), ctrl.deleteStaff);
 
 // ---------------------------------------------------------------------------
 // Media / Cloudinary
@@ -479,13 +575,15 @@ router.delete('/staff/:id',       authorization('admin', 'manager'), ctrl.delete
 router.post(
   '/media/upload',
   authorization('admin', 'manager'),
-  (req, res, next) => upload.single('image')(req, res, (err) => handleUploadErrors(err, req, res, next)),
+  (req, res, next) =>
+    upload.single('image')(req, res, (err) => handleUploadErrors(err, req, res, next)),
   ctrl.uploadImage
 );
 router.post(
   '/media/upload-multiple',
   authorization('admin', 'manager'),
-  (req, res, next) => upload.array('images', 5)(req, res, (err) => handleUploadErrors(err, req, res, next)),
+  (req, res, next) =>
+    upload.array('images', 5)(req, res, (err) => handleUploadErrors(err, req, res, next)),
   ctrl.uploadMultipleImages
 );
 router.delete('/media', authorization('admin', 'manager'), ctrl.deleteImage);
@@ -506,48 +604,96 @@ router.delete('/media', authorization('admin', 'manager'), ctrl.deleteImage);
  *       200:
  *         description: Dashboard data
  */
-router.get('/analytics/dashboard',         analyticsCtrl.getDashboard);
-router.get('/analytics/sales-report',      analyticsCtrl.getSalesReport);
-router.get('/analytics/revenue',           analyticsCtrl.getRevenue);
-router.get('/analytics/top-products',      analyticsCtrl.getTopProducts);
-router.get('/analytics/top-categories',    analyticsCtrl.getTopCategories);
-router.get('/analytics/customer-growth',   analyticsCtrl.getCustomerGrowth);
-router.get('/analytics/vendor-performance', authorization('admin', 'manager'), analyticsCtrl.getVendorPerformance);
-router.get('/analytics/recent-orders',     analyticsCtrl.getRecentOrders);
+router.get('/analytics/dashboard', analyticsCtrl.getDashboard);
+router.get('/analytics/sales-report', analyticsCtrl.getSalesReport);
+router.get('/analytics/revenue', analyticsCtrl.getRevenue);
+router.get('/analytics/top-products', analyticsCtrl.getTopProducts);
+router.get('/analytics/top-categories', analyticsCtrl.getTopCategories);
+router.get('/analytics/customer-growth', analyticsCtrl.getCustomerGrowth);
+router.get(
+  '/analytics/vendor-performance',
+  authorization('admin', 'manager'),
+  analyticsCtrl.getVendorPerformance
+);
+router.get('/analytics/recent-orders', analyticsCtrl.getRecentOrders);
 
 // Legacy dashboard-amount alias — keep for any existing CRM calls
-router.get('/analytics/dashboard-amount',  ctrl.getDashboardAmount);
+router.get('/analytics/dashboard-amount', ctrl.getDashboardAmount);
 
 // ---------------------------------------------------------------------------
 // Banners — CMS Phase 2
 // Note: /banners/priority must be declared before /banners/:id
 // ---------------------------------------------------------------------------
 
-router.patch('/banners/priority',    authorization('admin', 'manager'), cmsCtrl.updateBannerPriority);
-router.get('/banners',               cmsCtrl.listBanners);
-router.get('/banners/:id',           cmsCtrl.getBanner);
-router.post('/banners',              authorization('admin', 'manager'), validate(v.createBanner), logActivity('create', 'banner'), cmsCtrl.createBanner);
-router.patch('/banners/:id',         authorization('admin', 'manager'), validate(v.updateBanner), logActivity('update', 'banner'), cmsCtrl.updateBanner);
-router.delete('/banners/:id',        authorization('admin', 'manager'), logActivity('delete', 'banner'), cmsCtrl.deleteBanner);
+router.patch('/banners/priority', authorization('admin', 'manager'), cmsCtrl.updateBannerPriority);
+router.get('/banners', cmsCtrl.listBanners);
+router.get('/banners/:id', cmsCtrl.getBanner);
+router.post(
+  '/banners',
+  authorization('admin', 'manager'),
+  validate(v.createBanner),
+  logActivity('create', 'banner'),
+  cmsCtrl.createBanner
+);
+router.patch(
+  '/banners/:id',
+  authorization('admin', 'manager'),
+  validate(v.updateBanner),
+  logActivity('update', 'banner'),
+  cmsCtrl.updateBanner
+);
+router.delete(
+  '/banners/:id',
+  authorization('admin', 'manager'),
+  logActivity('delete', 'banner'),
+  cmsCtrl.deleteBanner
+);
 
 // ---------------------------------------------------------------------------
 // Blog — CMS Phase 2
 // Note: specific sub-routes must be declared before /blog/:id
 // ---------------------------------------------------------------------------
 
-router.patch('/blog/:id/publish',    authorization('admin', 'manager'), logActivity('update', 'blog'), cmsCtrl.publishBlogPost);
-router.patch('/blog/:id/unpublish',  authorization('admin', 'manager'), logActivity('update', 'blog'), cmsCtrl.unpublishBlogPost);
-router.get('/blog',                  cmsCtrl.listBlogPosts);
-router.get('/blog/:id',              cmsCtrl.getBlogPost);
-router.post('/blog',                 authorization('admin', 'manager'), validate(v.createBlogPost), logActivity('create', 'blog'), cmsCtrl.createBlogPost);
-router.patch('/blog/:id',            authorization('admin', 'manager'), validate(v.updateBlogPost), logActivity('update', 'blog'), cmsCtrl.updateBlogPost);
-router.delete('/blog/:id',           authorization('admin', 'manager'), logActivity('delete', 'blog'), cmsCtrl.deleteBlogPost);
+router.patch(
+  '/blog/:id/publish',
+  authorization('admin', 'manager'),
+  logActivity('update', 'blog'),
+  cmsCtrl.publishBlogPost
+);
+router.patch(
+  '/blog/:id/unpublish',
+  authorization('admin', 'manager'),
+  logActivity('update', 'blog'),
+  cmsCtrl.unpublishBlogPost
+);
+router.get('/blog', cmsCtrl.listBlogPosts);
+router.get('/blog/:id', cmsCtrl.getBlogPost);
+router.post(
+  '/blog',
+  authorization('admin', 'manager'),
+  validate(v.createBlogPost),
+  logActivity('create', 'blog'),
+  cmsCtrl.createBlogPost
+);
+router.patch(
+  '/blog/:id',
+  authorization('admin', 'manager'),
+  validate(v.updateBlogPost),
+  logActivity('update', 'blog'),
+  cmsCtrl.updateBlogPost
+);
+router.delete(
+  '/blog/:id',
+  authorization('admin', 'manager'),
+  logActivity('delete', 'blog'),
+  cmsCtrl.deleteBlogPost
+);
 
 // ---------------------------------------------------------------------------
 // Settings — CMS Phase 2
 // ---------------------------------------------------------------------------
 
-router.get('/settings',     cmsCtrl.getSettings);
+router.get('/settings', cmsCtrl.getSettings);
 router.patch(
   '/settings',
   authorization('admin', 'manager'),
@@ -561,7 +707,7 @@ router.patch(
 // ---------------------------------------------------------------------------
 
 router.get('/activity-log/export', authorization('admin'), activityLogCtrl.exportLogs);
-router.get('/activity-log',        authorization('admin', 'manager'), activityLogCtrl.listLogs);
+router.get('/activity-log', authorization('admin', 'manager'), activityLogCtrl.listLogs);
 
 // ---------------------------------------------------------------------------
 // Vendors — Phase 4
@@ -581,12 +727,12 @@ if (vendorCtrl) {
    *       200:
    *         description: Vendor list
    */
-  router.get('/vendors/stats',                          vendorCtrl.getVendorStats);
-  router.get('/vendors',                                vendorCtrl.listVendors);
-  router.get('/vendors/:id',                            vendorCtrl.getVendorById);
-  router.get('/vendors/:id/products',                   vendorCtrl.getVendorProducts);
-  router.get('/vendors/:id/orders',                     vendorCtrl.getVendorOrders);
-  router.get('/vendors/:id/payouts',                    vendorCtrl.getVendorPayouts);
+  router.get('/vendors/stats', vendorCtrl.getVendorStats);
+  router.get('/vendors', vendorCtrl.listVendors);
+  router.get('/vendors/:id', vendorCtrl.getVendorById);
+  router.get('/vendors/:id/products', vendorCtrl.getVendorProducts);
+  router.get('/vendors/:id/orders', vendorCtrl.getVendorOrders);
+  router.get('/vendors/:id/payouts', vendorCtrl.getVendorPayouts);
 
   /**
    * @swagger
@@ -606,11 +752,35 @@ if (vendorCtrl) {
    *       200:
    *         description: Vendor approved
    */
-  router.patch('/vendors/:id/approve',                  authorization('admin', 'manager'), logActivity('status-change', 'vendor'), vendorCtrl.approveVendor);
-  router.patch('/vendors/:id/reject',                   authorization('admin', 'manager'), logActivity('status-change', 'vendor'), vendorCtrl.rejectVendor);
-  router.patch('/vendors/:id/suspend',                  authorization('admin', 'manager'), logActivity('status-change', 'vendor'), vendorCtrl.suspendVendor);
-  router.patch('/vendors/:id/commission',               authorization('admin', 'manager'), logActivity('update', 'vendor'), vendorCtrl.updateCommission);
-  router.post('/vendors/:id/payouts/:payoutId/process', authorization('admin', 'manager'), vendorCtrl.processPayout);
+  router.patch(
+    '/vendors/:id/approve',
+    authorization('admin', 'manager'),
+    logActivity('status-change', 'vendor'),
+    vendorCtrl.approveVendor
+  );
+  router.patch(
+    '/vendors/:id/reject',
+    authorization('admin', 'manager'),
+    logActivity('status-change', 'vendor'),
+    vendorCtrl.rejectVendor
+  );
+  router.patch(
+    '/vendors/:id/suspend',
+    authorization('admin', 'manager'),
+    logActivity('status-change', 'vendor'),
+    vendorCtrl.suspendVendor
+  );
+  router.patch(
+    '/vendors/:id/commission',
+    authorization('admin', 'manager'),
+    logActivity('update', 'vendor'),
+    vendorCtrl.updateCommission
+  );
+  router.post(
+    '/vendors/:id/payouts/:payoutId/process',
+    authorization('admin', 'manager'),
+    vendorCtrl.processPayout
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -639,17 +809,34 @@ if (vendorCtrl) {
  *       422:
  *         description: Validation error
  */
-router.get('/coupons',          cmsCtrl.listCoupons);
-router.get('/coupons/:id',      cmsCtrl.getCoupon);
-router.post('/coupons',         authorization('admin', 'manager'), validate(v.createCoupon), logActivity('create', 'coupon'), cmsCtrl.createCoupon);
-router.patch('/coupons/:id',    authorization('admin', 'manager'), validate(v.updateCoupon), logActivity('update', 'coupon'), cmsCtrl.updateCoupon);
-router.delete('/coupons/:id',   authorization('admin', 'manager'), logActivity('delete', 'coupon'), cmsCtrl.deleteCoupon);
+router.get('/coupons', cmsCtrl.listCoupons);
+router.get('/coupons/:id', cmsCtrl.getCoupon);
+router.post(
+  '/coupons',
+  authorization('admin', 'manager'),
+  validate(v.createCoupon),
+  logActivity('create', 'coupon'),
+  cmsCtrl.createCoupon
+);
+router.patch(
+  '/coupons/:id',
+  authorization('admin', 'manager'),
+  validate(v.updateCoupon),
+  logActivity('update', 'coupon'),
+  cmsCtrl.updateCoupon
+);
+router.delete(
+  '/coupons/:id',
+  authorization('admin', 'manager'),
+  logActivity('delete', 'coupon'),
+  cmsCtrl.deleteCoupon
+);
 
 // ---------------------------------------------------------------------------
 // Chatbot — Phase 4
 // Read-only endpoints for the CRM analytics page.
 // ---------------------------------------------------------------------------
-router.get('/chat/sessions',    authorization('admin', 'manager'), chatbotAdminCtrl.listSessions);
-router.get('/chat/analytics',   authorization('admin', 'manager'), chatbotAdminCtrl.getAnalytics);
+router.get('/chat/sessions', authorization('admin', 'manager'), chatbotAdminCtrl.listSessions);
+router.get('/chat/analytics', authorization('admin', 'manager'), chatbotAdminCtrl.getAnalytics);
 
 module.exports = router;

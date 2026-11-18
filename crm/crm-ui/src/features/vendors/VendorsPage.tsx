@@ -55,11 +55,16 @@ const DEBOUNCE_MS = 300;
 
 function verificationColor(status: string): string {
   switch (status) {
-    case 'approved': return 'green';
-    case 'pending': return 'orange';
-    case 'rejected': return 'red';
-    case 'suspended': return 'default';
-    default: return 'default';
+    case 'approved':
+      return 'green';
+    case 'pending':
+      return 'orange';
+    case 'rejected':
+      return 'red';
+    case 'suspended':
+      return 'default';
+    default:
+      return 'default';
   }
 }
 
@@ -86,8 +91,7 @@ function RejectModal({ vendor, open, onClose }: RejectModalProps) {
   const queryClient = useQueryClient();
 
   const rejectMutation = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      vendorsApi.reject(id, reason),
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => vendorsApi.reject(id, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendors'] });
       toast.success('Vendor rejected');
@@ -116,7 +120,9 @@ function RejectModal({ vendor, open, onClose }: RejectModalProps) {
       okButtonProps={{ danger: true }}
       confirmLoading={rejectMutation.isPending}
       width={480}
-      afterOpenChange={(visible) => { if (!visible) form.resetFields(); }}
+      afterOpenChange={(visible) => {
+        if (!visible) form.resetFields();
+      }}
       destroyOnHidden
     >
       <Form form={form} layout="vertical" style={{ marginTop: 12 }}>
@@ -258,7 +264,9 @@ function ProcessPayoutModal({ vendorId, payout, open, onClose }: ProcessPayoutMo
       okText="Process Payout"
       confirmLoading={processMutation.isPending}
       width={460}
-      afterOpenChange={(visible) => { if (!visible) form.resetFields(); }}
+      afterOpenChange={(visible) => {
+        if (!visible) form.resetFields();
+      }}
       destroyOnHidden
     >
       {payout && (
@@ -358,7 +366,8 @@ function VendorDrawer({ vendor, open, onClose }: VendorDrawerProps) {
       title: 'Order #',
       key: 'invoice',
       width: 90,
-      render: (_: unknown, r: Order) => r.invoice != null ? `#${r.invoice}` : (r.orderNumber ?? '—'),
+      render: (_: unknown, r: Order) =>
+        r.invoice != null ? `#${r.invoice}` : (r.orderNumber ?? '—'),
     },
     {
       title: 'Amount',
@@ -369,9 +378,7 @@ function VendorDrawer({ vendor, open, onClose }: VendorDrawerProps) {
     {
       title: 'Status',
       key: 'status',
-      render: (_: unknown, r: Order) => (
-        <Tag>{r.orderStatus ?? r.status ?? 'pending'}</Tag>
-      ),
+      render: (_: unknown, r: Order) => <Tag>{r.orderStatus ?? r.status ?? 'pending'}</Tag>,
     },
     {
       title: 'Date',

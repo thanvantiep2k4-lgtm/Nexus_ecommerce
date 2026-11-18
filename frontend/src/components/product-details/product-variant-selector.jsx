@@ -38,10 +38,10 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
   });
 
   // Derive unique memory options (conditional)
-  const uniqueMemory = [...new Set(variants.map(v => v.memory).filter(Boolean))];
+  const uniqueMemory = [...new Set(variants.map((v) => v.memory).filter(Boolean))];
 
   // Derive unique storage options (conditional)
-  const uniqueStorage = [...new Set(variants.map(v => v.storage).filter(Boolean))];
+  const uniqueStorage = [...new Set(variants.map((v) => v.storage).filter(Boolean))];
 
   // Find matching variant
   useEffect(() => {
@@ -50,7 +50,8 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
         const colorKey = colorNameOf(v);
         const size = v.size || '';
         const memMatch = !uniqueMemory.length || !selectedMemory || v.memory === selectedMemory;
-        const storMatch = !uniqueStorage.length || !selectedStorage || v.storage === selectedStorage;
+        const storMatch =
+          !uniqueStorage.length || !selectedStorage || v.storage === selectedStorage;
         return colorKey === selectedColor && size === selectedSize && memMatch && storMatch;
       });
       if (match) {
@@ -69,7 +70,7 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
     } else {
       onVariantSelected(null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedColor, selectedSize, selectedMemory, selectedStorage, variants, onVariantSelected]);
 
   const handleColorSelect = (colorName) => {
@@ -113,11 +114,14 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
             {availableSizes.map((size, i) => {
               const isAvailable = variants.some((v) => {
                 const colorKey = colorNameOf(v);
-                return (!selectedColor || colorKey === selectedColor) && v.size === size && v.stock > 0;
+                return (
+                  (!selectedColor || colorKey === selectedColor) && v.size === size && v.stock > 0
+                );
               });
               return (
                 <option key={i} value={size} disabled={!isAvailable}>
-                  {size}{!isAvailable ? ' (Out of Stock)' : ''}
+                  {size}
+                  {!isAvailable ? ' (Out of Stock)' : ''}
                 </option>
               );
             })}
@@ -135,7 +139,9 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
           >
             <option value="">Select Memory</option>
             {uniqueMemory.map((mem, i) => (
-              <option key={i} value={mem}>{mem}</option>
+              <option key={i} value={mem}>
+                {mem}
+              </option>
             ))}
           </select>
         </div>
@@ -151,7 +157,9 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
           >
             <option value="">Select Storage</option>
             {uniqueStorage.map((stor, i) => (
-              <option key={i} value={stor}>{stor}</option>
+              <option key={i} value={stor}>
+                {stor}
+              </option>
             ))}
           </select>
         </div>

@@ -44,26 +44,28 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Vendor Approved',
-    `      <h2>Your Vendor Application is Approved!</h2>
+  en: (d) =>
+    layout(
+      'Vendor Approved',
+      `      <h2>Your Vendor Application is Approved!</h2>
       <p>Hi <strong>${d.vendorName}</strong>,</p>
       <p>We are delighted to inform you that your vendor application for <strong>${d.storeName}</strong> has been approved!</p>
       <p>You can now log in to your vendor dashboard and start adding products.</p>
       <a href="${d.dashboardUrl}" class="btn">Go to Vendor Dashboard</a>
       <p style="margin-top:24px;">Welcome to the Shofy vendor community!</p>`
-  ),
-  vi: (d) => layout(
-    'Đơn đăng ký nhà bán hàng được phê duyệt',
-    `      <h2>Đơn đăng ký nhà bán hàng đã được phê duyệt!</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Đơn đăng ký nhà bán hàng được phê duyệt',
+      `      <h2>Đơn đăng ký nhà bán hàng đã được phê duyệt!</h2>
       <p>Xin chào <strong>${d.vendorName}</strong>,</p>
       <p>Chúng tôi vui mừng thông báo rằng đơn đăng ký của <strong>${d.storeName}</strong> đã được phê duyệt!</p>
       <p>Bạn có thể đăng nhập vào trang quản trị nhà bán hàng và bắt đầu thêm sản phẩm.</p>
       <a href="${d.dashboardUrl}" class="btn">Đến trang quản trị</a>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

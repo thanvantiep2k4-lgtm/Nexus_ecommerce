@@ -1,6 +1,6 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { handleFilterSidebarOpen } from "@/redux/features/shop-filter-slice";
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { handleFilterSidebarOpen } from '@/redux/features/shop-filter-slice';
 
 const SORT_OPTIONS = [
   { value: 'Default Sorting', label: 'Most Popular' },
@@ -16,10 +16,7 @@ const ShopTopRight = ({ selectHandleFilter }) => {
     <div className="cl-shop__topbar-right">
       <div className="cl-shop__topbar-sort">
         <label>Sort by:</label>
-        <select
-          onChange={(e) => selectHandleFilter(e)}
-          defaultValue="Default Sorting"
-        >
+        <select onChange={(e) => selectHandleFilter(e)} defaultValue="Default Sorting">
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}

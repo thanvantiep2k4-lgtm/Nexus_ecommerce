@@ -18,7 +18,7 @@ const CheckoutSavedAddresses = ({ setValue, onAddressSelected }) => {
       const defaultAddr = addresses.find((a) => a.isDefault) || addresses[0];
       handleSelect(defaultAddr);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addresses.length]);
 
   const handleSelect = (addr) => {
@@ -104,9 +104,7 @@ const CheckoutSavedAddresses = ({ setValue, onAddressSelected }) => {
                 {addr.address}, {addr.city}
                 {addr.country ? `, ${addr.country}` : ''}
               </p>
-              {addr.phone && (
-                <p className="cl-checkout__address-detail">{addr.phone}</p>
-              )}
+              {addr.phone && <p className="cl-checkout__address-detail">{addr.phone}</p>}
             </div>
           </div>
         ))}

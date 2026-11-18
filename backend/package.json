@@ -10,7 +10,7 @@
     "start": "node index.js",
     "build": "echo 'No build step for backend'",
     "start-dev": "nodemon index.js",
-    "data:import": "node seed.js",
+    "data:import": "node seeds/index.js",
     "test": "jest",
     "catalog:backup": "node scripts/backup.js",
     "catalog:dry": "node scripts/migrate.js",

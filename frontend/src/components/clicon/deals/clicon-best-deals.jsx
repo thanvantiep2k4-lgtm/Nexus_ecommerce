@@ -78,9 +78,7 @@ const CliconBestDeals = () => {
           <div className="row g-3 align-items-start">
             {/* Featured product — left column */}
             <div className="col-xl-4">
-              {featuredProduct && (
-                <CliconDealFeaturedCard product={featuredProduct} />
-              )}
+              {featuredProduct && <CliconDealFeaturedCard product={featuredProduct} />}
             </div>
 
             {/* 4×2 grid — right column */}

@@ -1,39 +1,39 @@
-import React, { useState } from "react";
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import { useGetSettingsQuery } from "@/redux/features/cmsApi";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { useGetSettingsQuery } from '@/redux/features/cmsApi';
 
 const TOPICS = [
-  { key: "topicTrackOrder",    icon: "fa-solid fa-truck-fast",      href: "/track-order" },
-  { key: "topicResetPassword", icon: "fa-solid fa-key",             href: "/forgot-password" },
-  { key: "topicPayment",       icon: "fa-regular fa-credit-card",   href: "#payment" },
-  { key: "topicAccount",       icon: "fa-regular fa-user",          href: "/profile" },
-  { key: "topicWishlist",      icon: "fa-regular fa-heart",         href: "/wishlist" },
-  { key: "topicShipping",      icon: "fa-solid fa-box",             href: "#shipping" },
-  { key: "topicCart",          icon: "fa-solid fa-cart-shopping",   href: "/cart" },
-  { key: "topicSell",          icon: "fa-solid fa-store",           href: "/profile?tab=vendor" },
+  { key: 'topicTrackOrder', icon: 'fa-solid fa-truck-fast', href: '/track-order' },
+  { key: 'topicResetPassword', icon: 'fa-solid fa-key', href: '/forgot-password' },
+  { key: 'topicPayment', icon: 'fa-regular fa-credit-card', href: '#payment' },
+  { key: 'topicAccount', icon: 'fa-regular fa-user', href: '/profile' },
+  { key: 'topicWishlist', icon: 'fa-regular fa-heart', href: '/wishlist' },
+  { key: 'topicShipping', icon: 'fa-solid fa-box', href: '#shipping' },
+  { key: 'topicCart', icon: 'fa-solid fa-cart-shopping', href: '/cart' },
+  { key: 'topicSell', icon: 'fa-solid fa-store', href: '/profile?tab=vendor' },
 ];
 
 const POPULAR_TOPICS = [
-  { key: "faq1",  highlight: false },
-  { key: "faq2",  highlight: false },
-  { key: "faq3",  highlight: false },
-  { key: "faq4",  highlight: false },
-  { key: "faq5",  highlight: false },
-  { key: "faq6",  highlight: false },
-  { key: "faq7",  highlight: false },
-  { key: "faq8",  highlight: true  },
-  { key: "faq9",  highlight: false },
+  { key: 'faq1', highlight: false },
+  { key: 'faq2', highlight: false },
+  { key: 'faq3', highlight: false },
+  { key: 'faq4', highlight: false },
+  { key: 'faq5', highlight: false },
+  { key: 'faq6', highlight: false },
+  { key: 'faq7', highlight: false },
+  { key: 'faq8', highlight: true },
+  { key: 'faq9', highlight: false },
 ];
 
 const CustomerSupportArea = () => {
   const { t } = useTranslation();
   const { data: settingsData } = useGetSettingsQuery();
   const settings = settingsData?.data || {};
-  const phone = settings.contact?.phone || settings.contactPhone || "+84 28 7106 1234";
-  const email = settings.contact?.email || settings.contactEmail || "support@tychicus.id.vn";
+  const phone = settings.contact?.phone || settings.contactPhone || '+84 28 7106 1234';
+  const email = settings.contact?.email || settings.contactEmail || 'support@tychicus.id.vn';
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -50,8 +50,8 @@ const CustomerSupportArea = () => {
         <div className="container">
           <div className="cl-support-hero__inner">
             <div className="cl-support-hero__content">
-              <span className="cl-support-hero__badge">{t("support.helpCenter")}</span>
-              <h1 className="cl-support-hero__title">{t("support.heroTitle")}</h1>
+              <span className="cl-support-hero__badge">{t('support.helpCenter')}</span>
+              <h1 className="cl-support-hero__title">{t('support.heroTitle')}</h1>
 
               <form className="cl-support-hero__search" onSubmit={handleSearch}>
                 <span className="cl-support-hero__search-icon">
@@ -60,13 +60,13 @@ const CustomerSupportArea = () => {
                 <input
                   className="cl-support-hero__search-input"
                   type="text"
-                  placeholder={t("support.searchPlaceholder")}
+                  placeholder={t('support.searchPlaceholder')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  aria-label={t("support.searchPlaceholder")}
+                  aria-label={t('support.searchPlaceholder')}
                 />
                 <button type="submit" className="cl-support-hero__search-btn">
-                  {t("support.search")}
+                  {t('support.search')}
                 </button>
               </form>
             </div>
@@ -82,16 +82,12 @@ const CustomerSupportArea = () => {
       <section className="cl-support-topics">
         <div className="container">
           <div className="cl-support-topics__header">
-            <h2 className="cl-support-topics__title">{t("support.assistanceTitle")}</h2>
+            <h2 className="cl-support-topics__title">{t('support.assistanceTitle')}</h2>
           </div>
 
           <div className="cl-support-topics__grid">
             {TOPICS.map(({ key, icon, href }) => (
-              <Link
-                key={key}
-                href={href}
-                className="cl-support-topics__card"
-              >
+              <Link key={key} href={href} className="cl-support-topics__card">
                 <span className="cl-support-topics__card-icon">
                   <i className={icon}></i>
                 </span>
@@ -106,14 +102,14 @@ const CustomerSupportArea = () => {
       <section className="cl-support-popular">
         <div className="container">
           <div className="cl-support-popular__header">
-            <h2 className="cl-support-popular__title">{t("support.popularTopics")}</h2>
+            <h2 className="cl-support-popular__title">{t('support.popularTopics')}</h2>
           </div>
 
           <div className="cl-support-popular__grid">
             {POPULAR_TOPICS.map(({ key, highlight }) => (
               <div
                 key={key}
-                className={`cl-support-popular__item${highlight ? " cl-support-popular__item--highlight" : ""}`}
+                className={`cl-support-popular__item${highlight ? ' cl-support-popular__item--highlight' : ''}`}
               >
                 <span className="cl-support-popular__bullet"></span>
                 <a href="#" className="cl-support-popular__link">
@@ -129,10 +125,11 @@ const CustomerSupportArea = () => {
       <section className="cl-support-contact">
         <div className="container">
           <div className="cl-support-contact__header">
-            <span className="cl-support-contact__badge">{t("support.contactUs")}</span>
+            <span className="cl-support-contact__badge">{t('support.contactUs')}</span>
             <h2 className="cl-support-contact__title">
-              {t("support.dontFindAnswer")}<br />
-              {t("support.contactWithUs")}
+              {t('support.dontFindAnswer')}
+              <br />
+              {t('support.contactWithUs')}
             </h2>
           </div>
 
@@ -143,14 +140,14 @@ const CustomerSupportArea = () => {
                 <i className="fa-solid fa-phone"></i>
               </div>
               <div className="cl-support-contact__card-body">
-                <h3 className="cl-support-contact__card-title">{t("support.callUsNow")}</h3>
-                <p className="cl-support-contact__card-hours">{t("support.callUsHours")}</p>
+                <h3 className="cl-support-contact__card-title">{t('support.callUsNow')}</h3>
+                <p className="cl-support-contact__card-hours">{t('support.callUsHours')}</p>
                 <p className="cl-support-contact__card-value">{phone}</p>
                 <a
                   href={`tel:${phone}`}
                   className="cl-support-contact__card-btn cl-support-contact__card-btn--blue"
                 >
-                  {t("support.callNow")} <i className="fa-solid fa-arrow-right"></i>
+                  {t('support.callNow')} <i className="fa-solid fa-arrow-right"></i>
                 </a>
               </div>
             </div>
@@ -161,14 +158,14 @@ const CustomerSupportArea = () => {
                 <i className="fa-regular fa-message"></i>
               </div>
               <div className="cl-support-contact__card-body">
-                <h3 className="cl-support-contact__card-title">{t("support.chatWithUs")}</h3>
-                <p className="cl-support-contact__card-hours">{t("support.chatHours")}</p>
+                <h3 className="cl-support-contact__card-title">{t('support.chatWithUs')}</h3>
+                <p className="cl-support-contact__card-hours">{t('support.chatHours')}</p>
                 <p className="cl-support-contact__card-value">{email}</p>
                 <a
                   href={`mailto:${email}`}
                   className="cl-support-contact__card-btn cl-support-contact__card-btn--green"
                 >
-                  {t("support.contactUs")} <i className="fa-solid fa-arrow-right"></i>
+                  {t('support.contactUs')} <i className="fa-solid fa-arrow-right"></i>
                 </a>
               </div>
             </div>

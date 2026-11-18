@@ -13,11 +13,7 @@ import {
   Space,
   Spin,
 } from 'antd';
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  SaveOutlined,
-} from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
@@ -45,7 +41,6 @@ const LANGUAGE_OPTIONS = [
   { value: 'en', label: 'English' },
   { value: 'vi', label: 'Vietnamese' },
 ];
-
 
 export default function GeneralSettingsPage() {
   const [form] = Form.useForm();
@@ -159,7 +154,11 @@ export default function GeneralSettingsPage() {
       <Form form={form} layout="vertical">
         {/* Site Info */}
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Site Information</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Site Information
+            </Title>
+          }
           size="small"
           style={{ marginBottom: 16 }}
         >
@@ -183,7 +182,11 @@ export default function GeneralSettingsPage() {
 
         {/* Contact */}
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Contact Information</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Contact Information
+            </Title>
+          }
           size="small"
           style={{ marginBottom: 16 }}
         >
@@ -208,23 +211,21 @@ export default function GeneralSettingsPage() {
 
         {/* Social Media */}
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Social Media</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Social Media
+            </Title>
+          }
           size="small"
           style={{ marginBottom: 16 }}
           extra={
-            <Button
-              size="small"
-              icon={<PlusOutlined />}
-              onClick={addSocialLink}
-            >
+            <Button size="small" icon={<PlusOutlined />} onClick={addSocialLink}>
               Add
             </Button>
           }
         >
           {socialLinks.length === 0 && (
-            <Typography.Text type="secondary">
-              No social links added yet.
-            </Typography.Text>
+            <Typography.Text type="secondary">No social links added yet.</Typography.Text>
           )}
           <Space direction="vertical" style={{ width: '100%' }}>
             {socialLinks.map((link, index) => (
@@ -262,15 +263,16 @@ export default function GeneralSettingsPage() {
 
         {/* Maintenance */}
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Maintenance Mode</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Maintenance Mode
+            </Title>
+          }
           size="small"
           style={{ marginBottom: 16 }}
         >
           <Space style={{ marginBottom: 12 }}>
-            <Switch
-              checked={maintenanceEnabled}
-              onChange={setMaintenanceEnabled}
-            />
+            <Switch checked={maintenanceEnabled} onChange={setMaintenanceEnabled} />
             <Typography.Text>
               {maintenanceEnabled ? 'Maintenance mode is ON' : 'Maintenance mode is OFF'}
             </Typography.Text>
@@ -287,15 +289,16 @@ export default function GeneralSettingsPage() {
 
         {/* AI Chatbot */}
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>AI Chatbot</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              AI Chatbot
+            </Title>
+          }
           size="small"
           style={{ marginBottom: 16 }}
         >
           <Space style={{ marginBottom: 12 }}>
-            <Switch
-              checked={chatbotEnabled}
-              onChange={setChatbotEnabled}
-            />
+            <Switch checked={chatbotEnabled} onChange={setChatbotEnabled} />
             <Typography.Text>
               {chatbotEnabled
                 ? 'Chatbot widget is visible on storefront'
@@ -304,10 +307,7 @@ export default function GeneralSettingsPage() {
           </Space>
           <Row gutter={16}>
             <Col xs={24} sm={12}>
-              <Form.Item
-                name="chatbotWelcomeEn"
-                label="Welcome message (EN)"
-              >
+              <Form.Item name="chatbotWelcomeEn" label="Welcome message (EN)">
                 <Input.TextArea
                   rows={2}
                   maxLength={300}
@@ -317,10 +317,7 @@ export default function GeneralSettingsPage() {
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
-              <Form.Item
-                name="chatbotWelcomeVi"
-                label="Welcome message (VI)"
-              >
+              <Form.Item name="chatbotWelcomeVi" label="Welcome message (VI)">
                 <Input.TextArea
                   rows={2}
                   maxLength={300}
@@ -334,7 +331,11 @@ export default function GeneralSettingsPage() {
 
         {/* Localization */}
         <Card
-          title={<Title level={5} style={{ margin: 0 }}>Localization</Title>}
+          title={
+            <Title level={5} style={{ margin: 0 }}>
+              Localization
+            </Title>
+          }
           size="small"
         >
           <Divider />

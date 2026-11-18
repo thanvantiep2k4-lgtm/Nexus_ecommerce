@@ -79,11 +79,14 @@ const CliconDealFeaturedCard = ({ product }) => {
           <Link href={`/product-details/${_id}`}>{title}</Link>
         </h2>
 
-        <PriceDisplay price={price} discount={discount} size="md" className="cl-deal-featured__price-row" />
+        <PriceDisplay
+          price={price}
+          discount={discount}
+          size="md"
+          className="cl-deal-featured__price-row"
+        />
 
-        {shortDesc && (
-          <p className="cl-deal-featured__desc">{shortDesc}</p>
-        )}
+        {shortDesc && <p className="cl-deal-featured__desc">{shortDesc}</p>}
 
         <div className="cl-deal-featured__actions">
           <button

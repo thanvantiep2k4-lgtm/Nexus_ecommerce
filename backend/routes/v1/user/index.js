@@ -7,9 +7,9 @@
 
 const express = require('express');
 const router = express.Router();
-const ctrl = require('../../../controller/v1/user.controller');
-const wishlistCtrl = require('../../../controller/v1/wishlist.controller');
-const userPrefsCtrl = require('../../../controller/v1/userPreferences.controller');
+const ctrl = require('../../../controllers/v1/user.controller');
+const wishlistCtrl = require('../../../controllers/v1/wishlist.controller');
+const userPrefsCtrl = require('../../../controllers/v1/userPreferences.controller');
 const { validate } = require('../../../middleware/validate');
 const v = require('../../../validations');
 
@@ -63,7 +63,7 @@ router.get('/profile', ctrl.getProfile);
  *       401:
  *         description: Unauthorized
  */
-router.get('/preferences',   userPrefsCtrl.getPreferences);
+router.get('/preferences', userPrefsCtrl.getPreferences);
 /**
  * @swagger
  * /api/v1/user/preferences:
@@ -133,7 +133,7 @@ router.put('/profile', validate(v.updateUser), ctrl.updateProfile);
  *       200:
  *         description: Order list
  */
-router.get('/orders',     ctrl.getUserOrders);
+router.get('/orders', ctrl.getUserOrders);
 
 /**
  * @swagger
@@ -190,7 +190,7 @@ router.get('/orders/:id', ctrl.getOrderById);
  *       422:
  *         description: Validation error
  */
-router.post('/orders',    validate(v.createOrder), ctrl.createOrder);
+router.post('/orders', validate(v.createOrder), ctrl.createOrder);
 
 // ---------------------------------------------------------------------------
 // Reviews
@@ -244,11 +244,11 @@ router.post('/reviews', validate(v.createReview), ctrl.addReview);
  *       200:
  *         description: Wishlist items
  */
-router.get('/wishlist',                               wishlistCtrl.getWishlist);
-router.post('/wishlist',                              wishlistCtrl.addToWishlist);
-router.delete('/wishlist',                            wishlistCtrl.clearWishlist);
-router.delete('/wishlist/:productId',                 wishlistCtrl.removeFromWishlist);
-router.post('/wishlist/:productId/move-to-cart',      wishlistCtrl.moveToCart);
+router.get('/wishlist', wishlistCtrl.getWishlist);
+router.post('/wishlist', wishlistCtrl.addToWishlist);
+router.delete('/wishlist', wishlistCtrl.clearWishlist);
+router.delete('/wishlist/:productId', wishlistCtrl.removeFromWishlist);
+router.post('/wishlist/:productId/move-to-cart', wishlistCtrl.moveToCart);
 
 // ---------------------------------------------------------------------------
 // Addresses
@@ -274,11 +274,11 @@ router.post('/wishlist/:productId/move-to-cart',      wishlistCtrl.moveToCart);
  *       201:
  *         description: Address added
  */
-router.get('/addresses',               ctrl.getAddresses);
-router.post('/addresses',              ctrl.addAddress);
+router.get('/addresses', ctrl.getAddresses);
+router.post('/addresses', ctrl.addAddress);
 router.patch('/addresses/:id/default', ctrl.setDefaultAddress);
-router.patch('/addresses/:id',         ctrl.updateAddress);
-router.delete('/addresses/:id',        ctrl.deleteAddress);
+router.patch('/addresses/:id', ctrl.updateAddress);
+router.delete('/addresses/:id', ctrl.deleteAddress);
 
 // ---------------------------------------------------------------------------
 // Vendor application

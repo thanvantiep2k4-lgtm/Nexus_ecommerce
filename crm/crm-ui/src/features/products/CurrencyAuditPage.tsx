@@ -14,11 +14,7 @@ import {
 import type { TableProps } from 'antd';
 import { DollarOutlined, CheckCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  currencyAuditApi,
-  type AuditProduct,
-  type AuditResponse,
-} from '@/services/currencyAudit';
+import { currencyAuditApi, type AuditProduct, type AuditResponse } from '@/services/currencyAudit';
 import PageHeader from '@/components/commons/PageHeader';
 
 const { Text } = Typography;
@@ -52,7 +48,7 @@ export default function CurrencyAuditPage() {
       message.success(
         skipped > 0
           ? `${res.updated} products updated (${skipped} skipped)`
-          : `${res.updated} products updated`,
+          : `${res.updated} products updated`
       );
       setSelectedIds([]);
       queryClient.invalidateQueries({ queryKey: ['currency-audit'] });
@@ -108,9 +104,7 @@ export default function CurrencyAuditPage() {
       key: 'suggestedVndPrice',
       width: 160,
       align: 'right',
-      render: (v: number) => (
-        <Text type="secondary">{v?.toLocaleString('vi-VN') ?? '—'} ₫</Text>
-      ),
+      render: (v: number) => <Text type="secondary">{v?.toLocaleString('vi-VN') ?? '—'} ₫</Text>,
     },
     {
       title: 'Reviewed',
@@ -172,18 +166,14 @@ export default function CurrencyAuditPage() {
               <Text>{selectedIds.length} selected</Text>
               <Popconfirm
                 title={`Convert ${selectedIds.length} products from USD?`}
-                onConfirm={() =>
-                  normalizeBulk.mutate({ ids: selectedIds, fromCurrency: 'USD' })
-                }
+                onConfirm={() => normalizeBulk.mutate({ ids: selectedIds, fromCurrency: 'USD' })}
               >
                 <Button type="primary" danger icon={<DollarOutlined />}>
                   Bulk Convert from USD
                 </Button>
               </Popconfirm>
               <Button
-                onClick={() =>
-                  normalizeBulk.mutate({ ids: selectedIds, fromCurrency: 'VND' })
-                }
+                onClick={() => normalizeBulk.mutate({ ids: selectedIds, fromCurrency: 'VND' })}
               >
                 Bulk Mark as VND
               </Button>

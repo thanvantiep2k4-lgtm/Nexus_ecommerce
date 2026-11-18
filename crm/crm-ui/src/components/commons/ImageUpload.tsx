@@ -4,8 +4,8 @@ import { UploadOutlined, DeleteOutlined, PictureOutlined, LinkOutlined } from '@
 import toast from 'react-hot-toast';
 import api from '@/services/api';
 
-const MAX_BYTES = 5 * 1024 * 1024;        // hard limit (matches backend multer)
-const WARN_BYTES = 3 * 1024 * 1024;       // soft warning threshold
+const MAX_BYTES = 5 * 1024 * 1024; // hard limit (matches backend multer)
+const WARN_BYTES = 3 * 1024 * 1024; // soft warning threshold
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 
 const formatMB = (bytes: number) => (bytes / 1024 / 1024).toFixed(1) + 'MB';
@@ -298,11 +298,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             </span>
           ),
           children: (
-            <UrlPasteTab
-              width={width}
-              height={height}
-              onConfirm={(url) => onChange?.(url)}
-            />
+            <UrlPasteTab width={width} height={height} onConfirm={(url) => onChange?.(url)} />
           ),
         },
       ]}

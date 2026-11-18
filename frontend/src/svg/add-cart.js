@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const AddCart = () => {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M5.76447 1L3.23047 3.541"
         stroke="currentColor"

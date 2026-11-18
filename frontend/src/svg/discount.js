@@ -1,29 +1,18 @@
-import React from "react";
+import React from 'react';
 
 const Discount = () => {
   return (
-    <svg
-      width="31"
-      height="30"
-      viewBox="0 0 31 30"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
       <mask
         id="mask0_1211_583"
-        style={{maskType:'alpha'}}
+        style={{ maskType: 'alpha' }}
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"
         width="31"
         height="30"
       >
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M0 0H30.0024V29.9998H0V0Z"
-          fill="white"
-        />
+        <path fillRule="evenodd" clipRule="evenodd" d="M0 0H30.0024V29.9998H0V0Z" fill="white" />
       </mask>
       <g mask="url(#mask0_1211_583)">
         <path

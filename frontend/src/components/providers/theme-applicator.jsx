@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useGetSettingsQuery } from "@/redux/features/cmsApi";
+import { useEffect } from 'react';
+import { useGetSettingsQuery } from '@/redux/features/cmsApi';
 
 // Darken a hex color by a given percentage (0-100)
 function darkenHex(hex, percent) {
@@ -25,21 +25,21 @@ const ThemeApplicator = () => {
 
   useEffect(() => {
     const theme = data?.data?.theme;
-    if (!theme || typeof window === "undefined") return;
+    if (!theme || typeof window === 'undefined') return;
 
     const root = document.documentElement;
     if (theme.primaryColor) {
-      root.style.setProperty("--cl-primary", theme.primaryColor);
-      root.style.setProperty("--cl-primary-hover", darkenHex(theme.primaryColor, 10));
+      root.style.setProperty('--cl-primary', theme.primaryColor);
+      root.style.setProperty('--cl-primary-hover', darkenHex(theme.primaryColor, 10));
     }
     if (theme.secondaryColor) {
-      root.style.setProperty("--cl-secondary", theme.secondaryColor);
+      root.style.setProperty('--cl-secondary', theme.secondaryColor);
     }
     if (theme.accentColor) {
-      root.style.setProperty("--cl-accent", theme.accentColor);
+      root.style.setProperty('--cl-accent', theme.accentColor);
     }
     if (theme.headerBg) {
-      root.style.setProperty("--cl-header-bg", theme.headerBg);
+      root.style.setProperty('--cl-header-bg', theme.headerBg);
     }
   }, [data]);
 

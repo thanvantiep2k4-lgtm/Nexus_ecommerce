@@ -1,21 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   filterSidebar: false,
 };
 
 export const shopFilterSlice = createSlice({
-  name: "shopFilter",
+  name: 'shopFilter',
   initialState,
   reducers: {
     handleFilterSidebarOpen: (state, { payload }) => {
-      state.filterSidebar = true
+      state.filterSidebar = true;
     },
     handleFilterSidebarClose: (state, { payload }) => {
-      state.filterSidebar = false
+      state.filterSidebar = false;
     },
   },
 });
 
-export const { handleFilterSidebarOpen,handleFilterSidebarClose } = shopFilterSlice.actions;
+export const { handleFilterSidebarOpen, handleFilterSidebarClose } = shopFilterSlice.actions;
 export default shopFilterSlice.reducer;

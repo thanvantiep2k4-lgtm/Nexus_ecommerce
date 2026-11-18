@@ -11,7 +11,7 @@ function dateFormat(date, mask) {
 }
 
 dateFormat.masks = {
-  default: "ddd mmm dd yyyy HH:MM:ss",
+  default: 'ddd mmm dd yyyy HH:MM:ss',
 };
 
 module.exports = dateFormat;

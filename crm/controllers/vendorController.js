@@ -89,7 +89,10 @@ exports.suspendVendor = async (req, res) => {
 
 exports.updateCommission = async (req, res) => {
   try {
-    const result = await req.api.patch(`/api/v1/admin/vendors/${req.params.id}/commission`, req.body);
+    const result = await req.api.patch(
+      `/api/v1/admin/vendors/${req.params.id}/commission`,
+      req.body
+    );
     res.json(result);
   } catch (error) {
     handleError(res, error);

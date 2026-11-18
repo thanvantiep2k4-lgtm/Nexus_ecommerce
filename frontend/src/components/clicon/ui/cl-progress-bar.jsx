@@ -30,14 +30,9 @@ const ClProgressBar = ({
       aria-valuemax={max}
     >
       <div className="cl-progress__track">
-        <div
-          className="cl-progress__bar"
-          style={{ width: `${percent}%` }}
-        />
+        <div className="cl-progress__bar" style={{ width: `${percent}%` }} />
       </div>
-      {showLabel && (
-        <span className="cl-progress__label">{Math.round(percent)}%</span>
-      )}
+      {showLabel && <span className="cl-progress__label">{Math.round(percent)}%</span>}
     </div>
   );
 };

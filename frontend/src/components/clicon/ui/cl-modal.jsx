@@ -13,23 +13,18 @@ import { useTranslation } from 'react-i18next';
  * @param {React.ReactNode} [props.footer]
  * @param {string} [props.className]
  */
-const ClModal = ({
-  isOpen,
-  onClose,
-  size = 'md',
-  title,
-  children,
-  footer,
-  className = '',
-}) => {
+const ClModal = ({ isOpen, onClose, size = 'md', title, children, footer, className = '' }) => {
   const { t } = useTranslation();
   const overlayRef = useRef(null);
   const contentRef = useRef(null);
 
   // Close on Escape
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Escape') onClose();
-  }, [onClose]);
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'Escape') onClose();
+    },
+    [onClose]
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -64,7 +59,9 @@ const ClModal = ({
         {/* Header */}
         {title && (
           <div className="cl-modal__header">
-            <h3 id="cl-modal-title" className="cl-modal__title">{title}</h3>
+            <h3 id="cl-modal-title" className="cl-modal__title">
+              {title}
+            </h3>
           </div>
         )}
 

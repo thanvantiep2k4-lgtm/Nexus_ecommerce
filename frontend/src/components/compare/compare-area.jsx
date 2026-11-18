@@ -1,34 +1,64 @@
-import React from "react";
-import Link from "next/link";
-import SafeImage from "@/components/common/safe-image";
-import { useDispatch, useSelector } from "react-redux";
-import { Rating } from "react-simple-star-rating";
-import { useTranslation } from "react-i18next";
-import { add_cart_product } from "@/redux/features/cartSlice";
-import { add_to_wishlist } from "@/redux/features/wishlist-slice";
-import { remove_compare_product } from "@/redux/features/compareSlice";
-import useCurrency from "@/hooks/use-currency";
+import React from 'react';
+import Link from 'next/link';
+import SafeImage from '@/components/common/safe-image';
+import { useDispatch, useSelector } from 'react-redux';
+import { Rating } from 'react-simple-star-rating';
+import { useTranslation } from 'react-i18next';
+import { add_cart_product } from '@/redux/features/cartSlice';
+import { add_to_wishlist } from '@/redux/features/wishlist-slice';
+import { remove_compare_product } from '@/redux/features/compareSlice';
+import useCurrency from '@/hooks/use-currency';
 
 // Heart SVG icon
 const HeartIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15.63 3.4575C15.2469 3.07425 14.7921 2.77023 14.2915 2.56281C13.7909 2.35539 13.2544 2.24878 12.7125 2.24878C12.1706 2.24878 11.6341 2.35539 11.1335 2.56281C10.6329 2.77023 10.1781 3.07425 9.795 3.4575L9 4.2525L8.205 3.4575C7.43125 2.68375 6.38312 2.24919 5.2875 2.24919C4.19188 2.24919 3.14375 2.68375 2.37 3.4575C1.59625 4.23125 1.16169 5.27938 1.16169 6.375C1.16169 7.47063 1.59625 8.51875 2.37 9.2925L3.165 10.0875L9 15.9225L14.835 10.0875L15.63 9.2925C16.0132 8.90943 16.3173 8.45461 16.5247 7.95401C16.7321 7.45342 16.8387 6.91686 16.8387 6.375C16.8387 5.83314 16.7321 5.29658 16.5247 4.79599C16.3173 4.29539 16.0132 3.84057 15.63 3.4575Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path
+      d="M15.63 3.4575C15.2469 3.07425 14.7921 2.77023 14.2915 2.56281C13.7909 2.35539 13.2544 2.24878 12.7125 2.24878C12.1706 2.24878 11.6341 2.35539 11.1335 2.56281C10.6329 2.77023 10.1781 3.07425 9.795 3.4575L9 4.2525L8.205 3.4575C7.43125 2.68375 6.38312 2.24919 5.2875 2.24919C4.19188 2.24919 3.14375 2.68375 2.37 3.4575C1.59625 4.23125 1.16169 5.27938 1.16169 6.375C1.16169 7.47063 1.59625 8.51875 2.37 9.2925L3.165 10.0875L9 15.9225L14.835 10.0875L15.63 9.2925C16.0132 8.90943 16.3173 8.45461 16.5247 7.95401C16.7321 7.45342 16.8387 6.91686 16.8387 6.375C16.8387 5.83314 16.7321 5.29658 16.5247 4.79599C16.3173 4.29539 16.0132 3.84057 15.63 3.4575Z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 // Cart SVG icon
 const CartIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5.33333 14.6667C5.7 14.6667 6 14.3667 6 14C6 13.6333 5.7 13.3333 5.33333 13.3333C4.96667 13.3333 4.66667 13.6333 4.66667 14C4.66667 14.3667 4.96667 14.6667 5.33333 14.6667Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M12.6667 14.6667C13.0333 14.6667 13.3333 14.3667 13.3333 14C13.3333 13.6333 13.0333 13.3333 12.6667 13.3333C12.3 13.3333 12 13.6333 12 14C12 14.3667 12.3 14.6667 12.6667 14.6667Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M1.33333 1.33334H2.66667L4.47333 9.59334C4.54222 9.90002 4.71251 10.1731 4.95587 10.3695C5.19922 10.566 5.50139 10.6733 5.81333 10.6733H12.3267C12.6386 10.6733 12.9408 10.566 13.1841 10.3695C13.4275 10.1731 13.5978 9.90002 13.6667 9.59334L14.7267 4.66668H3.33333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path
+      d="M5.33333 14.6667C5.7 14.6667 6 14.3667 6 14C6 13.6333 5.7 13.3333 5.33333 13.3333C4.96667 13.3333 4.66667 13.6333 4.66667 14C4.66667 14.3667 4.96667 14.6667 5.33333 14.6667Z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M12.6667 14.6667C13.0333 14.6667 13.3333 14.3667 13.3333 14C13.3333 13.6333 13.0333 13.3333 12.6667 13.3333C12.3 13.3333 12 13.6333 12 14C12 14.3667 12.3 14.6667 12.6667 14.6667Z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M1.33333 1.33334H2.66667L4.47333 9.59334C4.54222 9.90002 4.71251 10.1731 4.95587 10.3695C5.19922 10.566 5.50139 10.6733 5.81333 10.6733H12.3267C12.6386 10.6733 12.9408 10.566 13.1841 10.3695C13.4275 10.1731 13.5978 9.90002 13.6667 9.59334L14.7267 4.66668H3.33333"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 // Close SVG icon
 const CloseIcon = () => (
   <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9 3L3 9M3 3L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path
+      d="M9 3L3 9M3 3L9 9"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -71,7 +101,9 @@ const CompareArea = () => {
         <div className="container">
           <div className="cl-compare__card">
             <div className="cl-compare__empty">
-              <h3 className="cl-compare__empty-title">{t('compare.noItems', 'No items to compare')}</h3>
+              <h3 className="cl-compare__empty-title">
+                {t('compare.noItems', 'No items to compare')}
+              </h3>
               <Link href="/shop" className="cl-compare__empty-link">
                 {t('cart.continueShopping', 'Continue Shopping')}
               </Link>
@@ -107,11 +139,7 @@ const CompareArea = () => {
         const displayPrice = hasDiscount
           ? item.price - (item.price * item.discount) / 100
           : item.price;
-        return (
-          <span className="cl-compare__price">
-            {formatPrice(displayPrice || 0)}
-          </span>
-        );
+        return <span className="cl-compare__price">{formatPrice(displayPrice || 0)}</span>;
       },
     },
     {
@@ -134,8 +162,12 @@ const CompareArea = () => {
       render: (item) => {
         const isOutOfStock = item.status === 'out-of-stock' || item.quantity === 0;
         return (
-          <span className={`cl-compare__stock ${isOutOfStock ? 'cl-compare__stock--out-of-stock' : 'cl-compare__stock--in-stock'}`}>
-            {isOutOfStock ? t('product.outOfStock', 'OUT OF STOCK') : t('wishlist.inStock', 'IN STOCK')}
+          <span
+            className={`cl-compare__stock ${isOutOfStock ? 'cl-compare__stock--out-of-stock' : 'cl-compare__stock--in-stock'}`}
+          >
+            {isOutOfStock
+              ? t('product.outOfStock', 'OUT OF STOCK')
+              : t('wishlist.inStock', 'IN STOCK')}
           </span>
         );
       },
@@ -181,7 +213,7 @@ const CompareArea = () => {
                 <div className="cl-compare__product-img">
                   <SafeImage
                     src={item.img}
-                    alt={item.title || "compare"}
+                    alt={item.title || 'compare'}
                     width={180}
                     height={180}
                     style={{ objectFit: 'contain' }}
@@ -190,9 +222,7 @@ const CompareArea = () => {
                 </div>
 
                 <div className="cl-compare__product-title">
-                  <Link href={`/product-details/${item._id}`}>
-                    {item.title}
-                  </Link>
+                  <Link href={`/product-details/${item._id}`}>{item.title}</Link>
                 </div>
 
                 <div className="cl-compare__product-actions">

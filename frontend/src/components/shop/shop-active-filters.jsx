@@ -1,6 +1,6 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 const FILTER_KEYS = ['category', 'brand', 'tag', 'minPrice', 'maxPrice', 'search', 'color'];
 
@@ -46,7 +46,11 @@ const ShopActiveFilters = ({ totalProducts = 0 }) => {
         {activeFilters.map((f) => (
           <span key={f.key} className="cl-shop__active-filter-chip">
             {f.label}
-            <button type="button" onClick={() => handleRemoveFilter(f.key)} aria-label={`${t('common.delete')} ${FILTER_LABELS[f.key]}`}>
+            <button
+              type="button"
+              onClick={() => handleRemoveFilter(f.key)}
+              aria-label={`${t('common.delete')} ${FILTER_LABELS[f.key]}`}
+            >
               &times;
             </button>
           </span>

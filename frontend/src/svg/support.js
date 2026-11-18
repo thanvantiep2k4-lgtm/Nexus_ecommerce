@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const Support = () => {
   return (
-    <svg
-      width="31"
-      height="30"
-      viewBox="0 0 31 30"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M1.5 24.3333V15C1.5 11.287 2.975 7.72602 5.60051 5.10051C8.22602 2.475 11.787 1 15.5 1C19.213 1 22.774 2.475 25.3995 5.10051C28.025 7.72602 29.5 11.287 29.5 15V24.3333"
         stroke="currentColor"

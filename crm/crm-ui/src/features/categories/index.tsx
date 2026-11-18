@@ -80,7 +80,7 @@ interface CategoryFormValues {
 
 function useDebouncedState(
   initialValue: string,
-  delay: number,
+  delay: number
 ): [string, string, (value: string) => void] {
   const [inputValue, setInputValue] = useState(initialValue);
   const [debouncedValue, setDebouncedValue] = useState(initialValue);
@@ -94,7 +94,7 @@ function useDebouncedState(
         setDebouncedValue(value);
       }, delay);
     },
-    [delay],
+    [delay]
   );
 
   return [inputValue, debouncedValue, setValue];
@@ -137,7 +137,12 @@ function CategoryImage({ src, alt, size = 48 }: { src?: string; alt: string; siz
       shape="square"
       size={size}
       icon={<PictureOutlined />}
-      style={{ backgroundColor: '#fafafa', color: '#d9d9d9', borderRadius: 8, border: '1px solid #f0f0f0' }}
+      style={{
+        backgroundColor: '#fafafa',
+        color: '#d9d9d9',
+        borderRadius: 8,
+        border: '1px solid #f0f0f0',
+      }}
     />
   );
 }
@@ -150,7 +155,7 @@ function buildTreeData(
   categories: Category[],
   onEdit: (cat: Category) => void,
   onView: (cat: Category) => void,
-  onDelete: (id: string) => void,
+  onDelete: (id: string) => void
 ): DataNode[] {
   return categories.map((cat) => {
     const productCount = cat.products?.length ?? 0;
@@ -172,9 +177,14 @@ function buildTreeData(
         <Flex align="center" gap={12}>
           <CategoryImage src={cat.img} alt={cat.parent} size={36} />
           <div>
-            <Text strong style={{ fontSize: 14 }}>{cat.parent}</Text>
+            <Text strong style={{ fontSize: 14 }}>
+              {cat.parent}
+            </Text>
             <div>
-              <Tag color={getProductTypeColor(cat.productType)} style={{ fontSize: 11, marginRight: 4 }}>
+              <Tag
+                color={getProductTypeColor(cat.productType)}
+                style={{ fontSize: 11, marginRight: 4 }}
+              >
                 {cat.productType}
               </Tag>
               <Badge
@@ -188,12 +198,32 @@ function buildTreeData(
         </Flex>
         <Space size={0}>
           <StatusBadge status={cat.status} type="general" />
-          {cat.featured && <Tag color="gold" style={{ fontSize: 11 }}>Featured</Tag>}
+          {cat.featured && (
+            <Tag color="gold" style={{ fontSize: 11 }}>
+              Featured
+            </Tag>
+          )}
           <Tooltip title="View">
-            <Button size="small" type="text" icon={<EyeOutlined />} onClick={(e) => { e.stopPropagation(); onView(cat); }} />
+            <Button
+              size="small"
+              type="text"
+              icon={<EyeOutlined />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onView(cat);
+              }}
+            />
           </Tooltip>
           <Tooltip title="Edit">
-            <Button size="small" type="text" icon={<EditOutlined />} onClick={(e) => { e.stopPropagation(); onEdit(cat); }} />
+            <Button
+              size="small"
+              type="text"
+              icon={<EditOutlined />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(cat);
+              }}
+            />
           </Tooltip>
           <Popconfirm
             title="Delete this category?"
@@ -202,7 +232,13 @@ function buildTreeData(
             okText="Delete"
             okButtonProps={{ danger: true }}
           >
-            <Button size="small" type="text" danger icon={<DeleteOutlined />} onClick={(e) => e.stopPropagation()} />
+            <Button
+              size="small"
+              type="text"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={(e) => e.stopPropagation()}
+            />
           </Popconfirm>
         </Space>
       </div>
@@ -246,7 +282,6 @@ function StatsCards({
   productTypeStats: { _id: string; count: number }[];
   loading: boolean;
 }) {
-
   const cardStyle = {
     borderRadius: 12,
     height: '100%',
@@ -257,7 +292,11 @@ function StatsCards({
       <Col xs={12} sm={12} md={6}>
         <Card style={cardStyle} loading={loading} size="small">
           <Statistic
-            title={<Text type="secondary" style={{ fontSize: 13 }}>Total Categories</Text>}
+            title={
+              <Text type="secondary" style={{ fontSize: 13 }}>
+                Total Categories
+              </Text>
+            }
             value={totalCategories}
             prefix={<TagsOutlined style={{ color: '#1677ff', fontSize: 20 }} />}
             valueStyle={{ color: '#1677ff', fontWeight: 600 }}
@@ -267,7 +306,11 @@ function StatsCards({
       <Col xs={12} sm={12} md={6}>
         <Card style={cardStyle} loading={loading} size="small">
           <Statistic
-            title={<Text type="secondary" style={{ fontSize: 13 }}>Visible</Text>}
+            title={
+              <Text type="secondary" style={{ fontSize: 13 }}>
+                Visible
+              </Text>
+            }
             value={visibleCount}
             prefix={<EyeOutlined style={{ color: '#52c41a', fontSize: 20 }} />}
             valueStyle={{ color: '#52c41a', fontWeight: 600 }}
@@ -293,7 +336,11 @@ function StatsCards({
       <Col xs={12} sm={12} md={6}>
         <Card style={cardStyle} loading={loading} size="small">
           <Statistic
-            title={<Text type="secondary" style={{ fontSize: 13 }}>Hidden</Text>}
+            title={
+              <Text type="secondary" style={{ fontSize: 13 }}>
+                Hidden
+              </Text>
+            }
             value={hiddenCount}
             prefix={<EyeInvisibleOutlined style={{ color: '#faad14', fontSize: 20 }} />}
             valueStyle={{ color: '#faad14', fontWeight: 600 }}
@@ -303,7 +350,11 @@ function StatsCards({
       <Col xs={12} sm={12} md={6}>
         <Card style={cardStyle} loading={loading} size="small">
           <Statistic
-            title={<Text type="secondary" style={{ fontSize: 13 }}>Featured</Text>}
+            title={
+              <Text type="secondary" style={{ fontSize: 13 }}>
+                Featured
+              </Text>
+            }
             value={featuredCount}
             prefix={<StarOutlined style={{ color: '#eb2f96', fontSize: 20 }} />}
             valueStyle={{ color: '#eb2f96', fontWeight: 600 }}
@@ -341,7 +392,9 @@ function CategoryDetail({ category }: { category: Category }) {
       <Flex align="center" gap={16} style={{ marginBottom: 24 }}>
         <CategoryImage src={category.img} alt={category.parent} size={80} />
         <div>
-          <Title level={4} style={{ margin: 0 }}>{category.parent}</Title>
+          <Title level={4} style={{ margin: 0 }}>
+            {category.parent}
+          </Title>
           <Flex gap={6} style={{ marginTop: 6 }}>
             <Tag color={getProductTypeColor(category.productType)}>{category.productType}</Tag>
             <StatusBadge status={category.status} type="general" />
@@ -370,7 +423,11 @@ function CategoryDetail({ category }: { category: Category }) {
         </Col>
         <Col span={8}>
           <Card size="small" style={{ textAlign: 'center', borderRadius: 8 }}>
-            <Statistic title="Sort Order" value={category.sortOrder ?? 0} valueStyle={{ fontSize: 20 }} />
+            <Statistic
+              title="Sort Order"
+              value={category.sortOrder ?? 0}
+              valueStyle={{ fontSize: 20 }}
+            />
           </Card>
         </Col>
       </Row>
@@ -378,7 +435,10 @@ function CategoryDetail({ category }: { category: Category }) {
       {/* Description */}
       {category.description && (
         <div style={{ marginBottom: 20 }}>
-          <Text type="secondary" style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          <Text
+            type="secondary"
+            style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}
+          >
             Description
           </Text>
           <p style={{ marginTop: 4, color: '#595959' }}>{category.description}</p>
@@ -388,7 +448,10 @@ function CategoryDetail({ category }: { category: Category }) {
       {/* Sub-categories */}
       {category.children && category.children.length > 0 && (
         <div style={{ marginBottom: 20 }}>
-          <Text type="secondary" style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          <Text
+            type="secondary"
+            style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}
+          >
             Sub-categories
           </Text>
           <div style={{ marginTop: 8 }}>
@@ -632,8 +695,9 @@ export default function CategoriesPage() {
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   const treeData = useMemo(
-    () => buildTreeData(allCategories, handleEditCategory, handleViewCategory, handleDeleteCategory),
-    [allCategories],
+    () =>
+      buildTreeData(allCategories, handleEditCategory, handleViewCategory, handleDeleteCategory),
+    [allCategories]
   );
 
   // ---------------------------------------------------------------------------
@@ -649,18 +713,15 @@ export default function CategoriesPage() {
           <CategoryImage src={record.img} alt={record.parent} />
           <div>
             <Flex align="center" gap={6}>
-              <Text strong style={{ fontSize: 14 }}>{record.parent}</Text>
-              {record.featured && (
-                <StarOutlined style={{ color: '#eb2f96', fontSize: 12 }} />
-              )}
+              <Text strong style={{ fontSize: 14 }}>
+                {record.parent}
+              </Text>
+              {record.featured && <StarOutlined style={{ color: '#eb2f96', fontSize: 12 }} />}
             </Flex>
             {record.children && record.children.length > 0 && (
               <div style={{ marginTop: 4 }}>
                 {record.children.slice(0, 3).map((child) => (
-                  <Tag
-                    key={child}
-                    style={{ fontSize: 11, marginBottom: 2, borderRadius: 4 }}
-                  >
+                  <Tag key={child} style={{ fontSize: 11, marginBottom: 2, borderRadius: 4 }}>
                     {child}
                   </Tag>
                 ))}
@@ -691,8 +752,7 @@ export default function CategoriesPage() {
       key: 'products',
       width: 90,
       align: 'center',
-      sorter: (a: Category, b: Category) =>
-        (a.products?.length ?? 0) - (b.products?.length ?? 0),
+      sorter: (a: Category, b: Category) => (a.products?.length ?? 0) - (b.products?.length ?? 0),
       render: (_: unknown, record: Category) => {
         const count = record.products?.length ?? 0;
         return (
@@ -727,8 +787,7 @@ export default function CategoriesPage() {
       key: 'sortOrder',
       width: 70,
       align: 'center',
-      sorter: (a: Category, b: Category) =>
-        (a.sortOrder ?? 0) - (b.sortOrder ?? 0),
+      sorter: (a: Category, b: Category) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0),
       render: (_: unknown, record: Category) => (
         <Text type="secondary" style={{ fontSize: 13 }}>
           {record.sortOrder ?? 0}
@@ -833,10 +892,7 @@ export default function CategoriesPage() {
           styles={{ body: { padding: treeData.length === 0 ? 48 : 16 } }}
         >
           {treeData.length === 0 ? (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="No categories found"
-            >
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No categories found">
               <Button type="primary" icon={<PlusOutlined />} onClick={handleAddCategory}>
                 Create First Category
               </Button>
@@ -944,7 +1000,9 @@ export default function CategoriesPage() {
                 emptyText: (
                   <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description={hasActiveFilters ? 'No categories match your filters' : 'No categories yet'}
+                    description={
+                      hasActiveFilters ? 'No categories match your filters' : 'No categories yet'
+                    }
                   >
                     {!hasActiveFilters && (
                       <Button type="primary" icon={<PlusOutlined />} onClick={handleAddCategory}>
@@ -1068,12 +1126,7 @@ export default function CategoriesPage() {
                     <FolderOutlined style={{ marginRight: 6 }} />
                     Sub-categories
                   </Text>
-                  <Button
-                    type="dashed"
-                    size="small"
-                    icon={<PlusOutlined />}
-                    onClick={() => add()}
-                  >
+                  <Button type="dashed" size="small" icon={<PlusOutlined />} onClick={() => add()}>
                     Add
                   </Button>
                 </Flex>

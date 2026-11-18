@@ -1,23 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   shipping_info: {},
-  stripe_client_secret:"",
+  stripe_client_secret: '',
   shipping_method_id: null,
 };
 
 export const orderSlice = createSlice({
-  name: "order",
+  name: 'order',
   initialState,
   reducers: {
     set_shipping: (state, { payload }) => {
       state.shipping_info = payload;
-      localStorage.setItem(
-        "shipping_info",
-        JSON.stringify(payload)
-      );
+      localStorage.setItem('shipping_info', JSON.stringify(payload));
     },
-    set_client_secret:(state,{payload}) => {
+    set_client_secret: (state, { payload }) => {
       state.stripe_client_secret = payload;
     },
     set_shipping_method_id: (state, { payload }) => {
@@ -26,5 +23,5 @@ export const orderSlice = createSlice({
   },
 });
 
-export const {set_shipping,set_client_secret,set_shipping_method_id} = orderSlice.actions;
+export const { set_shipping, set_client_secret, set_shipping_method_id } = orderSlice.actions;
 export default orderSlice.reducer;

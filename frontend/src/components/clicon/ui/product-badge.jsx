@@ -45,7 +45,13 @@ export const ProductBadge = ({ variant, discountPercent, label: labelProp, class
  * @param {string[]} [props.tags=[]] - Product tags
  * @param {string} [props.className] - Additional CSS class
  */
-export const ProductBadgeAuto = ({ discount = 0, quantity = 1, featured = false, tags = [], className = '' }) => {
+export const ProductBadgeAuto = ({
+  discount = 0,
+  quantity = 1,
+  featured = false,
+  tags = [],
+  className = '',
+}) => {
   if (quantity === 0) {
     return <ProductBadge variant="sold-out" className={className} />;
   }

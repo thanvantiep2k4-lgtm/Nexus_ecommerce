@@ -14,7 +14,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const mongoose = require('mongoose');
-const Coupon = require('../model/Coupon');
+const Coupon = require('../models/Coupon');
 
 // Reference "now" so date ranges stay relative to seed time.
 const now = new Date();
@@ -154,7 +154,9 @@ async function seed() {
       { upsert: true, new: true }
     );
     if (result.createdAt.getTime() === result.updatedAt.getTime()) {
-      console.log(`  ✓ Created: ${coupon.couponCode} — ${coupon.title} (${coupon.productType}, ${coupon.discountPercentage}%)`);
+      console.log(
+        `  ✓ Created: ${coupon.couponCode} — ${coupon.title} (${coupon.productType}, ${coupon.discountPercentage}%)`
+      );
       inserted++;
     } else {
       console.log(`  ↻ Updated: ${coupon.couponCode} — ${coupon.title}`);

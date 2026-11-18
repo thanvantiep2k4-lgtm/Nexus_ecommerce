@@ -1,18 +1,18 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 // internal
-import useCartInfo from "@/hooks/use-cart-info";
-import { CartTwo, Compare, Menu, Wishlist } from "@/svg";
-import { openCartMini } from "@/redux/features/cartSlice";
+import useCartInfo from '@/hooks/use-cart-info';
+import { CartTwo, Compare, Menu, Wishlist } from '@/svg';
+import { openCartMini } from '@/redux/features/cartSlice';
 
 const HeaderMainRight = ({ setIsCanvasOpen }) => {
   const { t } = useTranslation();
   const { user: userInfo } = useSelector((state) => state.auth);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { quantity } = useCartInfo();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   return (
     <div className="tp-header-main-right d-flex align-items-center justify-content-end">
       <div className="tp-header-action d-flex align-items-center">
@@ -20,11 +20,11 @@ const HeaderMainRight = ({ setIsCanvasOpen }) => {
         <div className="tp-header-action-item d-none d-lg-block">
           {userInfo?.name ? (
             <Link href="/profile" className="tp-header-user-link">
-              {t("header.helloName", { name: userInfo.name })}
+              {t('header.helloName', { name: userInfo.name })}
             </Link>
           ) : (
             <Link href="/login" className="tp-header-user-link">
-              {t("header.login")}
+              {t('header.login')}
             </Link>
           )}
         </div>

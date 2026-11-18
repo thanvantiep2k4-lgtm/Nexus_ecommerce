@@ -20,13 +20,9 @@ export default function ChatMessage({ message, sessionId }) {
 
   return (
     <>
-      <div className={`shofy-chat__msg shofy-chat__msg--${message.role}`}>
-        {message.content}
-      </div>
+      <div className={`shofy-chat__msg shofy-chat__msg--${message.role}`}>{message.content}</div>
       {message.suggestedActions &&
-        message.suggestedActions.map((a, i) => (
-          <SuggestedActionCard key={i} action={a} />
-        ))}
+        message.suggestedActions.map((a, i) => <SuggestedActionCard key={i} action={a} />)}
       {message.role === 'assistant' && message.messageId && (
         <div className="shofy-chat__feedback">
           <button

@@ -66,7 +66,9 @@ const ClSelect = ({
         aria-expanded={isOpen}
         disabled={disabled}
       >
-        <span className={`cl-select__value${!selectedOption ? ' cl-select__value--placeholder' : ''}`}>
+        <span
+          className={`cl-select__value${!selectedOption ? ' cl-select__value--placeholder' : ''}`}
+        >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <i className="fa-solid fa-chevron-down cl-select__arrow" aria-hidden="true" />

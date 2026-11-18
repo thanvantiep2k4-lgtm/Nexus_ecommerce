@@ -1,5 +1,4 @@
-const API_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
 
 function generateSiteMap(baseUrl, products, blogs) {
   const productEntries = (products || [])
@@ -7,24 +6,24 @@ function generateSiteMap(baseUrl, products, blogs) {
       (p) =>
         `  <url>
     <loc>${baseUrl}/product-details/${p._id}</loc>
-    ${p.updatedAt ? `<lastmod>${p.updatedAt.split("T")[0]}</lastmod>` : ""}
+    ${p.updatedAt ? `<lastmod>${p.updatedAt.split('T')[0]}</lastmod>` : ''}
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`
     )
-    .join("\n");
+    .join('\n');
 
   const blogEntries = (blogs || [])
     .map(
       (b) =>
         `  <url>
     <loc>${baseUrl}/blog/${b.slug}</loc>
-    ${b.updatedAt ? `<lastmod>${b.updatedAt.split("T")[0]}</lastmod>` : ""}
+    ${b.updatedAt ? `<lastmod>${b.updatedAt.split('T')[0]}</lastmod>` : ''}
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>`
     )
-    .join("\n");
+    .join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -54,33 +53,30 @@ ${blogEntries}
 }
 
 export async function getServerSideProps({ res }) {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001';
 
   let products = [];
   let blogs = [];
 
   try {
     const [prodRes, blogRes] = await Promise.all([
-      fetch(
-        `${API_URL}/api/v1/store/products?limit=5000&status=in-stock`
-      ).then((r) => (r.ok ? r.json() : null)),
-      fetch(`${API_URL}/api/v1/store/blog?limit=500`).then((r) =>
+      fetch(`${API_URL}/api/v1/store/products?limit=5000&status=in-stock`).then((r) =>
         r.ok ? r.json() : null
       ),
+      fetch(`${API_URL}/api/v1/store/blog?limit=500`).then((r) => (r.ok ? r.json() : null)),
     ]);
     products = prodRes?.data || [];
     blogs = blogRes?.data || [];
   } catch (err) {
-    console.error("[Sitemap] Error fetching data:", err.message);
+    console.error('[Sitemap] Error fetching data:', err.message);
   }
 
   const sitemap = generateSiteMap(baseUrl, products, blogs);
 
-  res.setHeader("Content-Type", "text/xml; charset=utf-8");
+  res.setHeader('Content-Type', 'text/xml; charset=utf-8');
   res.setHeader(
-    "Cache-Control",
-    "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400"
+    'Cache-Control',
+    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400'
   );
   res.write(sitemap);
   res.end();

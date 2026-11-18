@@ -2,7 +2,9 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Currency switcher', () => {
-  test('anonymous user can switch VND ↔ USD via Clicon welcome bar; persists across reload', async ({ page }) => {
+  test('anonymous user can switch VND ↔ USD via Clicon welcome bar; persists across reload', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     // Wait for the welcome-bar currency toggle to mount.

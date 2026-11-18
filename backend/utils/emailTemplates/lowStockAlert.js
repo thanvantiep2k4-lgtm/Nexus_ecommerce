@@ -44,9 +44,10 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Low Stock Alert',
-    `      <h2>Low Stock Warning</h2>
+  en: (d) =>
+    layout(
+      'Low Stock Alert',
+      `      <h2>Low Stock Warning</h2>
       <p>This is an automated alert to inform you that the following product is running low on stock:</p>
       <hr class="divider" />
       <div class="info-row"><span class="label">Product:</span> ${d.productTitle}</div>
@@ -54,10 +55,11 @@ const bodies = {
       <hr class="divider" />
       <p>Please restock this product to avoid running out.</p>
       <a href="${d.productUrl}" class="btn">View Product</a>`
-  ),
-  vi: (d) => layout(
-    'Cảnh báo tồn kho thấp',
-    `      <h2>Cảnh báo tồn kho thấp</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Cảnh báo tồn kho thấp',
+      `      <h2>Cảnh báo tồn kho thấp</h2>
       <p>Đây là cảnh báo tự động về sản phẩm sắp hết hàng:</p>
       <hr class="divider" />
       <div class="info-row"><span class="label">Sản phẩm:</span> ${d.productTitle}</div>
@@ -65,10 +67,10 @@ const bodies = {
       <hr class="divider" />
       <p>Vui lòng nhập thêm hàng để tránh tình trạng hết hàng.</p>
       <a href="${d.productUrl}" class="btn">Xem sản phẩm</a>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

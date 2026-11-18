@@ -14,27 +14,29 @@ const passwordSchema = Joi.string()
   .pattern(/[a-z]/, 'lowercase')
   .pattern(/[^A-Za-z0-9]/, 'special character')
   .messages({
-    'string.min':            'Password must be at least 8 characters',
-    'string.max':            'Password must not exceed 128 characters',
-    'string.pattern.name':   'Password must contain at least 1 {#name}',
+    'string.min': 'Password must be at least 8 characters',
+    'string.max': 'Password must not exceed 128 characters',
+    'string.pattern.name': 'Password must contain at least 1 {#name}',
   });
 
 const bankInfoSchema = Joi.object({
-  bankName:      Joi.string().allow('', null).optional(),
+  bankName: Joi.string().allow('', null).optional(),
   accountNumber: Joi.string().allow('', null).optional(),
-  accountName:   Joi.string().allow('', null).optional(),
-  branch:        Joi.string().allow('', null).optional(),
+  accountName: Joi.string().allow('', null).optional(),
+  branch: Joi.string().allow('', null).optional(),
 }).options({ stripUnknown: true });
 
 // ---------------------------------------------------------------------------
 // Update own profile (user)
 // ---------------------------------------------------------------------------
 const updateUser = Joi.object({
-  name:    Joi.string().min(1).max(100).optional(),
-  email:   Joi.string().email({ tlds: { allow: false } }).optional(),
-  phone:   Joi.string().allow('', null).optional(),
+  name: Joi.string().min(1).max(100).optional(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .optional(),
+  phone: Joi.string().allow('', null).optional(),
   address: Joi.string().allow('', null).optional(),
-  bio:     Joi.string().max(500).allow('', null).optional(),
+  bio: Joi.string().max(500).allow('', null).optional(),
   // Avatar URL (updated via separate upload endpoint in most flows)
   imageURL: Joi.string().allow('', null).optional(),
 }).options({ stripUnknown: true });
@@ -46,29 +48,29 @@ const updateUser = Joi.object({
 // `avatar` is a UI alias for the model field `imageURL`.
 // ---------------------------------------------------------------------------
 const adminAddressObject = Joi.object({
-  street:  Joi.string().allow('', null).optional(),
-  city:    Joi.string().allow('', null).optional(),
-  state:   Joi.string().allow('', null).optional(),
+  street: Joi.string().allow('', null).optional(),
+  city: Joi.string().allow('', null).optional(),
+  state: Joi.string().allow('', null).optional(),
   zipCode: Joi.string().allow('', null).optional(),
   country: Joi.string().allow('', null).optional(),
 }).options({ stripUnknown: true });
 
 const adminUpdateUser = Joi.object({
-  name:          Joi.string().min(1).max(100).optional(),
-  email:         Joi.string().email({ tlds: { allow: false } }).optional(),
-  phone:         Joi.string().allow('', null).optional(),
-  password:      passwordSchema.optional(),
-  role:          Joi.string().valid('user', 'admin', 'vendor').optional(),
-  status:        Joi.string().valid('active', 'inactive', 'blocked').optional(),
-  gender:        Joi.string().valid('male', 'female', 'other').allow('', null).optional(),
-  avatar:        Joi.string().allow('', null).optional(),
-  imageURL:      Joi.string().allow('', null).optional(),
-  dateOfBirth:   Joi.alternatives().try(Joi.date(), Joi.string()).allow('', null).optional(),
-  emailVerified: Joi.boolean().optional(),
-  bio:           Joi.string().max(500).allow('', null).optional(),
-  address: Joi.alternatives()
-    .try(Joi.string().allow('', null), adminAddressObject)
+  name: Joi.string().min(1).max(100).optional(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
     .optional(),
+  phone: Joi.string().allow('', null).optional(),
+  password: passwordSchema.optional(),
+  role: Joi.string().valid('user', 'admin', 'vendor').optional(),
+  status: Joi.string().valid('active', 'inactive', 'blocked').optional(),
+  gender: Joi.string().valid('male', 'female', 'other').allow('', null).optional(),
+  avatar: Joi.string().allow('', null).optional(),
+  imageURL: Joi.string().allow('', null).optional(),
+  dateOfBirth: Joi.alternatives().try(Joi.date(), Joi.string()).allow('', null).optional(),
+  emailVerified: Joi.boolean().optional(),
+  bio: Joi.string().max(500).allow('', null).optional(),
+  address: Joi.alternatives().try(Joi.string().allow('', null), adminAddressObject).optional(),
 }).options({ stripUnknown: true });
 
 // ---------------------------------------------------------------------------
@@ -83,37 +85,41 @@ const updateUserStatus = Joi.object({
 // Vendor application
 // ---------------------------------------------------------------------------
 const vendorApplication = Joi.object({
-  storeName:        Joi.string().min(2).max(100).required(),
-  storeSlug:        Joi.string().lowercase().allow('', null).optional(),
+  storeName: Joi.string().min(2).max(100).required(),
+  storeSlug: Joi.string().lowercase().allow('', null).optional(),
   storeDescription: Joi.string().max(1000).allow('', null).optional(),
-  storeLogo:        Joi.string().allow('', null).optional(),
-  storeBanner:      Joi.string().allow('', null).optional(),
-  bankInfo:         bankInfoSchema.optional(),
+  storeLogo: Joi.string().allow('', null).optional(),
+  storeBanner: Joi.string().allow('', null).optional(),
+  bankInfo: bankInfoSchema.optional(),
 }).options({ stripUnknown: true });
 
 // ---------------------------------------------------------------------------
 // Admin — create user
 // ---------------------------------------------------------------------------
 const createUser = Joi.object({
-  name:     Joi.string().min(1).max(100).required(),
-  email:    Joi.string().email({ tlds: { allow: false } }).required(),
+  name: Joi.string().min(1).max(100).required(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required(),
   password: passwordSchema.required(),
-  role:     Joi.string().valid('user', 'admin', 'vendor').default('user').optional(),
-  status:   Joi.string().valid('active', 'inactive', 'blocked').default('active').optional(),
-  phone:    Joi.string().allow('', null).optional(),
+  role: Joi.string().valid('user', 'admin', 'vendor').default('user').optional(),
+  status: Joi.string().valid('active', 'inactive', 'blocked').default('active').optional(),
+  phone: Joi.string().allow('', null).optional(),
 }).options({ stripUnknown: true });
 
 // ---------------------------------------------------------------------------
 // Admin — create staff
 // ---------------------------------------------------------------------------
 const addStaff = Joi.object({
-  name:        Joi.string().min(1).max(100).required(),
-  email:       Joi.string().email({ tlds: { allow: false } }).required(),
-  password:    passwordSchema.required(),
-  role:        Joi.string().valid('Admin', 'Super Admin', 'Manager', 'CEO').required(),
-  phone:       Joi.string().allow('', null).optional(),
+  name: Joi.string().min(1).max(100).required(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required(),
+  password: passwordSchema.required(),
+  role: Joi.string().valid('Admin', 'Super Admin', 'Manager', 'CEO').required(),
+  phone: Joi.string().allow('', null).optional(),
   joiningDate: Joi.string().allow('', null).optional(),
-  image:       Joi.string().allow('', null).optional(),
+  image: Joi.string().allow('', null).optional(),
 }).options({ stripUnknown: true });
 
 // ---------------------------------------------------------------------------
@@ -122,6 +128,17 @@ const addStaff = Joi.object({
 const updatePreferences = Joi.object({
   currency: Joi.string().valid('VND', 'USD', 'EUR', 'GBP', 'JPY'),
   language: Joi.string().valid('vi', 'en'),
-}).min(1).options({ stripUnknown: true });
+})
+  .min(1)
+  .options({ stripUnknown: true });
 
-module.exports = { updateUser, adminUpdateUser, updateUserStatus, vendorApplication, createUser, addStaff, passwordSchema, updatePreferences };
+module.exports = {
+  updateUser,
+  adminUpdateUser,
+  updateUserStatus,
+  vendorApplication,
+  createUser,
+  addStaff,
+  passwordSchema,
+  updatePreferences,
+};

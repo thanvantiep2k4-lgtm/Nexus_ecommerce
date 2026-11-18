@@ -43,7 +43,11 @@ const ProductCarousel = ({ settings = {}, title, subtitle }) => {
   let content = null;
 
   if (isLoading) {
-    content = <div className="d-flex justify-content-center py-5"><div className="spinner-border text-primary" /></div>;
+    content = (
+      <div className="d-flex justify-content-center py-5">
+        <div className="spinner-border text-primary" />
+      </div>
+    );
   } else if (isError) {
     content = <ErrorMsg msg={t('error.loadingProductsError')} />;
   } else if (!products?.data?.length) {
@@ -95,9 +99,7 @@ const ProductCarousel = ({ settings = {}, title, subtitle }) => {
         </div>
         <div className="row">
           <div className="col-xl-12">
-            <div className="tp-product-arrival-slider fix">
-              {content}
-            </div>
+            <div className="tp-product-arrival-slider fix">{content}</div>
           </div>
         </div>
       </div>

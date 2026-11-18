@@ -20,25 +20,16 @@ const ReviewCard = ({ review, className = '' }) => {
   return (
     <div className={`cl-review-card${className ? ` ${className}` : ''}`}>
       <div className="cl-review-card__header">
-        <ClAvatar
-          src={userId?.imageURL}
-          name={userId?.name}
-          size="md"
-        />
+        <ClAvatar src={userId?.imageURL} name={userId?.name} size="md" />
         <div className="cl-review-card__meta">
           <div className="cl-review-card__top-row">
             <StarRating value={rating} size="sm" />
             {isVerifiedPurchase && (
-              <ClTag
-                label={t('product.verifiedPurchase', 'Verified Purchase')}
-                variant="success"
-              />
+              <ClTag label={t('product.verifiedPurchase', 'Verified Purchase')} variant="success" />
             )}
           </div>
           <h4 className="cl-review-card__author">{userId?.name}</h4>
-          <span className="cl-review-card__date">
-            {dayjs(createdAt).format('MMMM D, YYYY')}
-          </span>
+          <span className="cl-review-card__date">{dayjs(createdAt).format('MMMM D, YYYY')}</span>
         </div>
       </div>
 

@@ -44,9 +44,10 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Order Confirmation',
-    `      <h2>Thank you for your order!</h2>
+  en: (d) =>
+    layout(
+      'Order Confirmation',
+      `      <h2>Thank you for your order!</h2>
       <p>Hi <strong>${d.customerName}</strong>,</p>
       <p>We have received your order and it is now being processed.</p>
       <hr class="divider" />
@@ -59,10 +60,11 @@ const bodies = {
       <ul>${d.itemsHtml}</ul>
       <p>We will send you another email once your order has shipped.</p>
       <p>If you have any questions, please contact our support team.</p>`
-  ),
-  vi: (d) => layout(
-    'Xác nhận đơn hàng',
-    `      <h2>Cảm ơn bạn đã đặt hàng!</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Xác nhận đơn hàng',
+      `      <h2>Cảm ơn bạn đã đặt hàng!</h2>
       <p>Xin chào <strong>${d.customerName}</strong>,</p>
       <p>Chúng tôi đã nhận được đơn hàng của bạn và đang xử lý.</p>
       <hr class="divider" />
@@ -74,10 +76,10 @@ const bodies = {
       <p><strong>Sản phẩm đã đặt:</strong></p>
       <ul>${d.itemsHtml}</ul>
       <p>Chúng tôi sẽ gửi email cho bạn khi đơn hàng được giao đi.</p>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

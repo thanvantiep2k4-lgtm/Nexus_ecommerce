@@ -1,19 +1,11 @@
-import Head from "next/head";
+import Head from 'next/head';
 
-const SEO = ({
-  pageTitle,
-  description,
-  image,
-  url,
-  noindex = false,
-  type = "website",
-}) => {
-  const siteName = "Shofy";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+const SEO = ({ pageTitle, description, image, url, noindex = false, type = 'website' }) => {
+  const siteName = 'Shofy';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
   const title = pageTitle ? `${pageTitle} — ${siteName}` : siteName;
   const desc =
-    description ||
-    "Shop the latest products at Shofy — your one-stop online marketplace";
+    description || 'Shop the latest products at Shofy — your one-stop online marketplace';
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
 
   return (
@@ -26,10 +18,7 @@ const SEO = ({
       ) : (
         <meta name="robots" content="index, follow" />
       )}
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-      />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <link rel="icon" href="/favicon.png" />
       {fullUrl && <link rel="canonical" href={fullUrl} />}
 

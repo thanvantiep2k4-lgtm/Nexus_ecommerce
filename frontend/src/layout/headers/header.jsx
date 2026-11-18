@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 // internal
-import Menus from "./header-com/menus";
-import useSticky from "@/hooks/use-sticky";
-import logo from "@assets/img/logo/logo.svg";
-import useCartInfo from "@/hooks/use-cart-info";
-import OffCanvas from "@/components/common/off-canvas";
-import { openCartMini } from "@/redux/features/cartSlice";
-import HeaderCategory from "./header-com/header-category";
-import HeaderTopRight from "./header-com/header-top-right";
-import HeaderMainRight from "./header-com/header-main-right";
-import CartMiniSidebar from "@/components/common/cart-mini-sidebar";
-import HeaderSearchForm from "@/components/forms/header-search-form";
-import { CartTwo, CategoryMenu, Compare, Menu, Phone, ShippingCar, Wishlist } from "@/svg";
-import useCurrency from "@/hooks/use-currency";
-import { useGetSettingsQuery } from "@/redux/features/cmsApi";
+import Menus from './header-com/menus';
+import useSticky from '@/hooks/use-sticky';
+import logo from '@assets/img/logo/logo.svg';
+import useCartInfo from '@/hooks/use-cart-info';
+import OffCanvas from '@/components/common/off-canvas';
+import { openCartMini } from '@/redux/features/cartSlice';
+import HeaderCategory from './header-com/header-category';
+import HeaderTopRight from './header-com/header-top-right';
+import HeaderMainRight from './header-com/header-main-right';
+import CartMiniSidebar from '@/components/common/cart-mini-sidebar';
+import HeaderSearchForm from '@/components/forms/header-search-form';
+import { CartTwo, CategoryMenu, Compare, Menu, Phone, ShippingCar, Wishlist } from '@/svg';
+import useCurrency from '@/hooks/use-currency';
+import { useGetSettingsQuery } from '@/redux/features/cmsApi';
 
 const Header = () => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -44,7 +44,7 @@ const Header = () => {
                     <span>
                       <ShippingCar />
                     </span>
-                    <p>{t("header.freeShipping", { amount: formattedThreshold })}</p>
+                    <p>{t('header.freeShipping', { amount: formattedThreshold })}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
@@ -84,7 +84,10 @@ const Header = () => {
             <div className="container">
               <div className="tp-mega-menu-wrapper p-relative">
                 <div className="d-flex align-items-center">
-                  <div className="tp-header-category tp-category-menu tp-header-category-toggle" style={{ flexShrink: 0, width: 'auto', maxWidth: 220 }}>
+                  <div
+                    className="tp-header-category tp-category-menu tp-header-category-toggle"
+                    style={{ flexShrink: 0, width: 'auto', maxWidth: 220 }}
+                  >
                     <button
                       onClick={() => setIsCategoryActive(!isCategoryActive)}
                       className="tp-category-menu-btn tp-category-menu-toggle"
@@ -92,7 +95,7 @@ const Header = () => {
                       <span>
                         <CategoryMenu />
                       </span>
-                      {t("header.allProductTypes")}
+                      {t('header.allProductTypes')}
                     </button>
                     <nav className="tp-category-menu-content">
                       <HeaderCategory isCategoryActive={isCategoryActive} />
@@ -111,7 +114,10 @@ const Header = () => {
       </header>
 
       {/* sticky header start */}
-      <div id="header-sticky-2" className={`tp-header-sticky-area ${sticky ? 'header-sticky-2' : ''}`}>
+      <div
+        id="header-sticky-2"
+        className={`tp-header-sticky-area ${sticky ? 'header-sticky-2' : ''}`}
+      >
         <div className="container">
           <div className="tp-mega-menu-wrapper p-relative">
             <div className="row align-items-center">
@@ -143,13 +149,21 @@ const Header = () => {
                     </Link>
                   </div>
                   <div className="tp-header-action-item">
-                    <button onClick={() => dispatch(openCartMini())} type="button" className="tp-header-action-btn cartmini-open-btn">
+                    <button
+                      onClick={() => dispatch(openCartMini())}
+                      type="button"
+                      className="tp-header-action-btn cartmini-open-btn"
+                    >
                       <CartTwo />
                       <span className="tp-header-action-badge">{quantity}</span>
                     </button>
                   </div>
                   <div className="tp-header-action-item d-lg-none">
-                    <button onClick={() => setIsCanvasOpen(true)} type="button" className="tp-header-action-btn tp-offcanvas-open-btn">
+                    <button
+                      onClick={() => setIsCanvasOpen(true)}
+                      type="button"
+                      className="tp-header-action-btn tp-offcanvas-open-btn"
+                    >
                       <Menu />
                     </button>
                   </div>

@@ -4,7 +4,7 @@ import ReviewForm from '../forms/review-form';
 import { ReviewCard } from '@/components/clicon/composites';
 import ReviewRatingBreakdown from './review-rating-breakdown';
 import { useGetProductReviewsQuery } from '@/redux/features/cmsApi';
-import useCurrency from "@/hooks/use-currency";
+import useCurrency from '@/hooks/use-currency';
 
 // Base-currency (VND) values; convert at display time
 const SHIPPING_RATES_VND = {
@@ -28,10 +28,7 @@ const DetailsTabNav = ({ product }) => {
   const { t } = useTranslation();
   const { formatPrice } = useCurrency();
 
-  const {
-    data: reviewsData,
-    isLoading: reviewsLoading,
-  } = useGetProductReviewsQuery(
+  const { data: reviewsData, isLoading: reviewsLoading } = useGetProductReviewsQuery(
     { productId: _id, page, limit: LIMIT },
     { skip: !_id }
   );
@@ -68,19 +65,42 @@ const DetailsTabNav = ({ product }) => {
             <div className="cl-pd__desc-section">
               <h4>Feature</h4>
               <ul>
-                <li><i className="fa-solid fa-shield-halved" /> Free 1 Year Warranty</li>
-                <li><i className="fa-solid fa-truck-fast" /> Free Shipping &amp; Fasted Delivery</li>
-                <li><i className="fa-solid fa-money-bill-wave" /> 100% Money-back guarantee</li>
-                <li><i className="fa-solid fa-headset" /> 24/7 Customer support</li>
-                <li><i className="fa-solid fa-credit-card" /> Secure payment method</li>
+                <li>
+                  <i className="fa-solid fa-shield-halved" /> Free 1 Year Warranty
+                </li>
+                <li>
+                  <i className="fa-solid fa-truck-fast" /> Free Shipping &amp; Fasted Delivery
+                </li>
+                <li>
+                  <i className="fa-solid fa-money-bill-wave" /> 100% Money-back guarantee
+                </li>
+                <li>
+                  <i className="fa-solid fa-headset" /> 24/7 Customer support
+                </li>
+                <li>
+                  <i className="fa-solid fa-credit-card" /> Secure payment method
+                </li>
               </ul>
             </div>
             <div className="cl-pd__shipping-info">
-              <h4>{t("product.shippingInfo")}</h4>
-              <p><strong>{t("product.courierLabel")}</strong> {t("product.courierValue")}</p>
-              <p><strong>{t("product.localShipping")}</strong> {t("product.localShippingValue", { amount: formatPrice(SHIPPING_RATES_VND.local) })}</p>
-              <p><strong>{t("product.upsGround")}</strong> {t("product.upsGroundValue", { amount: formatPrice(SHIPPING_RATES_VND.upsGround) })}</p>
-              <p><strong>{t("product.unishopGlobal")}</strong> {t("product.unishopGlobalValue", { amount: formatPrice(SHIPPING_RATES_VND.unishopGlobal) })}</p>
+              <h4>{t('product.shippingInfo')}</h4>
+              <p>
+                <strong>{t('product.courierLabel')}</strong> {t('product.courierValue')}
+              </p>
+              <p>
+                <strong>{t('product.localShipping')}</strong>{' '}
+                {t('product.localShippingValue', { amount: formatPrice(SHIPPING_RATES_VND.local) })}
+              </p>
+              <p>
+                <strong>{t('product.upsGround')}</strong>{' '}
+                {t('product.upsGroundValue', { amount: formatPrice(SHIPPING_RATES_VND.upsGround) })}
+              </p>
+              <p>
+                <strong>{t('product.unishopGlobal')}</strong>{' '}
+                {t('product.unishopGlobalValue', {
+                  amount: formatPrice(SHIPPING_RATES_VND.unishopGlobal),
+                })}
+              </p>
             </div>
           </div>
         )}
@@ -100,7 +120,9 @@ const DetailsTabNav = ({ product }) => {
                 </tbody>
               </table>
             ) : (
-              <p style={{ color: 'var(--cl-text-secondary)' }}>No additional information available.</p>
+              <p style={{ color: 'var(--cl-text-secondary)' }}>
+                No additional information available.
+              </p>
             )}
           </div>
         )}
@@ -113,7 +135,15 @@ const DetailsTabNav = ({ product }) => {
                 <tbody>
                   {additionalInformation.map((item, i) => (
                     <tr key={i}>
-                      <td style={{ fontWeight: 600, width: '30%', backgroundColor: 'var(--cl-bg-gray)' }}>{item.key}</td>
+                      <td
+                        style={{
+                          fontWeight: 600,
+                          width: '30%',
+                          backgroundColor: 'var(--cl-bg-gray)',
+                        }}
+                      >
+                        {item.key}
+                      </td>
                       <td>{item.value}</td>
                     </tr>
                   ))}
@@ -145,9 +175,9 @@ const DetailsTabNav = ({ product }) => {
                   <p style={{ color: 'var(--cl-text-secondary)' }}>There are no reviews yet.</p>
                 )}
 
-                {!reviewsLoading && reviews.length > 0 && reviews.map((item) => (
-                  <ReviewCard key={item._id} review={item} />
-                ))}
+                {!reviewsLoading &&
+                  reviews.length > 0 &&
+                  reviews.map((item) => <ReviewCard key={item._id} review={item} />)}
 
                 {totalPages > 1 && (
                   <div className="d-flex gap-2 mt-3">

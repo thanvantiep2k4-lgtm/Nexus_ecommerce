@@ -1,17 +1,16 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import SEO from "@/components/seo";
-import HeaderClicon from "@/layout/headers/header-clicon";
-import FooterClicon from "@/layout/footers/footer-clicon";
-import Wrapper from "@/layout/wrapper";
-import ErrorMsg from "@/components/common/error-msg";
-import ProductDetailsBreadcrumb from "@/components/breadcrumb/product-details-breadcrumb";
-import ProductDetailsArea from "@/components/product-details/product-details-area";
-import JsonLd from "@/components/seo/JsonLd";
-import { productJsonLd, breadcrumbJsonLd } from "@/utils/structuredData";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import SEO from '@/components/seo';
+import HeaderClicon from '@/layout/headers/header-clicon';
+import FooterClicon from '@/layout/footers/footer-clicon';
+import Wrapper from '@/layout/wrapper';
+import ErrorMsg from '@/components/common/error-msg';
+import ProductDetailsBreadcrumb from '@/components/breadcrumb/product-details-breadcrumb';
+import ProductDetailsArea from '@/components/product-details/product-details-area';
+import JsonLd from '@/components/seo/JsonLd';
+import { productJsonLd, breadcrumbJsonLd } from '@/utils/structuredData';
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
 
 const ProductDetailsPage = ({ product, relatedProducts, error }) => {
   const { t } = useTranslation();
@@ -26,15 +25,15 @@ const ProductDetailsPage = ({ product, relatedProducts, error }) => {
     );
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
 
   const categorySlug = product.category?.name
-    ? product.category.name.toLowerCase().replace("&", "").split(" ").join("-")
-    : "";
+    ? product.category.name.toLowerCase().replace('&', '').split(' ').join('-')
+    : '';
 
   const breadcrumbs = [
-    { name: "Home", url: "/" },
-    { name: "Shop", url: "/shop" },
+    { name: 'Home', url: '/' },
+    { name: 'Shop', url: '/shop' },
     ...(product.category?.name
       ? [{ name: product.category.name, url: `/shop?category=${categorySlug}` }]
       : []),
@@ -63,10 +62,7 @@ const ProductDetailsPage = ({ product, relatedProducts, error }) => {
           { label: product.title },
         ]}
       />
-      <ProductDetailsArea
-        productItem={product}
-        relatedProducts={relatedProducts}
-      />
+      <ProductDetailsArea productItem={product} relatedProducts={relatedProducts} />
       <FooterClicon />
     </Wrapper>
   );
@@ -83,9 +79,9 @@ export async function getStaticPaths() {
     const paths = (data.data || []).map((p) => ({
       params: { id: p._id },
     }));
-    return { paths, fallback: "blocking" };
+    return { paths, fallback: 'blocking' };
   } catch {
-    return { paths: [], fallback: "blocking" };
+    return { paths: [], fallback: 'blocking' };
   }
 }
 
@@ -93,9 +89,7 @@ export async function getStaticProps({ params }) {
   try {
     const [productRes, relatedRes] = await Promise.all([
       fetch(`${API_URL}/api/v1/store/products/${params.id}`),
-      fetch(`${API_URL}/api/v1/store/products/${params.id}/related`).catch(
-        () => null
-      ),
+      fetch(`${API_URL}/api/v1/store/products/${params.id}/related`).catch(() => null),
     ]);
 
     if (!productRes.ok) return { notFound: true };
@@ -122,7 +116,7 @@ export async function getStaticProps({ params }) {
       revalidate: 60,
     };
   } catch (err) {
-    console.error("[ProductDetail ISR] Error:", err.message);
+    console.error('[ProductDetail ISR] Error:', err.message);
     return { notFound: true };
   }
 }

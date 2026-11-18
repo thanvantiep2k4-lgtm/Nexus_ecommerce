@@ -1,6 +1,6 @@
-const dotenv = require("dotenv");
-const cloudinaryModule = require("cloudinary");
-const { secret } = require("../config/secret");
+const dotenv = require('dotenv');
+const cloudinaryModule = require('cloudinary');
+const { secret } = require('../config/secret');
 
 dotenv.config();
 const cloudinary = cloudinaryModule.v2;

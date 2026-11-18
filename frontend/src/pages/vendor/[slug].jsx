@@ -13,9 +13,7 @@ import useCurrency from '@/hooks/use-currency';
  */
 const VendorStorePage = ({ vendor, products, pagination }) => {
   const { formatPrice } = useCurrency();
-  const memberSince = vendor?.createdAt
-    ? dayjs(vendor.createdAt).format('MMMM YYYY')
-    : null;
+  const memberSince = vendor?.createdAt ? dayjs(vendor.createdAt).format('MMMM YYYY') : null;
 
   const storeName = vendor?.vendorProfile?.storeName || vendor?.name || 'Vendor Store';
   const storeBio = vendor?.vendorProfile?.storeBio || vendor?.vendorProfile?.storeDescription || '';
@@ -126,7 +124,12 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
           <div className="container">
             <h3
               className="mb-30"
-              style={{ fontSize: '18px', fontWeight: 600, borderBottom: '1px solid #eee', paddingBottom: '10px' }}
+              style={{
+                fontSize: '18px',
+                fontWeight: 600,
+                borderBottom: '1px solid #eee',
+                paddingBottom: '10px',
+              }}
             >
               Products by {storeName}
             </h3>
@@ -134,10 +137,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
             {products && products.length > 0 ? (
               <div className="row">
                 {products.map((product) => (
-                  <div
-                    key={product._id}
-                    className="col-xl-3 col-lg-4 col-sm-6 col-12 mb-30"
-                  >
+                  <div key={product._id} className="col-xl-3 col-lg-4 col-sm-6 col-12 mb-30">
                     <div className="tp-product-item transition-3">
                       <div className="tp-product-thumb p-relative fix">
                         <Link href={`/product-details/${product._id}`}>
@@ -168,9 +168,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
                           </div>
                         )}
                         <h3 className="tp-product-title" style={{ fontSize: '14px' }}>
-                          <Link href={`/product-details/${product._id}`}>
-                            {product.title}
-                          </Link>
+                          <Link href={`/product-details/${product._id}`}>{product.title}</Link>
                         </h3>
                         <div className="tp-product-price-wrapper">
                           {product.discount > 0 ? (
@@ -182,7 +180,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
                                 {' '}
                                 {formatPrice(
                                   Number(product.price) -
-                                  (Number(product.price) * Number(product.discount)) / 100
+                                    (Number(product.price) * Number(product.discount)) / 100
                                 )}
                               </span>
                             </>

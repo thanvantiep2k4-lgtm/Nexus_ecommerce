@@ -16,7 +16,7 @@
  */
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Product = require('../model/Products');
+const Product = require('../models/Products');
 
 const DRY = process.argv.includes('--dry');
 const FORCE = process.argv.includes('--force');
@@ -35,12 +35,18 @@ const COLORS_PER_PRODUCT = 2;
 
 function skuBase(product) {
   const raw = (product.slug || product.title || String(product._id)).toString();
-  const cleaned = raw.toUpperCase().replace(/[^A-Z0-9]+/g, '').slice(0, 16);
+  const cleaned = raw
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '')
+    .slice(0, 16);
   return cleaned || `P${String(product._id).slice(-6).toUpperCase()}`;
 }
 
 function colorAbbr(name) {
-  return name.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
+  return name
+    .toUpperCase()
+    .replace(/[^A-Z]/g, '')
+    .slice(0, 3);
 }
 
 function buildVariants(product, index) {
@@ -77,10 +83,7 @@ function buildVariants(product, index) {
   const dbName = mongoose.connection.name;
   console.log(`[seed-variants] connected to "${dbName}" (dry=${DRY}, force=${FORCE})`);
 
-  const products = await Product.find(
-    {},
-    'slug title price quantity img variants',
-  ).lean();
+  const products = await Product.find({}, 'slug title price quantity img variants').lean();
   console.log(`[seed-variants] ${products.length} products found`);
 
   const ops = [];
@@ -99,7 +102,7 @@ function buildVariants(product, index) {
     if (planned <= 3) {
       console.log(
         `[seed-variants] e.g. "${p.title}" → ${variants.length} variants ` +
-          `(${variants.map((v) => v.sku).join(', ')})`,
+          `(${variants.map((v) => v.sku).join(', ')})`
       );
     }
     ops.push({ updateOne: { filter: { _id: p._id }, update: { $set: { variants } } } });

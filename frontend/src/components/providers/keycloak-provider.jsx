@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
-import keycloak from "@/lib/keycloak";
-import { userLoggedIn, userLoggedOut } from "@/redux/features/auth/authSlice";
-import { authApi } from "@/redux/features/auth/authApi";
-import Loader from "@/components/loader/loader";
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import keycloak from '@/lib/keycloak';
+import { userLoggedIn, userLoggedOut } from '@/redux/features/auth/authSlice';
+import { authApi } from '@/redux/features/auth/authApi';
+import Loader from '@/components/loader/loader';
 
 const KeycloakContext = createContext(null);
 
@@ -20,9 +20,9 @@ const KeycloakProvider = ({ children }) => {
 
     keycloak
       .init({
-        onLoad: "check-sso",
+        onLoad: 'check-sso',
         silentCheckSsoRedirectUri:
-          typeof window !== "undefined"
+          typeof window !== 'undefined'
             ? `${window.location.origin}/silent-check-sso.html`
             : undefined,
         enablePkce: true,
@@ -35,10 +35,10 @@ const KeycloakProvider = ({ children }) => {
           try {
             const profileResult = await dispatch(authApi.endpoints.getUserProfile.initiate());
             if (profileResult?.error) {
-              console.error("[Auth] Failed to fetch user profile:", profileResult.error);
+              console.error('[Auth] Failed to fetch user profile:', profileResult.error);
             }
           } catch (err) {
-            console.error("[Auth] getUserProfile exception:", err);
+            console.error('[Auth] getUserProfile exception:', err);
           }
         }
         setInitialized(true);
@@ -74,9 +74,7 @@ const KeycloakProvider = ({ children }) => {
         userLoggedIn({
           user: {
             keycloakId: keycloak.tokenParsed.sub,
-            name:
-              keycloak.tokenParsed.name ||
-              keycloak.tokenParsed.preferred_username,
+            name: keycloak.tokenParsed.name || keycloak.tokenParsed.preferred_username,
             email: keycloak.tokenParsed.email,
             roles: keycloak.tokenParsed.realm_access?.roles || [],
           },

@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const Refund = () => {
   return (
-    <svg
-      width="21"
-      height="35"
-      viewBox="0 0 21 35"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="21" height="35" viewBox="0 0 21 35" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M10.3636 1V34"
         stroke="currentColor"

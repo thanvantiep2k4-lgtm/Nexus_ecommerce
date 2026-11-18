@@ -8,9 +8,7 @@ test.describe('Chatbot widget', () => {
 
     await bubble.click();
     await expect(page.locator('.shofy-chat__panel')).toBeVisible();
-    await expect(
-      page.locator('.shofy-chat__msg--assistant').first()
-    ).toContainText(/help|giúp/i);
+    await expect(page.locator('.shofy-chat__msg--assistant').first()).toContainText(/help|giúp/i);
   });
 
   test('sends a message and receives a response', async ({ page }) => {
@@ -35,7 +33,9 @@ test.describe('Chatbot widget', () => {
     await page.locator('.shofy-chat__bubble').click();
     await expect(page.locator('.shofy-chat__panel')).toBeVisible();
 
-    await page.locator('button[aria-label="Close chat"], button[aria-label="Đóng trò chuyện"]').click();
+    await page
+      .locator('button[aria-label="Close chat"], button[aria-label="Đóng trò chuyện"]')
+      .click();
     await expect(page.locator('.shofy-chat__panel')).toBeHidden();
     await expect(page.locator('.shofy-chat__bubble')).toBeVisible();
   });

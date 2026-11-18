@@ -32,9 +32,7 @@ const StarRating = ({
   if (reviews && typeof valueProp === 'undefined') {
     count = reviews.length;
     value =
-      count > 0
-        ? Math.round(reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / count)
-        : 0;
+      count > 0 ? Math.round(reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / count) : 0;
   }
 
   value = value || 0;
@@ -81,9 +79,7 @@ const StarRating = ({
           &#9733;
         </span>
       ))}
-      {typeof count === 'number' && count > 0 && (
-        <span className="cl-rating-count">({count})</span>
-      )}
+      {typeof count === 'number' && count > 0 && <span className="cl-rating-count">({count})</span>}
     </div>
   );
 };

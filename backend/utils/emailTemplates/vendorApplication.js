@@ -44,9 +44,10 @@ const subjects = {
 };
 
 const bodies = {
-  en: (d) => layout(
-    'Vendor Application Received',
-    `      <h2>Application Received</h2>
+  en: (d) =>
+    layout(
+      'Vendor Application Received',
+      `      <h2>Application Received</h2>
       <p>Hi <strong>${d.vendorName}</strong>,</p>
       <p>Thank you for applying to become a vendor on Shofy!</p>
       <hr class="divider" />
@@ -55,10 +56,11 @@ const bodies = {
       <hr class="divider" />
       <p>Our team will review your application and get back to you within 2–3 business days.</p>
       <p>If you have any questions, feel free to reach out to our vendor support team.</p>`
-  ),
-  vi: (d) => layout(
-    'Đã nhận đơn đăng ký nhà bán hàng',
-    `      <h2>Đơn đăng ký đã được nhận</h2>
+    ),
+  vi: (d) =>
+    layout(
+      'Đã nhận đơn đăng ký nhà bán hàng',
+      `      <h2>Đơn đăng ký đã được nhận</h2>
       <p>Xin chào <strong>${d.vendorName}</strong>,</p>
       <p>Cảm ơn bạn đã đăng ký trở thành nhà bán hàng trên Shofy!</p>
       <hr class="divider" />
@@ -66,10 +68,10 @@ const bodies = {
       <div class="info-row"><span class="label">Ngày đăng ký:</span> ${d.applicationDate}</div>
       <hr class="divider" />
       <p>Đội ngũ của chúng tôi sẽ xem xét đơn của bạn trong vòng 2–3 ngày làm việc.</p>`
-  ),
+    ),
 };
 
 module.exports = {
   subject: (data = {}, lang = 'en') => (subjects[lang] || subjects.en)(data),
-  html:    (data = {}, lang = 'en') => (bodies[lang]   || bodies.en)(data),
+  html: (data = {}, lang = 'en') => (bodies[lang] || bodies.en)(data),
 };

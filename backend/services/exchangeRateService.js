@@ -1,7 +1,7 @@
 // backend/services/exchangeRateService.js
 const cron = require('node-cron');
 const axios = require('axios');
-const ExchangeRate = require('../model/ExchangeRate');
+const ExchangeRate = require('../models/ExchangeRate');
 
 // open.er-api.com: free, no API key required, returns USD-based rates.
 // (exchangerate.host was retired to a paid, access_key-gated API.)
@@ -14,7 +14,9 @@ async function refreshRates() {
     const { data } = await axios.get(API_URL, { timeout: 10_000 });
     // open.er-api.com returns { result: 'success', base_code: 'USD', rates: {...} }.
     if (!data || data.result === 'error' || !data.rates) {
-      throw new Error(`Invalid API response${data && data['error-type'] ? `: ${data['error-type']}` : ''}`);
+      throw new Error(
+        `Invalid API response${data && data['error-type'] ? `: ${data['error-type']}` : ''}`
+      );
     }
 
     const usdRates = data.rates; // "1 USD = X <code>"
@@ -33,7 +35,7 @@ async function refreshRates() {
     await ExchangeRate.findOneAndUpdate(
       {},
       { base: 'VND', rates, source: 'open.er-api.com', stale: false, fetchedAt: new Date() },
-      { upsert: true, new: true, runValidators: true },
+      { upsert: true, new: true, runValidators: true }
     );
     console.log('[exchangeRate] refreshed:', rates);
   } catch (err) {

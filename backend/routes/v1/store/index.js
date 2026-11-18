@@ -10,11 +10,11 @@
 
 const express = require('express');
 const router = express.Router();
-const ctrl = require('../../../controller/v1/store.controller');
-const storeCmsCtrl = require('../../../controller/v1/store-cms.controller');
-const exchangeRateCtrl = require('../../../controller/v1/exchangeRate.controller');
-const reviewCtrl = require('../../../controller/v1/review.controller');
-const Category = require('../../../model/Category');
+const ctrl = require('../../../controllers/v1/store.controller');
+const storeCmsCtrl = require('../../../controllers/v1/store-cms.controller');
+const exchangeRateCtrl = require('../../../controllers/v1/exchangeRate.controller');
+const reviewCtrl = require('../../../controllers/v1/review.controller');
+const Category = require('../../../models/Category');
 const respond = require('../../../utils/respond');
 
 const { validate } = require('../../../middleware/validate');
@@ -50,7 +50,7 @@ const NOT_IMPLEMENTED = (req, res) =>
  *       200:
  *         description: Search results
  */
-router.get('/products/search',        ctrl.searchProducts);
+router.get('/products/search', ctrl.searchProducts);
 
 /**
  * @swagger
@@ -62,10 +62,10 @@ router.get('/products/search',        ctrl.searchProducts);
  *       200:
  *         description: Offer products
  */
-router.get('/products/offer',         ctrl.getOfferProducts);
-router.get('/products/top-rated',     ctrl.getTopRatedProducts);
+router.get('/products/offer', ctrl.getOfferProducts);
+router.get('/products/top-rated', ctrl.getTopRatedProducts);
 router.get('/products/popular/:type', ctrl.getPopularProductByType);
-router.get('/products/type/:type',    ctrl.getProductsByType);
+router.get('/products/type/:type', ctrl.getProductsByType);
 
 /**
  * @swagger
@@ -92,7 +92,7 @@ router.get('/products/type/:type',    ctrl.getProductsByType);
  *         description: Approved reviews with rating breakdown
  */
 router.get('/products/:productId/reviews', reviewCtrl.getApprovedProductReviews);
-router.get('/products/:id/related',        ctrl.getRelatedProducts);
+router.get('/products/:id/related', ctrl.getRelatedProducts);
 
 /**
  * @swagger
@@ -112,7 +112,7 @@ router.get('/products/:id/related',        ctrl.getRelatedProducts);
  *       404:
  *         description: Not found
  */
-router.get('/products/:id',                ctrl.getProduct);
+router.get('/products/:id', ctrl.getProduct);
 
 /**
  * @swagger
@@ -181,7 +181,7 @@ router.get('/products/:id',                ctrl.getProduct);
  *       200:
  *         description: Paginated product list
  */
-router.get('/products',                    ctrl.getAllProducts);
+router.get('/products', ctrl.getAllProducts);
 
 // ---------------------------------------------------------------------------
 // Categories
@@ -229,9 +229,9 @@ router.get('/categories/tree', async (req, res, next) => {
  *         description: Category list
  */
 router.get('/categories/show/:type', ctrl.getCategoriesByType);
-router.get('/categories/show',       ctrl.getShowCategories);
-router.get('/categories/:id',        ctrl.getSingleCategory);
-router.get('/categories',            ctrl.getAllCategories);
+router.get('/categories/show', ctrl.getShowCategories);
+router.get('/categories/:id', ctrl.getSingleCategory);
+router.get('/categories', ctrl.getAllCategories);
 
 // ---------------------------------------------------------------------------
 // Brands
@@ -248,8 +248,8 @@ router.get('/categories',            ctrl.getAllCategories);
  *         description: Active brand list
  */
 router.get('/brands/active', ctrl.getActiveBrands);
-router.get('/brands/:id',    ctrl.getSingleBrand);
-router.get('/brands',        ctrl.getAllBrands);
+router.get('/brands/:id', ctrl.getSingleBrand);
+router.get('/brands', ctrl.getAllBrands);
 
 // ---------------------------------------------------------------------------
 // Coupons
@@ -282,8 +282,8 @@ router.get('/brands',        ctrl.getAllBrands);
  *         description: Coupon is invalid or expired
  */
 router.post('/coupons/validate', ctrl.validateCoupon);
-router.get('/coupons/:id',       ctrl.getCouponById);
-router.get('/coupons',           ctrl.getAllCoupons);
+router.get('/coupons/:id', ctrl.getCouponById);
+router.get('/coupons', ctrl.getAllCoupons);
 
 // ---------------------------------------------------------------------------
 // Vendors — Phase 4 (public storefront)
@@ -299,7 +299,7 @@ router.get('/coupons',           ctrl.getAllCoupons);
  *       200:
  *         description: Vendor list
  */
-router.get('/vendors',        ctrl.listVendors);
+router.get('/vendors', ctrl.listVendors);
 
 /**
  * @swagger
@@ -319,7 +319,7 @@ router.get('/vendors',        ctrl.listVendors);
  *       404:
  *         description: Not found
  */
-router.get('/vendors/:slug',  ctrl.getVendorBySlug);
+router.get('/vendors/:slug', ctrl.getVendorBySlug);
 
 // ---------------------------------------------------------------------------
 // Order Tracking (public)
@@ -366,7 +366,7 @@ router.post('/orders/track', validate(trackOrderSchema), ctrl.trackOrder);
  *       200:
  *         description: Active banner list
  */
-router.get('/banners',          storeCmsCtrl.getActiveBanners);
+router.get('/banners', storeCmsCtrl.getActiveBanners);
 
 /**
  * @swagger
@@ -395,7 +395,7 @@ router.get('/banners',          storeCmsCtrl.getActiveBanners);
  *       200:
  *         description: Blog post list
  */
-router.get('/blog/featured',    storeCmsCtrl.getFeaturedBlogPosts);
+router.get('/blog/featured', storeCmsCtrl.getFeaturedBlogPosts);
 
 /**
  * @swagger
@@ -415,8 +415,8 @@ router.get('/blog/featured',    storeCmsCtrl.getFeaturedBlogPosts);
  *       404:
  *         description: Not found
  */
-router.get('/blog/:slug',       storeCmsCtrl.getBlogPostBySlug);
-router.get('/blog',             storeCmsCtrl.listPublishedBlogPosts);
+router.get('/blog/:slug', storeCmsCtrl.getBlogPostBySlug);
+router.get('/blog', storeCmsCtrl.listPublishedBlogPosts);
 
 /**
  * @swagger
@@ -428,7 +428,7 @@ router.get('/blog',             storeCmsCtrl.listPublishedBlogPosts);
  *       200:
  *         description: Public settings object
  */
-router.get('/settings',         storeCmsCtrl.getPublicSettings);
+router.get('/settings', storeCmsCtrl.getPublicSettings);
 
 // ---------------------------------------------------------------------------
 // Exchange Rates

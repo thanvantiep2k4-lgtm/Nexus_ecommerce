@@ -27,12 +27,8 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
     <footer>
       <div
         className={`tp-footer-area ${
-          primary_style
-            ? 'tp-footer-style-2 tp-footer-style-primary tp-footer-style-6'
-            : ''
-        } ${
-          style_2 ? 'tp-footer-style-2' : style_3 ? 'tp-footer-style-2 tp-footer-style-3' : ''
-        }`}
+          primary_style ? 'tp-footer-style-2 tp-footer-style-primary tp-footer-style-6' : ''
+        } ${style_2 ? 'tp-footer-style-2' : style_3 ? 'tp-footer-style-2 tp-footer-style-3' : ''}`}
         data-bg-color={`${style_2 ? 'footer-bg-white' : 'footer-bg-grey'}`}
       >
         <div className="tp-footer-top pt-95 pb-40">
@@ -48,26 +44,19 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                     </div>
                     <p className="tp-footer-desc">{t('footer.description')}</p>
                     <div className="tp-footer-social">
-                      {hasDynamicSocial ? (
-                        Object.entries(socialLinks).map(([platform, url]) =>
-                          url ? (
-                            <a
-                              key={platform}
-                              href={url}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <i className={`fa-brands fa-${platform}`}></i>
+                      {hasDynamicSocial
+                        ? Object.entries(socialLinks).map(([platform, url]) =>
+                            url ? (
+                              <a key={platform} href={url} target="_blank" rel="noreferrer">
+                                <i className={`fa-brands fa-${platform}`}></i>
+                              </a>
+                            ) : null
+                          )
+                        : social_data.map((s) => (
+                            <a href={s.link} key={s.id} target="_blank" rel="noreferrer">
+                              <i className={s.icon}></i>
                             </a>
-                          ) : null
-                        )
-                      ) : (
-                        social_data.map((s) => (
-                          <a href={s.link} key={s.id} target="_blank" rel="noreferrer">
-                            <i className={s.icon}></i>
-                          </a>
-                        ))
-                      )}
+                          ))}
                     </div>
                   </div>
                 </div>
@@ -77,12 +66,24 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                   <h4 className="tp-footer-widget-title">{t('footer.myAccount')}</h4>
                   <div className="tp-footer-widget-content">
                     <ul>
-                      <li><Link href="/profile">{t('footer.trackOrders')}</Link></li>
-                      <li><Link href="/shop">{t('footer.shipping')}</Link></li>
-                      <li><Link href="/wishlist">{t('footer.wishlist')}</Link></li>
-                      <li><Link href="/profile">{t('footer.myAccount')}</Link></li>
-                      <li><Link href="/profile">{t('footer.orderHistory')}</Link></li>
-                      <li><Link href="/contact">{t('footer.returns')}</Link></li>
+                      <li>
+                        <Link href="/profile">{t('footer.trackOrders')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/shop">{t('footer.shipping')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/wishlist">{t('footer.wishlist')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/profile">{t('footer.myAccount')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/profile">{t('footer.orderHistory')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/contact">{t('footer.returns')}</Link>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -92,12 +93,24 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                   <h4 className="tp-footer-widget-title">{t('footer.information')}</h4>
                   <div className="tp-footer-widget-content">
                     <ul>
-                      <li><Link href="/contact">{t('footer.ourStory')}</Link></li>
-                      <li><Link href="/contact">{t('footer.careers')}</Link></li>
-                      <li><Link href="/contact">{t('footer.privacyPolicy')}</Link></li>
-                      <li><Link href="/contact">{t('footer.termsConditions')}</Link></li>
-                      <li><Link href="/blog">{t('footer.latestNews')}</Link></li>
-                      <li><Link href="/contact">{t('footer.contactUs')}</Link></li>
+                      <li>
+                        <Link href="/contact">{t('footer.ourStory')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/contact">{t('footer.careers')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/contact">{t('footer.privacyPolicy')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/contact">{t('footer.termsConditions')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/blog">{t('footer.latestNews')}</Link>
+                      </li>
+                      <li>
+                        <Link href="/contact">{t('footer.contactUs')}</Link>
+                      </li>
                     </ul>
                   </div>
                 </div>

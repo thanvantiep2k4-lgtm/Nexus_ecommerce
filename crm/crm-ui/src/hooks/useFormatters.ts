@@ -1,13 +1,14 @@
 import { useCurrencyStore, type CurrencyCode } from '@/stores/useCurrencyStore';
 import { useExchangeRates } from './useExchangeRates';
 
-const CURRENCY_CONFIG: Record<CurrencyCode, { locale: string; decimals: number; symbol: string }> = {
-  VND: { locale: 'vi-VN', decimals: 0, symbol: '₫' },
-  USD: { locale: 'en-US', decimals: 2, symbol: '$' },
-  EUR: { locale: 'de-DE', decimals: 2, symbol: '€' },
-  GBP: { locale: 'en-GB', decimals: 2, symbol: '£' },
-  JPY: { locale: 'ja-JP', decimals: 0, symbol: '¥' },
-};
+const CURRENCY_CONFIG: Record<CurrencyCode, { locale: string; decimals: number; symbol: string }> =
+  {
+    VND: { locale: 'vi-VN', decimals: 0, symbol: '₫' },
+    USD: { locale: 'en-US', decimals: 2, symbol: '$' },
+    EUR: { locale: 'de-DE', decimals: 2, symbol: '€' },
+    GBP: { locale: 'en-GB', decimals: 2, symbol: '£' },
+    JPY: { locale: 'ja-JP', decimals: 0, symbol: '¥' },
+  };
 
 export interface Formatters {
   formatCurrency: (amount: number) => string;

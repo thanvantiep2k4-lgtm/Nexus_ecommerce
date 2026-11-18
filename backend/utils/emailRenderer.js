@@ -12,7 +12,10 @@
 function renderTemplate(template, data) {
   let result = template;
   for (const [key, value] of Object.entries(data)) {
-    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value != null ? String(value) : '');
+    result = result.replace(
+      new RegExp(`\\{\\{${key}\\}\\}`, 'g'),
+      value != null ? String(value) : ''
+    );
   }
   // Remove any remaining unresolved placeholders
   result = result.replace(/\{\{[^}]+\}\}/g, '');

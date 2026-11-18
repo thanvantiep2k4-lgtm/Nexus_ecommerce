@@ -19,12 +19,7 @@ import {
   ColorPicker,
 } from 'antd';
 import type { TableProps } from 'antd';
-import {
-  PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  CalendarOutlined,
-} from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, CalendarOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
@@ -173,12 +168,14 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
         },
         scheduling: {
           isAlwaysActive: !scheduled,
-          startDate: scheduled && values.scheduling_startDate
-            ? new Date(values.scheduling_startDate).toISOString()
-            : undefined,
-          endDate: scheduled && values.scheduling_endDate
-            ? new Date(values.scheduling_endDate).toISOString()
-            : undefined,
+          startDate:
+            scheduled && values.scheduling_startDate
+              ? new Date(values.scheduling_startDate).toISOString()
+              : undefined,
+          endDate:
+            scheduled && values.scheduling_endDate
+              ? new Date(values.scheduling_endDate).toISOString()
+              : undefined,
         },
         targeting: { pages: ['*'], userSegments: [] },
       };
@@ -303,11 +300,7 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
             </Text>
           </Col>
           <Col>
-            <Switch
-              size="small"
-              checked={scheduled}
-              onChange={setScheduled}
-            />
+            <Switch size="small" checked={scheduled} onChange={setScheduled} />
           </Col>
         </Row>
         {scheduled && (
@@ -366,9 +359,7 @@ export default function BannersPage() {
     {
       title: 'Name',
       key: 'title',
-      render: (_: unknown, record: Banner) => (
-        <Text strong>{record.title}</Text>
-      ),
+      render: (_: unknown, record: Banner) => <Text strong>{record.title}</Text>,
     },
     {
       title: 'Type',
@@ -498,11 +489,7 @@ export default function BannersPage() {
         scroll={{ x: 800 }}
       />
 
-      <BannerModal
-        open={modalOpen}
-        editing={editing}
-        onClose={() => setModalOpen(false)}
-      />
+      <BannerModal open={modalOpen} editing={editing} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

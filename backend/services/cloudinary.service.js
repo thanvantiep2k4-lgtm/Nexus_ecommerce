@@ -1,5 +1,5 @@
-const { secret } = require("../config/secret");
-const cloudinary = require("../utils/cloudinary");
+const { secret } = require('../config/secret');
+const cloudinary = require('../utils/cloudinary');
 const { Readable } = require('stream');
 
 const cloudinaryImageUpload = (imageBuffer) => {
@@ -23,7 +23,6 @@ const cloudinaryImageUpload = (imageBuffer) => {
     bufferStream.pipe(uploadStream);
   });
 };
-
 
 // cloudinaryImageDelete
 const cloudinaryImageDelete = async (public_id) => {

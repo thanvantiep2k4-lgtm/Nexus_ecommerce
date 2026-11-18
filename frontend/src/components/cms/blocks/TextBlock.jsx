@@ -20,10 +20,7 @@ const TextBlock = ({ settings = {}, title, subtitle }) => {
               </div>
             )}
             {content && (
-              <div
-                className="tp-postbox-text"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
+              <div className="tp-postbox-text" dangerouslySetInnerHTML={{ __html: content }} />
             )}
           </div>
         </div>

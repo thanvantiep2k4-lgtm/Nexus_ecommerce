@@ -1,16 +1,16 @@
-import React, { useState, useCallback } from "react";
-import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
-import SEO from "@/components/seo";
-import Wrapper from "@/layout/wrapper";
-import HeaderClicon from "@/layout/headers/header-clicon";
-import ShopBreadcrumb from "@/components/breadcrumb/shop-breadcrumb";
-import ShopArea from "@/components/shop/shop-area";
-import ErrorMsg from "@/components/common/error-msg";
-import FooterClicon from "@/layout/footers/footer-clicon";
-import ShopFilterOffCanvas from "@/components/common/shop-filter-offcanvas";
-import ShopLoader from "@/components/loader/shop/shop-loader";
-import { useGetFilteredProductsQuery } from "@/redux/features/cmsApi";
+import React, { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
+import SEO from '@/components/seo';
+import Wrapper from '@/layout/wrapper';
+import HeaderClicon from '@/layout/headers/header-clicon';
+import ShopBreadcrumb from '@/components/breadcrumb/shop-breadcrumb';
+import ShopArea from '@/components/shop/shop-area';
+import ErrorMsg from '@/components/common/error-msg';
+import FooterClicon from '@/layout/footers/footer-clicon';
+import ShopFilterOffCanvas from '@/components/common/shop-filter-offcanvas';
+import ShopLoader from '@/components/loader/shop/shop-loader';
+import { useGetFilteredProductsQuery } from '@/redux/features/cmsApi';
 
 const ShopPage = ({ query }) => {
   const { t } = useTranslation();
@@ -20,7 +20,7 @@ const ShopPage = ({ query }) => {
   // re-key this RTK query and re-fetch. getServerSideProps only runs on the first
   // load, so reading the prop alone left the list stale on every sidebar change.
   const liveQuery = { ...query, ...router.query };
-  const [selectValue, setSelectValue] = useState(liveQuery.sort || "");
+  const [selectValue, setSelectValue] = useState(liveQuery.sort || '');
 
   // Build API params from URL query
   const apiParams = {
@@ -71,12 +71,8 @@ const ShopPage = ({ query }) => {
 
   const otherProps = {
     priceFilterValues: {
-      priceValue: [
-        parseInt(query.minPrice) || 0,
-        parseInt(query.maxPrice) || 10000,
-      ],
-      handleChanges: (val) =>
-        handleFilterChange({ minPrice: val[0], maxPrice: val[1], page: 1 }),
+      priceValue: [parseInt(query.minPrice) || 0, parseInt(query.maxPrice) || 10000],
+      handleChanges: (val) => handleFilterChange({ minPrice: val[0], maxPrice: val[1], page: 1 }),
     },
     selectHandleFilter,
     currPage: parseInt(query.page) || 1,
@@ -114,15 +110,8 @@ const ShopPage = ({ query }) => {
     const shopProducts = productsData?.data || [];
     content = (
       <>
-        <ShopArea
-          all_products={shopProducts}
-          products={shopProducts}
-          otherProps={otherProps}
-        />
-        <ShopFilterOffCanvas
-          all_products={shopProducts}
-          otherProps={otherProps}
-        />
+        <ShopArea all_products={shopProducts} products={shopProducts} otherProps={otherProps} />
+        <ShopFilterOffCanvas all_products={shopProducts} otherProps={otherProps} />
       </>
     );
   }

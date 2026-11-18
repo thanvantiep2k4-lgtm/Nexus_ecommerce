@@ -43,13 +43,9 @@ const CliconCartCheckout = () => {
   const taxEnabled = !!taxConfig.enabled;
   const taxRate = Number(taxConfig.rate ?? 0);
   const taxApplyShipping = taxConfig.applyToShipping !== false;
-  const taxLabel = i18n.language === 'vi'
-    ? (taxConfig.labelVi || 'Thuế')
-    : (taxConfig.label || 'VAT');
+  const taxLabel = i18n.language === 'vi' ? taxConfig.labelVi || 'Thuế' : taxConfig.label || 'VAT';
   const taxBase = taxApplyShipping ? total + shipCost : total;
-  const taxAmount = taxEnabled && taxRate > 0
-    ? Number((taxBase * (taxRate / 100)).toFixed(2))
-    : 0;
+  const taxAmount = taxEnabled && taxRate > 0 ? Number((taxBase * (taxRate / 100)).toFixed(2)) : 0;
   const grandTotal = total + shipCost + taxAmount;
 
   const getLabel = (m) => {
@@ -69,7 +65,9 @@ const CliconCartCheckout = () => {
 
       {/* Shipping */}
       <div className="cl-cart-summary__shipping">
-        <span className="cl-cart-summary__shipping-title">{t('checkout.shipping', 'Shipping')}</span>
+        <span className="cl-cart-summary__shipping-title">
+          {t('checkout.shipping', 'Shipping')}
+        </span>
         <div className="cl-cart-summary__shipping-options">
           {methods.map((m) => (
             <label key={m.id} className="cl-cart-summary__option">

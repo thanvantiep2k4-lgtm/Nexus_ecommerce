@@ -9,7 +9,7 @@ function getDeclarations() {
   return Object.values(tools).map((t) => ({
     name: t.name,
     description: t.description,
-    parameters: t.parameters
+    parameters: t.parameters,
   }));
 }
 

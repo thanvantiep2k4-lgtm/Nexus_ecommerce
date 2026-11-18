@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const ChatSession = require('../../model/ChatSession');
+const ChatSession = require('../../models/ChatSession');
 
 let mongo;
 
@@ -21,7 +21,7 @@ describe('ChatSession model', () => {
     const s = await ChatSession.create({
       sessionId: 'abc-123',
       locale: 'en',
-      messages: [{ role: 'user', content: 'hi' }]
+      messages: [{ role: 'user', content: 'hi' }],
     });
     expect(s.status).toBe('active');
     expect(s.messages).toHaveLength(1);
@@ -29,10 +29,12 @@ describe('ChatSession model', () => {
   });
 
   it('rejects invalid role', async () => {
-    await expect(ChatSession.create({
-      sessionId: 'abc-124',
-      locale: 'en',
-      messages: [{ role: 'bogus', content: 'x' }]
-    })).rejects.toThrow();
+    await expect(
+      ChatSession.create({
+        sessionId: 'abc-124',
+        locale: 'en',
+        messages: [{ role: 'bogus', content: 'x' }],
+      })
+    ).rejects.toThrow();
   });
 });

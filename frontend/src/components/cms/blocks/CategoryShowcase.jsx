@@ -12,11 +12,7 @@ const CategoryShowcase = ({ settings = {}, title, subtitle }) => {
   const limit = settings.limit || 10;
   const router = useRouter();
 
-  const {
-    data: categories,
-    isLoading,
-    isError,
-  } = useGetProductTypeCategoryQuery(productType);
+  const { data: categories, isLoading, isError } = useGetProductTypeCategoryQuery(productType);
 
   const handleCategoryRoute = (categoryTitle) => {
     router.push(
@@ -27,7 +23,11 @@ const CategoryShowcase = ({ settings = {}, title, subtitle }) => {
   let content = null;
 
   if (isLoading) {
-    content = <div className="d-flex justify-content-center py-5"><div className="spinner-border text-primary" /></div>;
+    content = (
+      <div className="d-flex justify-content-center py-5">
+        <div className="spinner-border text-primary" />
+      </div>
+    );
   } else if (isError) {
     content = <ErrorMsg msg={t('error.loadingCategoriesError')} />;
   } else if (!categories?.result?.length) {
@@ -38,25 +38,13 @@ const CategoryShowcase = ({ settings = {}, title, subtitle }) => {
       <div className="col" key={item._id}>
         <div className="tp-product-category-item text-center mb-40">
           <div className="tp-product-category-thumb fix">
-            <a
-              className="cursor-pointer"
-              onClick={() => handleCategoryRoute(item.parent)}
-            >
-              <SafeImage
-                src={item.img}
-                alt={item.parent}
-                width={76}
-                height={98}
-                unoptimized
-              />
+            <a className="cursor-pointer" onClick={() => handleCategoryRoute(item.parent)}>
+              <SafeImage src={item.img} alt={item.parent} width={76} height={98} unoptimized />
             </a>
           </div>
           <div className="tp-product-category-content">
             <h3 className="tp-product-category-title">
-              <a
-                className="cursor-pointer"
-                onClick={() => handleCategoryRoute(item.parent)}
-              >
+              <a className="cursor-pointer" onClick={() => handleCategoryRoute(item.parent)}>
                 {item.parent}
               </a>
             </h3>
@@ -85,9 +73,7 @@ const CategoryShowcase = ({ settings = {}, title, subtitle }) => {
             </div>
           </div>
         )}
-        <div className="row row-cols-xl-5 row-cols-lg-5 row-cols-md-4">
-          {content}
-        </div>
+        <div className="row row-cols-xl-5 row-cols-lg-5 row-cols-md-4">{content}</div>
       </div>
     </section>
   );

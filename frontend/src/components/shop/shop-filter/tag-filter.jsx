@@ -1,12 +1,22 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { handleFilterSidebarClose } from "@/redux/features/shop-filter-slice";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { handleFilterSidebarClose } from '@/redux/features/shop-filter-slice';
 
 const POPULAR_TAGS = [
-  'Game', 'iPhone', 'TV', 'Asus Laptops',
-  'Macbook', 'SSD', 'Graphics Card', 'Power Bank',
-  'Smart TV', 'Speaker', 'Tablet', 'Microwave', 'Samsung',
+  'Game',
+  'iPhone',
+  'TV',
+  'Asus Laptops',
+  'Macbook',
+  'SSD',
+  'Graphics Card',
+  'Power Bank',
+  'Smart TV',
+  'Speaker',
+  'Tablet',
+  'Microwave',
+  'Samsung',
 ];
 
 const TagFilter = ({ setCurrPage }) => {

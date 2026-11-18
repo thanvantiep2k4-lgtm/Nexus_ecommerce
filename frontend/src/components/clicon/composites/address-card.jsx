@@ -27,7 +27,18 @@ const AddressCard = ({
 
   if (!address) return null;
 
-  const { label, firstName, lastName, address: street, city, state, zipCode, country, phone, isDefault } = address;
+  const {
+    label,
+    firstName,
+    lastName,
+    address: street,
+    city,
+    state,
+    zipCode,
+    country,
+    phone,
+    isDefault,
+  } = address;
   const fullName = [firstName, lastName].filter(Boolean).join(' ');
   const addressLine = [street, city, state, zipCode, country].filter(Boolean).join(', ');
 
@@ -38,7 +49,16 @@ const AddressCard = ({
       role={onSelect ? 'radio' : undefined}
       aria-checked={onSelect ? selected : undefined}
       tabIndex={onSelect ? 0 : undefined}
-      onKeyDown={onSelect ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } } : undefined}
+      onKeyDown={
+        onSelect
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onSelect();
+              }
+            }
+          : undefined
+      }
     >
       <div className="cl-address-card__header">
         <div className="cl-address-card__tags">
@@ -51,7 +71,10 @@ const AddressCard = ({
               <button
                 type="button"
                 className="cl-address-card__action"
-                onClick={(e) => { e.stopPropagation(); onEdit(address); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(address);
+                }}
                 aria-label={t('common.edit', 'Edit')}
               >
                 <i className="fa-regular fa-pen-to-square" aria-hidden="true" />
@@ -61,7 +84,10 @@ const AddressCard = ({
               <button
                 type="button"
                 className="cl-address-card__action cl-address-card__action--danger"
-                onClick={(e) => { e.stopPropagation(); onDelete(address); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(address);
+                }}
                 aria-label={t('common.delete', 'Delete')}
               >
                 <i className="fa-regular fa-trash-can" aria-hidden="true" />

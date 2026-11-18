@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const ArrowRight = () => {
   return (
-    <svg
-      width="15"
-      height="13"
-      viewBox="0 0 15 13"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M13.9998 6.19656L1 6.19656"
         stroke="currentColor"

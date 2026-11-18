@@ -2,7 +2,15 @@ const llm = require('./llmProvider');
 const tools = require('./tools');
 const config = require('../../config/gemini');
 
-async function runTurn({ systemInstruction, history, userMessage, context, onToken, onToolCall, maxIterations }) {
+async function runTurn({
+  systemInstruction,
+  history,
+  userMessage,
+  context,
+  onToken,
+  onToolCall,
+  maxIterations,
+}) {
   const maxIters = maxIterations || config.maxToolCallsPerTurn;
   const toolCalls = [];
   const suggestedActions = [];
@@ -20,7 +28,7 @@ async function runTurn({ systemInstruction, history, userMessage, context, onTok
       history: workingHistory,
       userMessage: workingMessage,
       tools: tools.getDeclarations(),
-      onToken
+      onToken,
     });
     usage.promptTokenCount += res.usage.promptTokenCount || 0;
     usage.candidatesTokenCount += res.usage.candidatesTokenCount || 0;
@@ -38,10 +46,12 @@ async function runTurn({ systemInstruction, history, userMessage, context, onTok
         args: call.args,
         result: dispatched.result || null,
         error: dispatched.error || null,
-        durationMs: dispatched.durationMs || 0
+        durationMs: dispatched.durationMs || 0,
       });
       if (onToolCall) onToolCall({ name: call.name, args: call.args, result: dispatched });
-      const payload = dispatched.error ? { error: dispatched.error, message: dispatched.message } : dispatched.result;
+      const payload = dispatched.error
+        ? { error: dispatched.error, message: dispatched.message }
+        : dispatched.result;
       if (payload && payload.suggestedAction) suggestedActions.push(payload.suggestedAction);
       toolResults.push({ name: call.name, response: payload });
     }
@@ -55,7 +65,10 @@ async function runTurn({ systemInstruction, history, userMessage, context, onTok
       workingHistory.push({ role: 'user', parts: [{ text: workingMessage }] });
     }
     workingHistory.push({ role: 'model', parts: [{ functionCall: res.toolCalls[0] }] });
-    workingHistory.push({ role: 'function', parts: toolResults.map((r) => ({ functionResponse: { name: r.name, response: r.response } })) });
+    workingHistory.push({
+      role: 'function',
+      parts: toolResults.map((r) => ({ functionResponse: { name: r.name, response: r.response } })),
+    });
     workingMessage = '';
   }
 

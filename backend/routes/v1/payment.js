@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Order = require('../../model/Order');
+const Order = require('../../models/Order');
 const { verifyVnpaySignature } = require('../../utils/vnpay');
 const { emitOrderUpdated } = require('../../utils/socketEmitter');
 
@@ -89,13 +89,12 @@ router.get(['/vnpay/return', '/vnp/return'], async (req, res) => {
 
     if (!isValidSignature) {
       console.error('[VNPay Return] Invalid signature');
-      return res.redirect(`${process.env.STORE_URL}/order/${orderId}?paymentStatus=invalid-signature`);
+      return res.redirect(
+        `${process.env.STORE_URL}/order/${orderId}?paymentStatus=invalid-signature`
+      );
     }
 
-    const status =
-      responseCode === '00' && transactionStatus === '00'
-        ? 'success'
-        : 'failed';
+    const status = responseCode === '00' && transactionStatus === '00' ? 'success' : 'failed';
 
     // Safe fallback to update order in case IPN is slightly delayed
     const order = await Order.findById(orderId);
@@ -122,9 +121,7 @@ router.get(['/vnpay/return', '/vnp/return'], async (req, res) => {
       }
     }
 
-    return res.redirect(
-      `${process.env.STORE_URL}/order/${orderId}?paymentStatus=${status}`
-    );
+    return res.redirect(`${process.env.STORE_URL}/order/${orderId}?paymentStatus=${status}`);
   } catch (error) {
     console.error('[VNPay Return] Error:', error);
     const orderId = req.query.vnp_TxnRef;

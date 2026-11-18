@@ -2,17 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import dayjs, { type Dayjs } from 'dayjs';
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Tag,
-  Typography,
-  Button,
-  Space,
-  DatePicker,
-} from 'antd';
+import { Row, Col, Card, Table, Tag, Typography, Button, Space, DatePicker } from 'antd';
 import {
   ShoppingOutlined,
   ShoppingCartOutlined,
@@ -41,14 +31,17 @@ import {
   Area,
 } from 'recharts';
 import type { ColumnsType } from 'antd/es/table';
-import {
-  productsApi,
-  ordersApi,
-  analyticsApi,
-} from '@/services/api';
+import { productsApi, ordersApi, analyticsApi } from '@/services/api';
 import { useFormatters } from '@/hooks/useFormatters';
 import StatusBadge from '@/components/commons/StatusBadge';
-import type { Order, Product, MonthlyStats, RevenueDataPoint, RevenueResponse, CustomerGrowthResponse } from '@/types/index';
+import type {
+  Order,
+  Product,
+  MonthlyStats,
+  RevenueDataPoint,
+  RevenueResponse,
+  CustomerGrowthResponse,
+} from '@/types/index';
 
 const { Title, Text } = Typography;
 
@@ -120,8 +113,18 @@ const PIE_COLORS: Record<string, string> = {
 };
 
 const MONTH_NAMES = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 // ---------------------------------------------------------------------------
@@ -204,43 +207,43 @@ export default function Dashboard() {
   const [customRange, setCustomRange] = useState<[Dayjs, Dayjs] | null>(null);
   const { formatCurrency, formatDate } = useFormatters();
 
-  const recentOrderColumns = useMemo<ColumnsType<Order>>(() => [
-    {
-      title: 'Order #',
-      key: 'orderNumber',
-      width: 90,
-      render: (_: unknown, record: Order) =>
-        record.invoice != null ? `#${record.invoice}` : (record.orderNumber ?? '—'),
-    },
-    {
-      title: 'Customer',
-      key: 'customer',
-      render: (_: unknown, record: Order) => record.user?.name ?? record.name ?? '—',
-      ellipsis: true,
-    },
-    {
-      title: 'Amount',
-      key: 'amount',
-      render: (_: unknown, record: Order) =>
-        formatCurrency(record.finalAmount ?? record.totalAmount ?? record.subTotal ?? 0),
-    },
-    {
-      title: 'Status',
-      key: 'status',
-      render: (_: unknown, record: Order) => (
-        <StatusBadge
-          status={record.orderStatus ?? record.status ?? 'pending'}
-          type="order"
-        />
-      ),
-    },
-    {
-      title: 'Date',
-      key: 'date',
-      render: (_: unknown, record: Order) => formatDate(record.createdAt),
-      ellipsis: true,
-    },
-  ], [formatCurrency, formatDate]);
+  const recentOrderColumns = useMemo<ColumnsType<Order>>(
+    () => [
+      {
+        title: 'Order #',
+        key: 'orderNumber',
+        width: 90,
+        render: (_: unknown, record: Order) =>
+          record.invoice != null ? `#${record.invoice}` : (record.orderNumber ?? '—'),
+      },
+      {
+        title: 'Customer',
+        key: 'customer',
+        render: (_: unknown, record: Order) => record.user?.name ?? record.name ?? '—',
+        ellipsis: true,
+      },
+      {
+        title: 'Amount',
+        key: 'amount',
+        render: (_: unknown, record: Order) =>
+          formatCurrency(record.finalAmount ?? record.totalAmount ?? record.subTotal ?? 0),
+      },
+      {
+        title: 'Status',
+        key: 'status',
+        render: (_: unknown, record: Order) => (
+          <StatusBadge status={record.orderStatus ?? record.status ?? 'pending'} type="order" />
+        ),
+      },
+      {
+        title: 'Date',
+        key: 'date',
+        render: (_: unknown, record: Order) => formatDate(record.createdAt),
+        ellipsis: true,
+      },
+    ],
+    [formatCurrency, formatDate]
+  );
 
   // ----- Analytics query (new unified endpoint) -----
 
@@ -321,13 +324,14 @@ export default function Dashboard() {
   // Revenue chart: backend returns { groupBy, rows } — unwrap rows
   const revenueWrapped = revenueData?.data as RevenueResponse | undefined;
   const rawRevenueRows: RevenueDataPoint[] = revenueWrapped?.rows ?? [];
-  const revenueChartData: RevenueDataPoint[] = rawRevenueRows.length > 0
-    ? rawRevenueRows
-    : (orderStats?.monthlyStats ?? []).map((stat: MonthlyStats) => ({
-        _id: monthLabel(stat),
-        revenue: stat.totalRevenue ?? stat.totalOrders ?? 0,
-        orders: stat.totalOrders ?? 0,
-      }));
+  const revenueChartData: RevenueDataPoint[] =
+    rawRevenueRows.length > 0
+      ? rawRevenueRows
+      : (orderStats?.monthlyStats ?? []).map((stat: MonthlyStats) => ({
+          _id: monthLabel(stat),
+          revenue: stat.totalRevenue ?? stat.totalOrders ?? 0,
+          orders: stat.totalOrders ?? 0,
+        }));
 
   const chartData = revenueChartData.map((pt) => ({
     // backend row shape: { date|week|month, orderCount, revenue } OR legacy { _id, revenue, orders }
@@ -346,17 +350,39 @@ export default function Dashboard() {
     count: pt.newUsers ?? pt.count ?? 0,
   }));
 
-  const recentOrders: Order[] = Array.isArray(recentOrdersAnalyticsData?.data) ? recentOrdersAnalyticsData.data : [];
+  const recentOrders: Order[] = Array.isArray(recentOrdersAnalyticsData?.data)
+    ? recentOrdersAnalyticsData.data
+    : [];
   const lowStockProducts: Product[] = Array.isArray(lowStockData?.data) ? lowStockData.data : [];
 
   // Pie chart data — prefer the analytics endpoint (status breakdown), fall back to legacy orderStats
   const pieData = [
-    { name: 'Pending', value: analytics?.pendingOrders ?? orderStats?.pendingOrders ?? 0, color: PIE_COLORS.pending },
+    {
+      name: 'Pending',
+      value: analytics?.pendingOrders ?? orderStats?.pendingOrders ?? 0,
+      color: PIE_COLORS.pending,
+    },
     { name: 'Confirmed', value: analytics?.confirmedOrders ?? 0, color: PIE_COLORS.confirmed },
-    { name: 'Processing', value: analytics?.processingOrders ?? orderStats?.processingOrders ?? 0, color: PIE_COLORS.processing },
-    { name: 'Shipped', value: analytics?.shippedOrders ?? orderStats?.shippedOrders ?? 0, color: PIE_COLORS.shipped },
-    { name: 'Delivered', value: analytics?.deliveredOrders ?? orderStats?.deliveredOrders ?? 0, color: PIE_COLORS.delivered },
-    { name: 'Cancelled', value: analytics?.cancelledOrders ?? orderStats?.cancelledOrders ?? 0, color: PIE_COLORS.cancelled },
+    {
+      name: 'Processing',
+      value: analytics?.processingOrders ?? orderStats?.processingOrders ?? 0,
+      color: PIE_COLORS.processing,
+    },
+    {
+      name: 'Shipped',
+      value: analytics?.shippedOrders ?? orderStats?.shippedOrders ?? 0,
+      color: PIE_COLORS.shipped,
+    },
+    {
+      name: 'Delivered',
+      value: analytics?.deliveredOrders ?? orderStats?.deliveredOrders ?? 0,
+      color: PIE_COLORS.delivered,
+    },
+    {
+      name: 'Cancelled',
+      value: analytics?.cancelledOrders ?? orderStats?.cancelledOrders ?? 0,
+      color: PIE_COLORS.cancelled,
+    },
   ].filter((entry) => entry.value > 0);
 
   const totalStatusOrders = pieData.reduce((sum, entry) => sum + entry.value, 0);
@@ -486,9 +512,7 @@ export default function Dashboard() {
                   allowClear
                   disabledDate={(current) => current && current > dayjs().endOf('day')}
                   onChange={(dates) =>
-                    setCustomRange(
-                      dates && dates[0] && dates[1] ? [dates[0], dates[1]] : null
-                    )
+                    setCustomRange(dates && dates[0] && dates[1] ? [dates[0], dates[1]] : null)
                   }
                 />
               </Space>
@@ -595,7 +619,12 @@ export default function Dashboard() {
                       dataKey="value"
                     >
                       {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={2} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.color}
+                          stroke="#fff"
+                          strokeWidth={2}
+                        />
                       ))}
                     </Pie>
                     <Tooltip
@@ -607,7 +636,8 @@ export default function Dashboard() {
                     />
                     <Legend
                       formatter={(value: string, entry) => {
-                        const count = (entry?.payload as { value?: number } | undefined)?.value ?? 0;
+                        const count =
+                          (entry?.payload as { value?: number } | undefined)?.value ?? 0;
                         return (
                           <span style={{ fontSize: 12 }}>
                             {value} <Text strong>{count}</Text>
@@ -659,8 +689,7 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart
                   data={topProducts.map((p) => ({
-                    name:
-                      p.title.length > 20 ? `${p.title.slice(0, 20)}…` : p.title,
+                    name: p.title.length > 20 ? `${p.title.slice(0, 20)}…` : p.title,
                     revenue: p.totalRevenue,
                     sold: p.totalSold,
                   }))}
@@ -751,12 +780,7 @@ export default function Dashboard() {
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} tickLine={false} />
-                  <YAxis
-                    tick={{ fontSize: 11 }}
-                    tickLine={false}
-                    axisLine={false}
-                    width={40}
-                  />
+                  <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={40} />
                   <Tooltip formatter={(v) => [Number(v), 'New Users']} />
                   <Area
                     type="monotone"

@@ -74,41 +74,174 @@ export default function App() {
     >
       <Routes>
         {/* Standalone routes (no MainLayout shell) */}
-        <Route path="/no-access" element={<SuspenseRoute><NoAccessPage /></SuspenseRoute>} />
+        <Route
+          path="/no-access"
+          element={
+            <SuspenseRoute>
+              <NoAccessPage />
+            </SuspenseRoute>
+          }
+        />
 
         <Route element={<MainLayout />}>
-          <Route path="/" element={<SuspenseRoute><DashboardPage /></SuspenseRoute>} />
-          <Route path="/products" element={<SuspenseRoute><ProductsPage /></SuspenseRoute>} />
-          <Route path="/products/currency-audit" element={<SuspenseRoute><CurrencyAuditPage /></SuspenseRoute>} />
-          <Route path="/categories" element={<SuspenseRoute><CategoriesPage /></SuspenseRoute>} />
-          <Route path="/orders" element={<SuspenseRoute><OrdersPage /></SuspenseRoute>} />
-          <Route path="/users" element={<SuspenseRoute><UsersPage /></SuspenseRoute>} />
+          <Route
+            path="/"
+            element={
+              <SuspenseRoute>
+                <DashboardPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <SuspenseRoute>
+                <ProductsPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/products/currency-audit"
+            element={
+              <SuspenseRoute>
+                <CurrencyAuditPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <SuspenseRoute>
+                <CategoriesPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <SuspenseRoute>
+                <OrdersPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <SuspenseRoute>
+                <UsersPage />
+              </SuspenseRoute>
+            }
+          />
 
           {/* Vendors */}
-          <Route path="/vendors" element={<SuspenseRoute><VendorsPage /></SuspenseRoute>} />
+          <Route
+            path="/vendors"
+            element={
+              <SuspenseRoute>
+                <VendorsPage />
+              </SuspenseRoute>
+            }
+          />
 
           {/* Activity Log */}
-          <Route path="/activity-log" element={<SuspenseRoute><ActivityLogPage /></SuspenseRoute>} />
+          <Route
+            path="/activity-log"
+            element={
+              <SuspenseRoute>
+                <ActivityLogPage />
+              </SuspenseRoute>
+            }
+          />
 
           {/* Coupons */}
-          <Route path="/coupons" element={<SuspenseRoute><CouponsPage /></SuspenseRoute>} />
+          <Route
+            path="/coupons"
+            element={
+              <SuspenseRoute>
+                <CouponsPage />
+              </SuspenseRoute>
+            }
+          />
 
           {/* Chatbot Analytics */}
-          <Route path="/chatbot" element={<SuspenseRoute><ChatbotAnalyticsPage /></SuspenseRoute>} />
+          <Route
+            path="/chatbot"
+            element={
+              <SuspenseRoute>
+                <ChatbotAnalyticsPage />
+              </SuspenseRoute>
+            }
+          />
 
           {/* CMS — Blog */}
-          <Route path="/cms/blog" element={<SuspenseRoute><BlogListPage /></SuspenseRoute>} />
-          <Route path="/cms/blog/new" element={<SuspenseRoute><BlogEditorPage /></SuspenseRoute>} />
-          <Route path="/cms/blog/:id" element={<SuspenseRoute><BlogEditorPage /></SuspenseRoute>} />
+          <Route
+            path="/cms/blog"
+            element={
+              <SuspenseRoute>
+                <BlogListPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/cms/blog/new"
+            element={
+              <SuspenseRoute>
+                <BlogEditorPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/cms/blog/:id"
+            element={
+              <SuspenseRoute>
+                <BlogEditorPage />
+              </SuspenseRoute>
+            }
+          />
 
           {/* CMS — Banners */}
-          <Route path="/cms/banners" element={<SuspenseRoute><BannersPage /></SuspenseRoute>} />
+          <Route
+            path="/cms/banners"
+            element={
+              <SuspenseRoute>
+                <BannersPage />
+              </SuspenseRoute>
+            }
+          />
 
           {/* Settings */}
-          <Route path="/settings/general" element={<SuspenseRoute><GeneralSettingsPage /></SuspenseRoute>} />
-          <Route path="/settings/payment" element={<SuspenseRoute><PaymentSettingsPage /></SuspenseRoute>} />
-          <Route path="/settings/shipping" element={<SuspenseRoute><ShippingSettingsPage /></SuspenseRoute>} />
-          <Route path="/settings/tax" element={<SuspenseRoute><TaxSettingsPage /></SuspenseRoute>} />
+          <Route
+            path="/settings/general"
+            element={
+              <SuspenseRoute>
+                <GeneralSettingsPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/settings/payment"
+            element={
+              <SuspenseRoute>
+                <PaymentSettingsPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/settings/shipping"
+            element={
+              <SuspenseRoute>
+                <ShippingSettingsPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/settings/tax"
+            element={
+              <SuspenseRoute>
+                <TaxSettingsPage />
+              </SuspenseRoute>
+            }
+          />
         </Route>
       </Routes>
     </ConfigProvider>

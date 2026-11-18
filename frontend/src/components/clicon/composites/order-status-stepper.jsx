@@ -14,7 +14,8 @@ const STEPS = ['pending', 'processing', 'shipped', 'delivered'];
 const OrderStatusStepper = ({ currentStatus, className = '' }) => {
   const { t } = useTranslation();
 
-  const isCancelled = currentStatus === 'cancel' || currentStatus === 'cancelled' || currentStatus === 'canceled';
+  const isCancelled =
+    currentStatus === 'cancel' || currentStatus === 'cancelled' || currentStatus === 'canceled';
 
   const stepLabels = {
     pending: t('order.placed', 'Order Placed'),

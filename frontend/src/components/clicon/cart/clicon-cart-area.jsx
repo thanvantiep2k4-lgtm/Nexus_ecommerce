@@ -85,7 +85,11 @@ const CliconCartArea = () => {
                     </thead>
                     <tbody>
                       {cart_products.map((item) => (
-                        <CliconCartItem key={item._id + (item.selectedVariant?.sku || '')} item={item} variant="row" />
+                        <CliconCartItem
+                          key={item._id + (item.selectedVariant?.sku || '')}
+                          item={item}
+                          variant="row"
+                        />
                       ))}
                     </tbody>
                   </table>
@@ -98,11 +102,7 @@ const CliconCartArea = () => {
                       {t('cart.returnToShop', 'Return to Shop')}
                     </ClButton>
                   </Link>
-                  <ClButton
-                    variant="danger"
-                    size="md"
-                    onClick={() => dispatch(clearCart())}
-                  >
+                  <ClButton variant="danger" size="md" onClick={() => dispatch(clearCart())}>
                     {t('cart.clearCart', 'Clear Cart')}
                   </ClButton>
                 </div>

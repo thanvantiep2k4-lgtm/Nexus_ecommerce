@@ -33,9 +33,7 @@ const CliconDoubleBanner = () => {
                 <h3 className="cl-double-banner__title">
                   {renderMultiline(t('banner.leftTitle'))}
                 </h3>
-                <p className="cl-double-banner__desc">
-                  {t('banner.leftDesc')}
-                </p>
+                <p className="cl-double-banner__desc">{t('banner.leftDesc')}</p>
                 <Link href="/shop" className="cl-double-banner__btn cl-double-banner__btn--primary">
                   {t('banner.shopNow')} <i className="fas fa-arrow-right"></i>
                 </Link>
@@ -54,7 +52,9 @@ const CliconDoubleBanner = () => {
           <div className="col-lg-6">
             <div className="cl-double-banner__card cl-double-banner__card--dark">
               <div className="cl-double-banner__body">
-                <span className="cl-double-banner__tag cl-double-banner__tag--blue">{t('banner.introducingNew')}</span>
+                <span className="cl-double-banner__tag cl-double-banner__tag--blue">
+                  {t('banner.introducingNew')}
+                </span>
                 <h3 className="cl-double-banner__title cl-double-banner__title--white">
                   {renderMultiline(t('banner.rightTitle'))}
                 </h3>

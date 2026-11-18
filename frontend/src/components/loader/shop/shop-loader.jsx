@@ -1,5 +1,5 @@
-import React from "react";
-import Loader from "../loader";
+import React from 'react';
+import Loader from '../loader';
 
 function SingleLoader({ loading, width }) {
   return (

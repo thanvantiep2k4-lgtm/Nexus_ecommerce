@@ -14,7 +14,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const mongoose = require('mongoose');
-const EmailTemplate = require('../model/EmailTemplate');
+const EmailTemplate = require('../models/EmailTemplate');
 
 // ── HTML layout helpers ────────────────────────────────────────────────────
 
@@ -97,7 +97,14 @@ const templates = [
       <ul>{{itemsHtml}}</ul>
       <p>Chúng tôi sẽ gửi email cho bạn khi đơn hàng được giao đi.</p>`
     ),
-    variables: ['customerName', 'orderNumber', 'orderTotal', 'orderDate', 'itemsHtml', 'shippingAddress'],
+    variables: [
+      'customerName',
+      'orderNumber',
+      'orderTotal',
+      'orderDate',
+      'itemsHtml',
+      'shippingAddress',
+    ],
     isDefault: true,
   },
 
@@ -135,7 +142,14 @@ const templates = [
       <hr class="divider" />
       <a href="{{trackingUrl}}" class="btn">Theo dõi đơn hàng</a>`
     ),
-    variables: ['customerName', 'orderNumber', 'trackingNumber', 'carrier', 'trackingUrl', 'estimatedDelivery'],
+    variables: [
+      'customerName',
+      'orderNumber',
+      'trackingNumber',
+      'carrier',
+      'trackingUrl',
+      'estimatedDelivery',
+    ],
     isDefault: true,
   },
 
@@ -375,9 +389,7 @@ async function seedEmailTemplates() {
     // findOneAndUpdate with $setOnInsert returns the existing doc if it existed
     // We detect new vs existing by checking if updatedAt === createdAt
     const isNew =
-      result.createdAt &&
-      result.updatedAt &&
-      Math.abs(result.createdAt - result.updatedAt) < 1000;
+      result.createdAt && result.updatedAt && Math.abs(result.createdAt - result.updatedAt) < 1000;
     if (isNew) {
       created++;
     } else {

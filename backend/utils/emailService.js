@@ -53,7 +53,9 @@ try {
  */
 async function sendTemplatedEmail(templateSlug, recipientEmail, data, language = 'en') {
   if (!transporter) {
-    console.warn(`[emailService] Skip send — transporter not available (template: ${templateSlug}, to: ${recipientEmail})`);
+    console.warn(
+      `[emailService] Skip send — transporter not available (template: ${templateSlug}, to: ${recipientEmail})`
+    );
     return;
   }
 
@@ -66,7 +68,7 @@ async function sendTemplatedEmail(templateSlug, recipientEmail, data, language =
   }
 
   const subject = tpl.subject(data, language);
-  const html    = tpl.html(data, language);
+  const html = tpl.html(data, language);
 
   await transporter.sendMail({
     from: EMAIL_USER,

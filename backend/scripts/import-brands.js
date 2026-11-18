@@ -11,7 +11,9 @@ async function importBrands({ djBrandNames = [], commit = true } = {}) {
   }
   let created = 0;
   for (const [lc, display] of wanted) {
-    const existing = await Brand.findOne({ name: new RegExp(`^${display.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') });
+    const existing = await Brand.findOne({
+      name: new RegExp(`^${display.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'),
+    });
     if (existing) continue;
     if (commit) await Brand.create({ name: display, status: 'active', slug: slugify(display) });
     created += 1;
@@ -34,7 +36,10 @@ if (require.main === module) {
     const r = await importBrands({ djBrandNames: names, commit: flags.commit });
     console.log(flags.commit ? 'Brands upserted:' : '[dry-run] would create:', r);
     await disconnect();
-  })().catch((e) => { console.error('import-brands FAILED:', e.message); process.exit(1); });
+  })().catch((e) => {
+    console.error('import-brands FAILED:', e.message);
+    process.exit(1);
+  });
 }
 
 module.exports = { importBrands };

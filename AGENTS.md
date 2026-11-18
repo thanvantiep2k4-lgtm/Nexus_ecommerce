@@ -1,6 +1,6 @@
 # AGENTS.md
 
-> Đọc `PROJECT_PLAN.md` trước khi làm bất cứ việc gì: đó là kế hoạch thống nhất của cả nhóm (port, env, phân công, quy ước).
+> Đọc `docs/PROJECT_PLAN.md` trước khi làm bất cứ việc gì: đó là kế hoạch thống nhất của cả nhóm (port, env, phân công, quy ước).
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence

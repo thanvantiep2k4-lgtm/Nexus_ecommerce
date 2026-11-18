@@ -21,10 +21,7 @@ const CliconBlogArea = () => {
             {t('blog.section_title', 'Latest News & Articles')}
           </h2>
           <p className="cl-blog-area__subtitle">
-            {t(
-              'blog.section_subtitle',
-              'Stay up to date with the latest in tech and electronics'
-            )}
+            {t('blog.section_subtitle', 'Stay up to date with the latest in tech and electronics')}
           </p>
         </div>
 
@@ -37,13 +34,16 @@ const CliconBlogArea = () => {
         </div>
 
         <div className="cl-blog-area__footer">
-          <Link
-            href="/blog"
-            className="cl-blog-area__view-all"
-            data-testid="cl-blog-view-all"
-          >
+          <Link href="/blog" className="cl-blog-area__view-all" data-testid="cl-blog-view-all">
             {t('blog.view_all', 'View All Articles')}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </Link>

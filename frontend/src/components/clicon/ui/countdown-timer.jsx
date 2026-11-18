@@ -12,13 +12,7 @@ import useCountdown from '@/hooks/use-countdown';
  * @param {string} [props.label] - Optional label before the timer (e.g., "Ends in:")
  * @param {string} [props.className] - Additional CSS class
  */
-const CountdownTimer = ({
-  targetDate,
-  onComplete,
-  showDays = false,
-  label,
-  className = '',
-}) => {
+const CountdownTimer = ({ targetDate, onComplete, showDays = false, label, className = '' }) => {
   const { t } = useTranslation();
   const { days, hours, minutes, seconds, isExpired } = useCountdown(targetDate);
 
@@ -40,32 +34,30 @@ const CountdownTimer = ({
           <>
             <div className="cl-countdown__unit">
               <span className="cl-countdown__value">{days}</span>
-              <span className="cl-countdown__unit-label">
-                {t('countdown.days', 'Days')}
-              </span>
+              <span className="cl-countdown__unit-label">{t('countdown.days', 'Days')}</span>
             </div>
-            <span className="cl-countdown__sep" aria-hidden="true">:</span>
+            <span className="cl-countdown__sep" aria-hidden="true">
+              :
+            </span>
           </>
         )}
         <div className="cl-countdown__unit">
           <span className="cl-countdown__value">{hours}</span>
-          <span className="cl-countdown__unit-label">
-            {t('countdown.hours', 'Hrs')}
-          </span>
+          <span className="cl-countdown__unit-label">{t('countdown.hours', 'Hrs')}</span>
         </div>
-        <span className="cl-countdown__sep" aria-hidden="true">:</span>
+        <span className="cl-countdown__sep" aria-hidden="true">
+          :
+        </span>
         <div className="cl-countdown__unit">
           <span className="cl-countdown__value">{minutes}</span>
-          <span className="cl-countdown__unit-label">
-            {t('countdown.minutes', 'Min')}
-          </span>
+          <span className="cl-countdown__unit-label">{t('countdown.minutes', 'Min')}</span>
         </div>
-        <span className="cl-countdown__sep" aria-hidden="true">:</span>
+        <span className="cl-countdown__sep" aria-hidden="true">
+          :
+        </span>
         <div className="cl-countdown__unit">
           <span className="cl-countdown__value">{seconds}</span>
-          <span className="cl-countdown__unit-label">
-            {t('countdown.seconds', 'Sec')}
-          </span>
+          <span className="cl-countdown__unit-label">{t('countdown.seconds', 'Sec')}</span>
         </div>
       </div>
     </div>

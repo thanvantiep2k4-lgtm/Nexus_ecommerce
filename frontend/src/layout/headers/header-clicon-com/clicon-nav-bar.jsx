@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import { useGetShowCategoryQuery } from "@/redux/features/categoryApi";
-import { useGetSettingsQuery } from "@/redux/features/cmsApi";
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { useGetShowCategoryQuery } from '@/redux/features/categoryApi';
+import { useGetSettingsQuery } from '@/redux/features/cmsApi';
 
 const CliconNavBar = () => {
   const { t } = useTranslation();
@@ -10,12 +10,11 @@ const CliconNavBar = () => {
   const dropdownRef = useRef(null);
   const { data: settingsData } = useGetSettingsQuery();
   const { data: categories } = useGetShowCategoryQuery();
-  const phone = settingsData?.data?.contact?.phone || "+84 28 7106 1234";
+  const phone = settingsData?.data?.contact?.phone || '+84 28 7106 1234';
 
   const categoryItems = (categories?.result || []).slice(0, 8);
 
-  const buildSlug = (title) =>
-    title.toLowerCase().replace("&", "").split(" ").join("-");
+  const buildSlug = (title) => title.toLowerCase().replace('&', '').split(' ').join('-');
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -24,8 +23,8 @@ const CliconNavBar = () => {
         setIsCategoryOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
@@ -38,22 +37,33 @@ const CliconNavBar = () => {
               onClick={() => setIsCategoryOpen(!isCategoryOpen)}
               className="cl-nav-bar__category-btn"
             >
-              <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 1h18M0 7h18M0 13h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <svg
+                width="18"
+                height="14"
+                viewBox="0 0 18 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 1h18M0 7h18M0 13h18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
-              <span>{t("header.allProductTypes")}</span>
-              <i className={`fas fa-chevron-${isCategoryOpen ? "up" : "down"}`}></i>
+              <span>{t('header.allProductTypes')}</span>
+              <i className={`fas fa-chevron-${isCategoryOpen ? 'up' : 'down'}`}></i>
             </button>
 
             {/* Dropdown menu */}
-            <div className={`cl-cat-dropdown ${isCategoryOpen ? "cl-cat-dropdown--open" : ""}`}>
+            <div className={`cl-cat-dropdown ${isCategoryOpen ? 'cl-cat-dropdown--open' : ''}`}>
               <ul className="cl-cat-dropdown__list">
                 {categoryItems.map((cat) => {
                   const hasChildren = cat.children && cat.children.length > 0;
                   return (
                     <li
                       key={cat._id}
-                      className={`cl-cat-dropdown__item ${hasChildren ? "cl-cat-dropdown__item--has-sub" : ""}`}
+                      className={`cl-cat-dropdown__item ${hasChildren ? 'cl-cat-dropdown__item--has-sub' : ''}`}
                     >
                       <Link
                         href={`/shop?category=${buildSlug(cat.parent)}`}
@@ -61,7 +71,13 @@ const CliconNavBar = () => {
                         onClick={() => setIsCategoryOpen(false)}
                       >
                         {cat.img && (
-                          <img src={cat.img} alt="" width={24} height={24} className="cl-cat-dropdown__icon" />
+                          <img
+                            src={cat.img}
+                            alt=""
+                            width={24}
+                            height={24}
+                            className="cl-cat-dropdown__icon"
+                          />
                         )}
                         <span>{cat.parent}</span>
                         {hasChildren && (
@@ -95,19 +111,19 @@ const CliconNavBar = () => {
           {/* Nav links */}
           <nav className="cl-nav-bar__links">
             <Link href="/track-order">
-              <i className="far fa-map-marker-alt"></i> {t("nav.trackOrder")}
+              <i className="far fa-map-marker-alt"></i> {t('nav.trackOrder')}
             </Link>
             <Link href="/compare">
-              <i className="far fa-arrows-repeat"></i> {t("nav.compare")}
+              <i className="far fa-arrows-repeat"></i> {t('nav.compare')}
             </Link>
             <Link href="/contact">
-              <i className="far fa-headset"></i> {t("nav.customerSupport")}
+              <i className="far fa-headset"></i> {t('nav.customerSupport')}
             </Link>
             <Link href="/blog">
-              <i className="far fa-newspaper"></i> {t("nav.blog")}
+              <i className="far fa-newspaper"></i> {t('nav.blog')}
             </Link>
             <Link href="/coupon">
-              <i className="far fa-tags"></i> {t("nav.coupons")}
+              <i className="far fa-tags"></i> {t('nav.coupons')}
             </Link>
           </nav>
 
