@@ -1,22 +1,24 @@
 {
-  "name": "shofy-ecommerce",
+  "name": "nexusmart",
   "version": "1.0.0",
-  "description": "Full-stack e-commerce application with Node.js backend and Next.js frontend",
+  "description": "NexusMart - sàn thương mại điện tử đa nhà bán tích hợp trợ lý AI",
   "private": true,
   "scripts": {
-    "setup": "bash setup.sh",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "cd backend && npm run start-dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "build": "npm run build:backend && npm run build:frontend",
-    "build:backend": "cd backend && npm run build",
-    "build:frontend": "cd frontend && npm run build",
-    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
-    "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm start",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "seed": "cd backend && npm run data:import",
-    "kill-ports": "npx kill-port 3001 4000 8081",
+    "env:init": "node scripts/init-env.js",
+    "setup": "npm run env:init && npm run install:all",
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install && npm --prefix crm install && npm --prefix crm/crm-ui install",
+    "infra:up": "docker compose up -d mongodb postgres keycloak",
+    "infra:down": "docker compose down",
+    "dev": "concurrently -n api,store,crm,crm-ui -c blue,green,magenta,yellow \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:crm\" \"npm run dev:crm-ui\"",
+    "dev:backend": "npm --prefix backend run start-dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:crm": "npm --prefix crm run dev",
+    "dev:crm-ui": "npm --prefix crm/crm-ui run dev",
+    "build": "npm --prefix frontend run build && npm --prefix crm/crm-ui run build",
+    "start": "concurrently \"npm --prefix backend start\" \"npm --prefix frontend start\" \"npm --prefix crm start\"",
+    "seed": "npm --prefix backend run data:import",
+    "test": "npm --prefix backend test",
+    "kill-ports": "npx kill-port 4000 3001 8081 5173",
     "clean-start": "npm run kill-ports && npm run dev"
   },
   "devDependencies": {
@@ -24,18 +26,8 @@
     "kill-port": "^2.0.1"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0"
+    "node": ">=20"
   },
-  "repository": {
-    "type": "git", 
-    "url": "git+https://github.com/ShuvoProgram/shofy-electronics-ecommerce.git"
-  },
-  "keywords": ["ecommerce", "nextjs", "nodejs", "mongodb", "stripe"],
-  "author": "Shofy Team",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ShuvoProgram/shofy-electronics-ecommerce/issues"
-  },
-  "homepage": "https://github.com/ShuvoProgram/shofy-electronics-ecommerce#readme"
+  "author": "NexusMart Team",
+  "license": "ISC"
 }
