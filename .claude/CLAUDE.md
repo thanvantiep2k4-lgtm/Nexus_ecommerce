@@ -6,10 +6,10 @@
 - Database: MongoDB (single instance)
   - Current: 2 databases (shofy, shofy_ecommerce) — migrating to 1
   - Target: single `shofy` database
-- Storefront API: Express.js (port 7001)
+- Storefront API: Express.js (port 4000)
 - CRM API: Express.js (port 8081)
 - Storefront: Next.js 13 (Pages Router, port 3001)
-- CRM UI: Vite + React 19 + TypeScript + Ant Design 6 (port 3001)
+- CRM UI: Vite + React 19 + TypeScript + Ant Design 6 (dev port 5173)
 
 ## Tech Stack Constraints
 

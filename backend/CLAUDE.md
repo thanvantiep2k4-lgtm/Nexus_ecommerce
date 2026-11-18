@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working in the 
 
 ## Project Overview
 
-Shofy Backend is the storefront-facing REST API. Express.js + Mongoose + Socket.io, runs on port `7001`. Talks to MongoDB (`shofy` database, single-DB after Phase 1). Serves both the Next.js storefront (port 3000) and the CRM admin panel (port 8080).
+Shofy Backend is the storefront-facing REST API. Express.js + Mongoose + Socket.io, runs on port `4000`. Talks to MongoDB (`shofy` database, single-DB after Phase 1). Serves both the Next.js storefront (port 3001) and the CRM admin panel (port 8081).
 
 ## Development Commands
 
@@ -12,7 +12,7 @@ Package manager is **npm** (Node 18+, see `.nvmrc`).
 
 ```bash
 npm install                 # Install dependencies
-npm run dev                 # nodemon, port 7001 (watches index.js)
+npm run dev                 # nodemon, port 4000 (watches index.js)
 npm start                   # production
 npm run seed                # node seed.js — DESTRUCTIVELY clears ALL collections then bulk inserts
 node scripts/backfill-embeddings.js   # one-shot chatbot embedding backfill
@@ -93,7 +93,7 @@ backend/
 
 ### Socket.io Events
 
-CORS allows localhost:3000, 3001, 8080. Emitted by controllers on every CRUD success:
+CORS allows localhost:3001, 3001, 8080. Emitted by controllers on every CRUD success:
 
 | Domain | Events |
 |--------|--------|
@@ -177,7 +177,7 @@ Fire-and-forget — never `await` (it would block the response). Graceful no-op 
 `.env` (see `.env.example`):
 
 - **DB**: `MONGO_URI`
-- **Server**: `PORT=7001`, `NODE_ENV`, `STORE_URL`, `ADMIN_URL`
+- **Server**: `PORT=4000`, `NODE_ENV`, `STORE_URL`, `ADMIN_URL`
 - **JWT**: `TOKEN_SECRET`, `JWT_SECRET_FOR_VERIFY`
 - **Email**: `SERVICE`, `EMAIL_USER`, `EMAIL_PASS`, `HOST`, `EMAIL_PORT`
 - **Cloudinary**: `CLOUDINARY_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `CLOUDINARY_UPLOAD_PRESET`

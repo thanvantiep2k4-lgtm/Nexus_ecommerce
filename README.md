@@ -6,9 +6,9 @@ Multi-vendor marketplace with CMS-driven storefront, built with Express.js, Next
 
 | Service | Stack | Port | Purpose |
 |---------|-------|------|---------|
-| **Backend API** | Express.js + MongoDB | 7001 | Unified REST API |
-| **Storefront** | Next.js 13 (Pages Router) + Bootstrap 5 | 3000 | Customer-facing store |
-| **CRM Admin** | Vite + React 19 + TypeScript + Ant Design 6 | 8080 | Admin panel |
+| **Backend API** | Express.js + MongoDB | 4000 | Unified REST API |
+| **Storefront** | Next.js 13 (Pages Router) + Bootstrap 5 | 3001 | Customer-facing store |
+| **CRM Admin** | Vite + React 19 + TypeScript + Ant Design 6 | 8081 (UI dev: 5173) | Admin panel |
 | **Auth** | Keycloak 26 | 8180 | SSO, RBAC (RS256 JWT) |
 | **Database** | MongoDB 7 | 27017 | Single database (`shofy`) |
 
@@ -45,7 +45,7 @@ docker compose up -d
 
 ## API Documentation
 
-Interactive Swagger UI: `http://localhost:7001/api-docs`
+Interactive Swagger UI: `http://localhost:4000/api-docs`
 
 ### API Route Groups
 
@@ -114,7 +114,7 @@ The widget appears on every page of the storefront as a floating bubble (bottom-
 
 - [Deployment Guide](DEPLOYMENT.md) — Docker, manual deploy, SSL, backups
 - [Admin Guide](ADMIN_GUIDE.md) — CRM user documentation
-- [API Docs](http://localhost:7001/api-docs) — Swagger UI (when running)
+- [API Docs](http://localhost:4000/api-docs) — Swagger UI (when running)
 
 ## Testing
 

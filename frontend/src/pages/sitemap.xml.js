@@ -1,5 +1,5 @@
 const API_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7001";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
 function generateSiteMap(baseUrl, products, blogs) {
   const productEntries = (products || [])
@@ -55,7 +55,7 @@ ${blogEntries}
 
 export async function getServerSideProps({ res }) {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 
   let products = [];
   let blogs = [];

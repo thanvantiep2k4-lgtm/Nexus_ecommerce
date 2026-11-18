@@ -40,7 +40,7 @@ const BlogPage = ({ posts, pagination, currentPage, latestPosts, query }) => {
 export default BlogPage;
 
 export async function getServerSideProps({ query }) {
-  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7001";
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
   const page = parseInt(query.page) || 1;
   const category = query.category || "";
   const search = query.search || "";

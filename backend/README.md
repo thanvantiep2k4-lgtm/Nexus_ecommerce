@@ -1,6 +1,6 @@
 # Shofy Backend
 
-Express.js REST API for the Shofy e-commerce platform (port 7001).
+Express.js REST API for the Shofy e-commerce platform (port 4000).
 
 ## Chatbot setup
 
@@ -16,6 +16,6 @@ Express.js REST API for the Shofy e-commerce platform (port 7001).
 ## Useful scripts
 
 ```bash
-npm run dev                          # nodemon on port 7001
+npm run dev                          # nodemon on port 4000
 node scripts/backfill-embeddings.js  # one-shot embed backfill
 ```

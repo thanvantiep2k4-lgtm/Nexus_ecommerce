@@ -215,7 +215,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
 };
 
 export async function getServerSideProps({ params }) {
-  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:7001';
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
   try {
     const [vendorRes, productsRes] = await Promise.all([
       fetch(`${API_URL}/api/v1/store/vendors/${params.slug}`),

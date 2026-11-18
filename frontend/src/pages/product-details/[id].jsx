@@ -11,7 +11,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { productJsonLd, breadcrumbJsonLd } from "@/utils/structuredData";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7001";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
 const ProductDetailsPage = ({ product, relatedProducts, error }) => {
   const { t } = useTranslation();

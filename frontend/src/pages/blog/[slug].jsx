@@ -9,7 +9,7 @@ import CliconBlogDetail from "@/components/clicon/blog/clicon-blog-detail";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleJsonLd } from "@/utils/structuredData";
 
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7001";
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
 export default function BlogPostPage({ post, latestPosts = [] }) {
   const { t } = useTranslation();

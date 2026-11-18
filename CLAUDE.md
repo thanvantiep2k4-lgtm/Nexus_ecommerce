@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Shofy is a full-stack e-commerce application with three services:
 - **Frontend** (`frontend/`) — Next.js 13 storefront on port 3000
-- **Backend** (`backend/`) — Express.js REST API on port 7001
+- **Backend** (`backend/`) — Express.js REST API on port 4000
 - **CRM** (`crm/`) — Express.js admin panel with EJS on port 8080
 
 **Database architecture (Phase 1 complete):** Migrating from dual-database (`shofy` + `shofy_ecommerce`) with sync service to a single unified database. The sync service has been removed from the CRM. Migration scripts are in `migration/`. The backend connects to whatever `MONGO_URI` is set in its `.env`.
@@ -290,7 +290,7 @@ npm run install:all    # Install deps for root, backend, and frontend
 ### Development
 ```bash
 npm run dev            # Start backend + frontend concurrently
-npm run dev:backend    # Backend only (nodemon, port 7001)
+npm run dev:backend    # Backend only (nodemon, port 4000)
 npm run dev:frontend   # Frontend only (Next.js, port 3000)
 cd crm && npm run dev  # CRM admin panel (nodemon, port 8080)
 ```
@@ -364,7 +364,7 @@ cd frontend && npm run lint  # ESLint (Next.js config)
 
 ### Socket.io Real-Time Events
 
-Configured in `index.js`, CORS allows localhost:3000, 3001, 8080. `global.io` used by `utils/socketEmitter.js`.
+Configured in `index.js`, CORS allows localhost:3001, 3001, 8080. `global.io` used by `utils/socketEmitter.js`.
 
 Events emitted by controllers on CRUD operations:
 - `product:created`, `product:updated`, `product:deleted`, `products:refresh`
@@ -396,7 +396,7 @@ Events emitted by controllers on CRUD operations:
 - **Next.js Pages Router** (not App Router) — all pages in `src/pages/`
 - **Path aliases:** `@/*` → `./src/*`, `@assets/*` → `./public/assets/*` (jsconfig.json)
 - **Image domains:** `lh3.googleusercontent.com`, `res.cloudinary.com`
-- **API base URL:** `process.env.NEXT_PUBLIC_API_BASE_URL` (default: `http://localhost:7001`)
+- **API base URL:** `process.env.NEXT_PUBLIC_API_BASE_URL` (default: `http://localhost:4000`)
 
 ### State Management — Redux Toolkit + RTK Query
 
@@ -516,7 +516,7 @@ Admin: `admin@shofy.com` / `password123`, Staff: `staff@shofy.com` / `password12
 `MONGO_URI`, `PORT`, `NODE_ENV`, `TOKEN_SECRET`, `JWT_SECRET_FOR_VERIFY`, `SERVICE`, `EMAIL_USER`, `EMAIL_PASS`, `HOST`, `EMAIL_PORT`, `CLOUDINARY_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `CLOUDINARY_UPLOAD_PRESET`, `STRIPE_KEY`, `STORE_URL`, `ADMIN_URL`
 
 ### Frontend (`.env.local`)
-`NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:7001`)
+`NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:4000`)
 
 ### CRM (`.env`)
 `MONGO_URI` (default `mongodb://127.0.0.1:27017/shofy_ecommerce`), `CRM_PORT` (default 8080), `FRONTEND_MONGO_URI` (default `mongodb://127.0.0.1:27017/shofy`)

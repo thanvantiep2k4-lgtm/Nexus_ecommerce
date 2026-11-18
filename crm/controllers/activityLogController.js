@@ -20,7 +20,7 @@ exports.exportCsv = async (req, res) => {
     // Stream the CSV export from the backend directly
     const ApiProxy = require('../services/apiProxy');
     const proxy = new ApiProxy(req);
-    const backendUrl = process.env.BACKEND_API_URL || 'http://localhost:7001';
+    const backendUrl = process.env.BACKEND_API_URL || 'http://localhost:4000';
     const axios = require('axios');
     const token = req.kauth?.grant?.access_token?.token || null;
 

@@ -223,7 +223,7 @@ app.use((req, res) => {
 
 // ─── Start ─────────────────────────────────────────────────────
 
-const PORT = process.env.CRM_PORT || 8080;
+const PORT = process.env.CRM_PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Shofy CRM Server running on port ${PORT}`);
   console.log(`Dashboard: http://localhost:${PORT}`);

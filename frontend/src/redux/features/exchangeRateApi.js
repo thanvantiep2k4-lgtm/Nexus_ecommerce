@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const exchangeRateApi = createApi({
   reducerPath: 'exchangeRateApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:7001',
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000',
   }),
   endpoints: (builder) => ({
     getExchangeRates: builder.query({

@@ -5,7 +5,7 @@ import keycloak from '@/lib/keycloak';
 export const userPreferencesApi = createApi({
   reducerPath: 'userPreferencesApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:7001',
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000',
     prepareHeaders: async (headers) => {
       try {
         if (keycloak.authenticated) {

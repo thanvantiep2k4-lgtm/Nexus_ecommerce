@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BACKEND_URL = process.env.BACKEND_API_URL || 'http://localhost:7001';
+const BACKEND_URL = process.env.BACKEND_API_URL || 'http://localhost:4000';
 
 class ApiProxy {
   constructor(req) {

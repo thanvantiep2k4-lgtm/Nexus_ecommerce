@@ -22,7 +22,7 @@ const definition = {
   },
   servers: [
     {
-      url: process.env.API_URL || 'http://localhost:7001',
+      url: process.env.API_URL || 'http://localhost:4000',
       description: 'Development server',
     },
   ],

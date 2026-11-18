@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working in the 
 
 Shofy CRM is the admin panel. Two layers in one folder:
 
-1. **`crm/`** — Express server on port `8080` that proxies `/api/*` calls to the backend (`:7001`) and serves the SPA build
+1. **`crm/`** — Express server on port `8081` that proxies `/api/*` calls to the backend (`:4000`) and serves the SPA build
 2. **`crm/crm-ui/`** — Vite + React 19 + TypeScript + Ant Design 6 SPA (Mediasoft-Admin pattern)
 
 The sync service that copied data from `shofy_ecommerce` → `shofy` was removed in Phase 1 — the CRM now proxies directly to the unified backend.
@@ -18,7 +18,7 @@ Package manager is **npm** (Node 18+).
 ```bash
 # From crm/
 npm install                  # server deps
-npm run dev                  # nodemon server.js (port 8080)
+npm run dev                  # nodemon server.js (port 8081)
 npm run seed                 # seed.js (legacy CRM DB data — mostly obsolete post-Phase 1)
 
 # From crm/crm-ui/
@@ -37,7 +37,7 @@ For production builds the Express server serves the Vite-built static files from
 
 Plain Express. Acts as:
 
-- **Proxy** — `/api/*` → backend `:7001` with admin Bearer token forwarding. Routes defined in `crm/server.js` + `crm/routes/`
+- **Proxy** — `/api/*` → backend `:4000` with admin Bearer token forwarding. Routes defined in `crm/server.js` + `crm/routes/`
 - **Static host** — serves `public/build/` (Vite output)
 - **Health** — `GET /health`
 
@@ -143,8 +143,8 @@ crm-ui + frontend storefront refresh
 
 ### Server `.env`
 
-- `CRM_PORT=8080`
-- `BACKEND_URL=http://localhost:7001`
+- `CRM_PORT=8081`
+- `BACKEND_URL=http://localhost:4000`
 - `ADMIN_TOKEN` or Keycloak-issued token for proxying
 
 ### UI (`crm/crm-ui/.env`)

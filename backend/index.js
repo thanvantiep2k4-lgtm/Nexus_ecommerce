@@ -10,7 +10,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const connectDB = require("./config/db");
 const { secret } = require("./config/secret");
-const PORT = process.env.PORT || secret.port || 7001;
+const PORT = process.env.PORT || secret.port || 4000;
 const morgan = require('morgan');
 // error handler
 const globalErrorHandler = require("./middleware/global-error-handler");
@@ -25,8 +25,8 @@ const { startCron: startExchangeRateCron } = require('./services/exchangeRateSer
 
 const allowedOrigins = [
   ...new Set([
-    process.env.STORE_URL || 'http://localhost:3000',
-    process.env.ADMIN_URL || 'http://localhost:8080',
+    process.env.STORE_URL || 'http://localhost:3001',
+    process.env.ADMIN_URL || 'http://localhost:8081',
     'http://localhost:3001',
     'http://localhost:8081',
     // secret.* are the same env vars — included as a safety net in case

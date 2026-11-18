@@ -17,7 +17,7 @@ import CliconProductColumns from "@/components/clicon/products/clicon-product-co
 import CliconBlogArea from "@/components/clicon/blog/clicon-blog-area";
 import CliconNewsletter from "@/components/clicon/newsletter/clicon-newsletter";
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7001";
+const API = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
 
 async function safeFetch(url) {
   try {
