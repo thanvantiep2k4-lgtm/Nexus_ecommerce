@@ -48,8 +48,9 @@ services:
       KC_HOSTNAME_STRICT: "false"
       KC_HEALTH_ENABLED: "true"
       KC_METRICS_ENABLED: "true"
-    command: start-dev
+    command: start-dev --import-realm
     volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
       - ./keycloak/themes/shofy-theme:/opt/keycloak/themes/shofy-theme
       - ./keycloak/themes/shofy-crm-theme:/opt/keycloak/themes/shofy-crm-theme
     ports:

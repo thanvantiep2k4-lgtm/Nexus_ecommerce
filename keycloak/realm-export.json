@@ -577,6 +577,82 @@
       ],
       "notBefore": 0,
       "groups": []
+    },
+    {
+      "username": "admin",
+      "email": "admin@nexusmart.local",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "NexusMart",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Admin@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admin",
+        "default-roles-shofy"
+      ]
+    },
+    {
+      "username": "manager",
+      "email": "manager@nexusmart.local",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Manager",
+      "lastName": "NexusMart",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Manager@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "manager",
+        "default-roles-shofy"
+      ]
+    },
+    {
+      "username": "staff",
+      "email": "staff@nexusmart.local",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Staff",
+      "lastName": "NexusMart",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Staff@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "staff",
+        "default-roles-shofy"
+      ]
+    },
+    {
+      "username": "customer",
+      "email": "customer@nexusmart.local",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Customer",
+      "lastName": "NexusMart",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Customer@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "user",
+        "default-roles-shofy"
+      ]
     }
   ],
   "scopeMappings": [
@@ -690,7 +766,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "admin-cli-dev-secret",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
@@ -846,7 +922,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "shofy-backend-dev-secret",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
@@ -884,7 +960,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "shofy-crm-dev-secret",
       "redirectUris": [
         "http://localhost:8081/*",
         "https://tychicus.id.vn/admin/*"
@@ -1229,23 +1305,7 @@
     "contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
     "strictTransportSecurity": "max-age=31536000; includeSubDomains"
   },
-  "smtpServer": {
-    "allowutf8": "",
-    "debug": "false",
-    "replyToDisplayName": "",
-    "starttls": "true",
-    "auth": "true",
-    "envelopeFrom": "",
-    "ssl": "false",
-    "password": "**********",
-    "port": "587",
-    "host": "smtp.gmail.com",
-    "replyTo": "",
-    "from": "nguyentychicus@gmail.com",
-    "fromDisplayName": "Shofy E-Commerce",
-    "authType": "basic",
-    "user": "nguyentychicus@gmail.com"
-  },
+  "smtpServer": {},
   "loginTheme": "shofy-theme",
   "accountTheme": "",
   "adminTheme": "",
