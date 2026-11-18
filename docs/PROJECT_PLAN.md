@@ -85,7 +85,7 @@ npm run dev            # chạy cùng lúc: api:4000, store:3001, crm:8081, crm-
 | Mở | Địa chỉ |
 |---|---|
 | Storefront | http://localhost:3001 |
-| CRM (dev) | http://localhost:5173 (hoặc http://localhost:8081 sau `npm run build`) |
+| CRM | http://localhost:8081 (đăng nhập Keycloak, dev tự chuyển sang http://localhost:5173; sau `npm run build` thì 8081 phục vụ luôn giao diện) |
 | Swagger | http://localhost:4000/api-docs |
 | Keycloak admin | http://localhost:8180 (admin / admin123) |
 
@@ -95,7 +95,7 @@ Chạy full bằng Docker: `docker compose up -d --build` (cần đủ 3 file `.
 
 Chatbot với Atlas Vector Search: làm theo `docs/guides/atlas-vector-index.md`, rồi `node backend/scripts/backfill-embeddings.js`. Không có Atlas thì chatbot tự fallback `$text`.
 
-Kiểm tra trước khi push:
+Kiểm tra trước khi push (hướng dẫn test thủ công đầy đủ: `docs/guides/huong-dan-test.md`):
 ```bash
 npm test                          # Jest backend
 cd frontend && npx playwright test   # E2E (cần app đang chạy)

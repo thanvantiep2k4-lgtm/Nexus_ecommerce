@@ -25,12 +25,12 @@ function layout(title, bodyContent) {
 </head>
 <body>
   <div class="wrapper">
-    <div class="header"><h1>Shofy</h1></div>
+    <div class="header"><h1>NexusMart</h1></div>
     <div class="body">
 ${bodyContent}
     </div>
     <div class="footer">
-      &copy; 2026 Shofy. All rights reserved.<br />
+      &copy; 2026 NexusMart. All rights reserved.<br />
       This is an automated message — please do not reply.
     </div>
   </div>
@@ -52,7 +52,7 @@ const bodies = {
       <p>We are delighted to inform you that your vendor application for <strong>${d.storeName}</strong> has been approved!</p>
       <p>You can now log in to your vendor dashboard and start adding products.</p>
       <a href="${d.dashboardUrl}" class="btn">Go to Vendor Dashboard</a>
-      <p style="margin-top:24px;">Welcome to the Shofy vendor community!</p>`
+      <p style="margin-top:24px;">Welcome to the NexusMart vendor community!</p>`
     ),
   vi: (d) =>
     layout(

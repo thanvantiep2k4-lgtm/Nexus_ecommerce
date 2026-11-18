@@ -4,7 +4,7 @@ module.exports = (register) =>
   register({
     name: 'searchProducts',
     description:
-      'Search the Shofy catalog by keyword and optional filters. Use when the user has specific criteria (category, brand, price range, color).',
+      'Search the NexusMart catalog by keyword and optional filters. Use when the user has specific criteria (category, brand, price range, color).',
     parameters: {
       type: 'object',
       properties: {

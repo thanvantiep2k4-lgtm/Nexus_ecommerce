@@ -162,7 +162,7 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                 <div className="col-md-6">
                   <div className="tp-footer-copyright">
                     <p>
-                      &copy; {new Date().getFullYear()} Shofy. {t('footer.allRightsReserved')}
+                      &copy; {new Date().getFullYear()} NexusMart. {t('footer.allRightsReserved')}
                     </p>
                   </div>
                 </div>

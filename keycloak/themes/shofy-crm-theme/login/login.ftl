@@ -19,7 +19,7 @@
                         <polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
                 </div>
-                <h1 class="crm-brand-title">Shofy CRM</h1>
+                <h1 class="crm-brand-title">NexusMart CRM</h1>
                 <p class="crm-brand-subtitle">Management Dashboard</p>
                 <div class="crm-brand-features">
                     <div class="crm-feature">

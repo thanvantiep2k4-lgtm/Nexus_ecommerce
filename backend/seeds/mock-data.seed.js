@@ -1,5 +1,5 @@
 /**
- * Non-destructive mock data seed for the Shofy unified DB.
+ * Non-destructive mock data seed for the NexusMart unified DB.
  *
  * Adds: users (customers + vendors), CMS home page, header/footer menus,
  *       extra banners, products across categories, orders, payouts, reviews.
@@ -13,7 +13,7 @@ const path = require('path');
 const bcrypt = require(path.join(__dirname, '..', 'node_modules', 'bcryptjs'));
 const { MongoClient, ObjectId } = require(path.join(__dirname, '..', 'node_modules', 'mongodb'));
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://187.124.3.207:27017/shofy';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/shofy';
 
 const slugify = (s) =>
   s
@@ -315,7 +315,7 @@ async function seed() {
       status: p.quantity > 0 ? 'in-stock' : 'out-of-stock',
       reviews: [],
       productType: p.productType,
-      description: `${p.title} — high-quality product from Shofy marketplace.`,
+      description: `${p.title} — high-quality product from NexusMart marketplace.`,
       additionalInformation: [],
       tags: [p.productType, p.featured ? 'featured' : 'new'],
       sizes: ['S', 'M', 'L'],
@@ -412,14 +412,14 @@ async function seed() {
           blockType: 'text-block',
           order: 6,
           isVisible: true,
-          title: 'Why Shofy?',
+          title: 'Why NexusMart?',
           settings: {
             html: '<h2>Quality, curated.</h2><p>Every product in our marketplace is verified by our team. Free shipping on orders over 500,000 VND.</p>',
           },
         },
       ],
       seo: {
-        metaTitle: 'Shofy — Curated Vietnamese Marketplace',
+        metaTitle: 'NexusMart — Curated Vietnamese Marketplace',
         metaDescription:
           'Discover fashion, beauty, electronics, and more from trusted Vietnamese vendors.',
       },

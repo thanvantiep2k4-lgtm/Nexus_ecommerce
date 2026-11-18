@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 
 const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
+  const { t } = useTranslation();
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
@@ -85,7 +87,7 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
       {/* Color swatches */}
       {uniqueColors.length > 0 && (
         <div className="cl-pd__color-swatches">
-          <span className="cl-pd__color-swatches-label">Color</span>
+          <span className="cl-pd__color-swatches-label">{t('pd.color', 'Màu sắc')}</span>
           <div className="cl-pd__color-swatches-list">
             {uniqueColors.map((color, i) => (
               <button
@@ -105,12 +107,12 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
       {/* Size dropdown */}
       {availableSizes.length > 0 && (
         <div className="cl-pd__select">
-          <span className="cl-pd__select-label">Size</span>
+          <span className="cl-pd__select-label">{t('pd.size', 'Kích cỡ')}</span>
           <select
             value={selectedSize || ''}
             onChange={(e) => setSelectedSize(e.target.value || null)}
           >
-            <option value="">Select Size</option>
+            <option value="">{t('pd.selectSize', 'Chọn kích cỡ')}</option>
             {availableSizes.map((size, i) => {
               const isAvailable = variants.some((v) => {
                 const colorKey = colorNameOf(v);
@@ -132,12 +134,12 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
       {/* Memory dropdown (conditional) */}
       {uniqueMemory.length > 0 && (
         <div className="cl-pd__select">
-          <span className="cl-pd__select-label">Memory</span>
+          <span className="cl-pd__select-label">{t('pd.memory', 'Bộ nhớ RAM')}</span>
           <select
             value={selectedMemory || ''}
             onChange={(e) => setSelectedMemory(e.target.value || null)}
           >
-            <option value="">Select Memory</option>
+            <option value="">{t('pd.selectMemory', 'Chọn RAM')}</option>
             {uniqueMemory.map((mem, i) => (
               <option key={i} value={mem}>
                 {mem}
@@ -150,12 +152,12 @@ const ProductVariantSelector = ({ variants = [], onVariantSelected }) => {
       {/* Storage dropdown (conditional) */}
       {uniqueStorage.length > 0 && (
         <div className="cl-pd__select">
-          <span className="cl-pd__select-label">Storage</span>
+          <span className="cl-pd__select-label">{t('pd.storage', 'Dung lượng')}</span>
           <select
             value={selectedStorage || ''}
             onChange={(e) => setSelectedStorage(e.target.value || null)}
           >
-            <option value="">Select Storage</option>
+            <option value="">{t('pd.selectStorage', 'Chọn dung lượng')}</option>
             {uniqueStorage.map((stor, i) => (
               <option key={i} value={stor}>
                 {stor}

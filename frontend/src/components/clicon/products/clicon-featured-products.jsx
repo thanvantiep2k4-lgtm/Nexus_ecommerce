@@ -17,7 +17,7 @@ const CliconFeaturedProducts = () => {
     data: products,
     isLoading: prdLoading,
     isError: prdError,
-  } = useGetProductTypeQuery({ type: 'electronics', query: 'new=true&limit=8' });
+  } = useGetProductTypeQuery({ type: 'all', query: 'new=true&limit=8' });
 
   const { data: categoryData } = useGetShowCategoryQuery();
 

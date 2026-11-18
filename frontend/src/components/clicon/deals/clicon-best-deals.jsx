@@ -41,7 +41,7 @@ function DealsSkeletonRow() {
 const CliconBestDeals = () => {
   const { t } = useTranslation();
   const { data, isLoading, isError } = useGetProductTypeQuery({
-    type: 'electronics',
+    type: 'all',
     query: 'featured=true&limit=9',
   });
 

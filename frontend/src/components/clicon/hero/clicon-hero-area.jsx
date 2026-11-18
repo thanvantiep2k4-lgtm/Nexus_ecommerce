@@ -1,198 +1,143 @@
 import React from 'react';
-import { Pagination, EffectFade, Autoplay } from 'swiper';
+import { Pagination, Navigation, EffectFade, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { useGetBannersQuery } from '@/redux/features/cmsApi';
-import CliconHeroPromoCard from './clicon-hero-promo-card';
 
-// ---------------------------------------------------------------------------
-// Fallback data — used only when no banners exist in CRM yet
-// ---------------------------------------------------------------------------
+// Màu nền + khối màu trang trí cho từng slide (xoay vòng)
+const SLIDE_THEMES = [
+  { bg: '#EEF6E8', shapes: ['#B9E87A', '#F9A8C9', '#7AA7F7'] },
+  { bg: '#EAF1FF', shapes: ['#93C5FD', '#FDE68A', '#86EFAC'] },
+  { bg: '#FFF1E8', shapes: ['#FDBA74', '#C4B5FD', '#67E8F9'] },
+];
+
 const FALLBACK_SLIDES = [
   {
-    subtitleKey: 'hero.slide1Subtitle',
-    titleKey: 'hero.slide1Title',
-    descKey: 'hero.slide1Desc',
-    image: '/assets/img/slider/slider-img-1.png',
-    bgColor: '#F2F4F5',
-    price: '$299',
-    link: '/shop',
-  },
-  {
-    subtitleKey: 'hero.slide2Subtitle',
-    titleKey: 'hero.slide2Title',
-    descKey: 'hero.slide2Desc',
-    image: '/assets/img/slider/slider-img-2.png',
-    bgColor: '#EAF4FB',
-    price: '$499',
-    link: '/shop',
-  },
-  {
-    subtitleKey: 'hero.slide3Subtitle',
-    titleKey: 'hero.slide3Title',
-    descKey: 'hero.slide3Desc',
-    image: '/assets/img/slider/slider-img-3.png',
-    bgColor: '#FFF3EB',
-    price: '$199',
+    title: 'Mua sắm thông minh. Sống tiện nghi hơn.',
+    desc: 'Hàng chính hãng từ hàng trăm nhà bán uy tín, giao nhanh toàn quốc.',
+    image: '',
     link: '/shop',
   },
 ];
 
-const FALLBACK_PROMOS = [
-  {
-    subtitleKey: 'hero.promo1Subtitle',
-    titleKey: 'hero.promo1Name',
-    price: 999,
-    link: '/shop?category=electronics',
-    bgColor: '#EAF4FB',
-    image: '/assets/img/banner/banner-slider-1.png',
-  },
-  {
-    subtitleKey: 'hero.promo2Subtitle',
-    titleKey: 'hero.promo2Name',
-    price: 89,
-    link: '/shop?category=electronics',
-    bgColor: '#FFF3EB',
-    image: '/assets/img/banner/banner-slider-2.png',
-  },
-];
+const toSlide = (b) => ({
+  _id: b._id,
+  title: b.content?.text || b.title,
+  desc: b.content?.textVi || '',
+  image: b.content?.image || '',
+  link: b.content?.buttonUrl || '/shop',
+});
 
-// ---------------------------------------------------------------------------
-// Map CRM Banner to slide shape
-// ---------------------------------------------------------------------------
-function bannerToSlide(banner) {
-  return {
-    _id: banner._id,
-    title: banner.content?.text || banner.title,
-    subtitle: banner.content?.buttonText || '',
-    desc: banner.content?.textVi || '',
-    image: banner.content?.image || '',
-    bgColor: banner.content?.backgroundColor || '#F2F4F5',
-    link: banner.content?.buttonUrl || '/shop',
-  };
-}
+const toPromo = (b) => ({
+  _id: b._id,
+  title: b.content?.text || b.title,
+  image: b.content?.image || '',
+  link: b.content?.buttonUrl || '/shop',
+});
 
-function bannerToPromo(banner) {
-  return {
-    _id: banner._id,
-    title: banner.content?.text || banner.title,
-    subtitle: banner.content?.buttonText || '',
-    image: banner.content?.image || '',
-    bgColor: banner.content?.backgroundColor || '#EAF4FB',
-    link: banner.content?.buttonUrl || '/shop',
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Sub-component: single slide
-// ---------------------------------------------------------------------------
-function HeroSlide({ slide, t, isApi }) {
-  const title = isApi ? slide.title : t(slide.titleKey);
-  const subtitle = isApi ? slide.subtitle : t(slide.subtitleKey);
-
+function HeroSlide({ slide, theme, t, priority }) {
   return (
-    <div
-      className="cl-hero-slide"
-      style={{ backgroundColor: slide.bgColor }}
-      data-testid={`clicon-hero-slide`}
-    >
-      {slide.image && (
-        <Image
-          className="cl-hero-slide__bg"
-          src={slide.image}
-          alt={title || ''}
-          fill
-          priority
-          sizes="(max-width: 1200px) 100vw, 66vw"
-          style={{ objectFit: 'cover' }}
-          unoptimized
-        />
-      )}
-      <span className="cl-hero-slide__scrim" aria-hidden="true" />
-      <div className="cl-hero-slide__content">
-        {subtitle && <p className="cl-hero-slide__subtitle">{subtitle}</p>}
-        {title && <h2 className="cl-hero-slide__title">{title}</h2>}
-        <Link
-          href={slide.link || '/shop'}
-          className="cl-hero-slide__btn"
-          data-testid="clicon-hero-shop-btn"
-        >
-          {t('hero.shopNow')}
-          <i className="fa-solid fa-arrow-right ms-2" aria-hidden="true" />
-        </Link>
+    <div className="nx-hero-slide" style={{ backgroundColor: theme.bg }}>
+      <div className="nx-hero-slide__content">
+        <h2 className="nx-hero-slide__title">{slide.title}</h2>
+        {slide.desc && <p className="nx-hero-slide__desc">{slide.desc}</p>}
+        <div className="nx-hero-slide__actions">
+          <Link href={slide.link || '/shop'} className="nx-btn nx-btn--primary">
+            {t('hero.shopNow', 'Mua ngay')}
+            <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+          </Link>
+          <Link href="/shop" className="nx-btn nx-btn--outline">
+            {t('hero.exploreDeals', 'Xem ưu đãi')}
+          </Link>
+        </div>
+      </div>
+      <div className="nx-hero-slide__visual" aria-hidden={!slide.image}>
+        <span className="nx-shape nx-shape--a" style={{ background: theme.shapes[0] }} />
+        <span className="nx-shape nx-shape--b" style={{ background: theme.shapes[1] }} />
+        <span className="nx-shape nx-shape--c" style={{ background: theme.shapes[2] }} />
+        {slide.image && (
+          <img
+            className="nx-hero-slide__img"
+            src={slide.image}
+            alt={slide.title}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : 'auto'}
+          />
+        )}
       </div>
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Main component
-// ---------------------------------------------------------------------------
 const CliconHeroArea = () => {
   const { t } = useTranslation();
-
-  // Fetch hero slides and promotional banners from CRM
   const { data: heroData } = useGetBannersQuery({ type: 'hero-slide' });
   const { data: promoData } = useGetBannersQuery({ type: 'promotional-banner' });
 
   const heroBanners = heroData?.data || [];
-  const promoBanners = promoData?.data || [];
-
-  // Use CRM banners if available, otherwise fallback
-  const useApi = heroBanners.length > 0;
-  const slides = useApi ? heroBanners.map(bannerToSlide) : FALLBACK_SLIDES;
-  const promos =
-    promoBanners.length > 0 ? promoBanners.slice(0, 2).map(bannerToPromo) : FALLBACK_PROMOS;
+  const slides = heroBanners.length ? heroBanners.map(toSlide) : FALLBACK_SLIDES;
+  const promo = (promoData?.data || []).map(toPromo)[0];
 
   return (
-    <section className="cl-hero-area" data-testid="clicon-hero-area">
+    <section className="nx-hero" data-testid="clicon-hero-area">
       <div className="container">
-        <div className="row g-3 align-items-stretch">
-          {/* Left: Swiper slider */}
-          <div className="col-xl-8 d-flex">
-            <div className="cl-hero-slider w-100">
-              <Swiper
-                // Re-init Swiper khi tập slide đổi (fallback 3 -> API 4). Bật `loop`
-                // mà đổi số slide sau init sẽ làm slide active bị rỗng nếu không remount.
-                key={`hero-${useApi ? 'api' : 'fallback'}-${slides.length}`}
-                slidesPerView={1}
-                effect="fade"
-                fadeEffect={{ crossFade: true }}
-                loop
-                autoplay={{ delay: 4500, disableOnInteraction: false }}
-                pagination={{ el: '.cl-hero-dots', clickable: true }}
-                modules={[Pagination, EffectFade, Autoplay]}
-                className="cl-hero-swiper"
-                data-testid="clicon-hero-swiper"
-              >
-                {slides.map((slide, idx) => (
-                  <SwiperSlide key={slide._id || idx}>
-                    <HeroSlide slide={slide} t={t} isApi={useApi} />
-                  </SwiperSlide>
-                ))}
-                <div className="cl-hero-dots" />
-              </Swiper>
-            </div>
+        <div className="nx-hero__grid">
+          <div className="nx-hero__main">
+            <Swiper
+              key={`hero-${slides.length}`}
+              slidesPerView={1}
+              effect="fade"
+              fadeEffect={{ crossFade: true }}
+              loop={slides.length > 1}
+              speed={700}
+              autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              navigation={{ prevEl: '.nx-hero__arrow--prev', nextEl: '.nx-hero__arrow--next' }}
+              pagination={{ el: '.nx-hero__dots', clickable: true }}
+              modules={[Pagination, Navigation, EffectFade, Autoplay]}
+              className="cl-hero-swiper nx-hero__swiper"
+              data-testid="clicon-hero-swiper"
+            >
+              {slides.map((slide, idx) => (
+                <SwiperSlide key={slide._id || idx}>
+                  <HeroSlide
+                    slide={slide}
+                    theme={SLIDE_THEMES[idx % SLIDE_THEMES.length]}
+                    t={t}
+                    priority={idx === 0}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <button
+              type="button"
+              className="nx-hero__arrow nx-hero__arrow--prev"
+              aria-label={t('aria.prevSlide', 'Slide trước')}
+            >
+              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="nx-hero__arrow nx-hero__arrow--next"
+              aria-label={t('aria.nextSlide', 'Slide tiếp theo')}
+            >
+              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            </button>
+            <div className="nx-hero__dots" />
           </div>
 
-          {/* Right: Promo cards */}
-          <div className="col-xl-4 d-flex">
-            <div className="cl-hero-promo w-100">
-              {promos.map((card, idx) => (
-                <CliconHeroPromoCard
-                  key={card._id || idx}
-                  title={promoBanners.length > 0 ? card.title : t(card.titleKey)}
-                  subtitle={promoBanners.length > 0 ? card.subtitle : t(card.subtitleKey)}
-                  price={card.price}
-                  link={card.link}
-                  bgColor={card.bgColor}
-                  image={card.image}
-                />
-              ))}
-            </div>
-          </div>
+          <Link href={promo?.link || '/shop'} className="nx-hero__promo">
+            <h3 className="nx-hero__promo-title">
+              {t('hero.promoTitle', 'Deal hôm nay, giá không đợi ai')}
+            </h3>
+            <p className="nx-hero__promo-desc">
+              {t('hero.promoDesc', 'Đừng bỏ lỡ ưu đãi tốt nhất trong ngày')}
+            </p>
+            <span className="nx-btn nx-btn--white">{t('hero.promoCta', 'Săn deal')}</span>
+            {promo?.image && (
+              <img className="nx-hero__promo-img" src={promo.image} alt={promo.title} />
+            )}
+          </Link>
         </div>
       </div>
     </section>

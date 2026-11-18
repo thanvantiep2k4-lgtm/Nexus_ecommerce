@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import useCartInfo from '@/hooks/use-cart-info';
@@ -9,7 +8,7 @@ import { userLoggedOut } from '@/redux/features/auth/authSlice';
 import { Search } from '@/svg';
 import useSearchFormSubmit from '@/hooks/use-search-form-submit';
 import { useKeycloak } from '@/components/providers/keycloak-provider';
-import logo from '@assets/img/logo/logo.svg';
+import BrandLogo from '@/components/common/brand-logo';
 
 const CliconMainHeader = ({ setIsCanvasOpen }) => {
   const { t } = useTranslation();
@@ -58,7 +57,7 @@ const CliconMainHeader = ({ setIsCanvasOpen }) => {
           {/* Logo */}
           <div className="cl-main-header__logo">
             <Link href="/">
-              <Image src={logo} alt="logo" width={140} height={36} />
+              <BrandLogo size={40} />
             </Link>
           </div>
 

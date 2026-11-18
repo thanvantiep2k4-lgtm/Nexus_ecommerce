@@ -1,5 +1,5 @@
 /* ================================================
-   Shofy Theme — Shared Components
+   NexusMart Theme — Shared Components
    Language Switcher + Toast Notifications
    ================================================ */
 
@@ -18,8 +18,8 @@
   padding: 6px 12px;
   background: #f8f9fa;
   border: 1.5px solid #E0E2E3;
-  border-radius: 8px;
-  font-family: 'Jost', sans-serif;
+  border-radius: 6px;
+  font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 13px;
   font-weight: 500;
   color: #55585B;
@@ -28,12 +28,12 @@
 }
 
 .shofy-lang-btn:hover {
-  border-color: #0989FF;
+  border-color: #2563EB;
   background: #fff;
 }
 
 .shofy-lang-switcher.open .shofy-lang-btn {
-  border-color: #0989FF;
+  border-color: #2563EB;
   background: #fff;
 }
 
@@ -53,7 +53,7 @@
   min-width: 140px;
   background: #fff;
   border: 1.5px solid #E0E2E3;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   list-style: none;
   padding: 4px;
@@ -77,12 +77,12 @@
 
 .shofy-lang-option:hover {
   background: #eff6ff;
-  color: #0989FF;
+  color: #2563EB;
 }
 
 .shofy-lang-active {
   font-weight: 600;
-  color: #0989FF;
+  color: #2563EB;
   background: #f0f7ff;
 }
 
@@ -103,7 +103,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: 10px;
+  border-radius: 6px;
   background: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -118,7 +118,7 @@
 .shofy-toast-error { border-left: 4px solid #FD4B6B; background: #fff0f3; }
 .shofy-toast-warning { border-left: 4px solid #FFB342; background: #fffbeb; }
 .shofy-toast-success { border-left: 4px solid #31B757; background: #f0fdf4; }
-.shofy-toast-info { border-left: 4px solid #0989FF; background: #eff6ff; }
+.shofy-toast-info { border-left: 4px solid #2563EB; background: #eff6ff; }
 
 .shofy-toast-icon {
   width: 20px;
@@ -130,14 +130,14 @@
 .shofy-toast-error .shofy-toast-icon { color: #FD4B6B; }
 .shofy-toast-warning .shofy-toast-icon { color: #FFB342; }
 .shofy-toast-success .shofy-toast-icon { color: #31B757; }
-.shofy-toast-info .shofy-toast-icon { color: #0989FF; }
+.shofy-toast-info .shofy-toast-icon { color: #2563EB; }
 
 .shofy-toast-body { flex: 1; min-width: 0; }
 
 .shofy-toast-title {
   font-size: 14px;
   font-weight: 600;
-  color: #010F1C;
+  color: #0F172A;
   margin-bottom: 2px;
 }
 
@@ -173,7 +173,7 @@
 .shofy-toast-error .shofy-toast-progress { background: #FD4B6B; }
 .shofy-toast-warning .shofy-toast-progress { background: #FFB342; }
 .shofy-toast-success .shofy-toast-progress { background: #31B757; }
-.shofy-toast-info .shofy-toast-progress { background: #0989FF; }
+.shofy-toast-info .shofy-toast-progress { background: #2563EB; }
 
 @keyframes shofy-toast-in {
   from { opacity: 0; transform: translateX(40px); }

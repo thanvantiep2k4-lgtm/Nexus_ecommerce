@@ -12,7 +12,7 @@ if (!i18n.isInitialized) {
       en: { translation: en },
       vi: { translation: vi },
     },
-    lng: 'en',
+    lng: 'vi',
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,

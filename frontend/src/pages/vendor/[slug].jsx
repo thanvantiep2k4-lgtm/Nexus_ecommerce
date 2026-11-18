@@ -24,7 +24,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
 
   return (
     <Wrapper>
-      <SEO pageTitle={`${storeName} — Shofy Marketplace`} />
+      <SEO pageTitle={`${storeName} — NexusMart`} />
       <Header />
 
       <main>

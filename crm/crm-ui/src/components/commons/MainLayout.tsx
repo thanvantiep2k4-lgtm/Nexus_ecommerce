@@ -266,7 +266,7 @@ export default function MainLayout() {
                 overflow: 'hidden',
               }}
             >
-              Shofy CRM
+              NexusMart CRM
             </span>
           )}
         </div>
@@ -331,7 +331,7 @@ export default function MainLayout() {
             lineHeight: '56px',
           }}
         >
-          <Breadcrumb items={[{ title: 'Shofy CRM' }, { title: pageTitle }]} />
+          <Breadcrumb items={[{ title: 'NexusMart CRM' }, { title: pageTitle }]} />
           <div style={{ marginLeft: 'auto' }}>
             <CurrencySwitcher />
           </div>

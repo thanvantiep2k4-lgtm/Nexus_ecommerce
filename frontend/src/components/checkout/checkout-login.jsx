@@ -5,7 +5,7 @@ const CheckoutLogin = () => {
   const { i18n } = useTranslation();
   const handleLogin = () => {
     const locale = (i18n.language || 'en').startsWith('vi') ? 'vi' : 'en';
-    keycloak.login({ redirectUri: window.location.href, locale });
+    keycloak.login({ redirectUri: window.location.origin + window.location.pathname, locale });
   };
 
   if (keycloak.authenticated) return null;

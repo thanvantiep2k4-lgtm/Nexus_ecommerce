@@ -31,13 +31,14 @@ const ProductBrand = ({ setCurrPage }) => {
     );
   } else if (isError) {
     content = <ErrorMsg msg={t('error.generic')} />;
-  } else if (!brands?.result?.length) {
+  } else if (!(brands?.data || brands?.result)?.length) {
     content = <ErrorMsg msg={t('error.noBrandsFound')} />;
   } else {
     const activeBrand = router.query.brand || '';
-    const sortedBrands = brands.result
+    const sortedBrands = (brands.data || brands.result)
       .slice()
-      .sort((a, b) => b.products.length - a.products.length);
+      .sort((a, b) => (b.products?.length || 0) - (a.products?.length || 0))
+      .slice(0, 12);
 
     content = (
       <div className="cl-shop__brand-grid">
@@ -57,7 +58,7 @@ const ProductBrand = ({ setCurrPage }) => {
 
   return (
     <div className="cl-shop__widget">
-      <h3 className="cl-shop__widget-title">Popular Brands</h3>
+      <h3 className="cl-shop__widget-title">{t('shop.popularBrands', 'Thương hiệu nổi bật')}</h3>
       {content}
     </div>
   );

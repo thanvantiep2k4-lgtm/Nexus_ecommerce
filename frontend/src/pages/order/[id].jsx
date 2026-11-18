@@ -17,6 +17,13 @@ import { OrderStatusStepper } from '@/components/clicon/composites';
 import { useKeycloak } from '@/components/providers/keycloak-provider';
 import { notifyError, notifySuccess } from '@/utils/toast';
 
+// Giá đã giảm của một dòng hàng (discount là %)
+const unitPriceOf = (item) => {
+  const price = item?.price || 0;
+  const discount = item?.discount || 0;
+  return discount > 0 ? price - (price * discount) / 100 : price;
+};
+
 // ── Status helpers ───────────────────────────────────────────────────
 function getStepIndex(status) {
   const s = (status || '').toLowerCase();
@@ -443,7 +450,12 @@ const SingleOrder = ({ params }) => {
                         </div>
                         <div className="cl-od-activity-item__content">
                           <div className="cl-od-activity-item__text">
-                            {act.note || activityMessages[type] || `Order status: ${act.status}`}
+                            {act.note ||
+                              activityMessages[type] ||
+                              t('orderDetail.statusChanged', {
+                                status: t(`order.${act.status}`, act.status),
+                                defaultValue: 'Trạng thái: {{status}}',
+                              })}
                           </div>
                           {act.timestamp && (
                             <div className="cl-od-activity-item__time">
@@ -537,11 +549,11 @@ const SingleOrder = ({ params }) => {
                                 </div>
                               </div>
                             </td>
-                            <td>{formatOrderAmount(item.price || 0, orderData?.order)}</td>
+                            <td>{formatOrderAmount(unitPriceOf(item), orderData?.order)}</td>
                             <td>x{item.orderQuantity || 1}</td>
                             <td style={{ paddingRight: 24, fontWeight: 600 }}>
                               {formatOrderAmount(
-                                (item.price || 0) * (item.orderQuantity || 1),
+                                unitPriceOf(item) * (item.orderQuantity || 1),
                                 orderData?.order
                               )}
                             </td>

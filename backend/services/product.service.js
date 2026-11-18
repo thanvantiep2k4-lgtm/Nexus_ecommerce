@@ -38,41 +38,40 @@ exports.getAllProductsService = async () => {
 exports.getProductTypeService = async (req) => {
   const type = req.params.type;
   const query = req.query;
-  let products;
+  // type = "all" → không lọc theo nhóm (trang chủ trộn nhiều ngành hàng)
+  const filter = type === 'all' ? {} : { productType: type };
+  const limit = Math.min(parseInt(query.limit, 10) || 0, 100);
+  let q;
   if (query.new === 'true') {
-    products = await Product.find({ productType: type })
+    q = Product.find(filter)
       .sort({ createdAt: -1 })
-      .limit(8)
-      .populate('reviews');
+      .limit(limit || 8);
   } else if (query.featured === 'true') {
-    products = await Product.find({
-      productType: type,
-      featured: true,
-    }).populate('reviews');
+    q = Product.find({ ...filter, featured: true });
+    if (limit) q = q.limit(limit);
   } else if (query.topSellers === 'true') {
-    products = await Product.find({ productType: type })
+    q = Product.find(filter)
       .sort({ sellCount: -1 })
-      .limit(8)
-      .populate('reviews');
+      .limit(limit || 8);
   } else {
-    products = await Product.find({ productType: type }).populate('reviews');
+    q = Product.find(filter);
+    if (limit) q = q.limit(limit);
   }
-  return products;
+  return q.populate('reviews');
 };
 
 // get offer product service
 exports.getOfferTimerProductService = async (query) => {
-  const products = await Product.find({
-    productType: query,
-    'offerDate.endDate': { $gt: new Date() },
-  }).populate('reviews');
+  const filter = { 'offerDate.endDate': { $gt: new Date() } };
+  if (query && query !== 'all') filter.productType = query;
+  const products = await Product.find(filter).populate('reviews');
   return products;
 };
 
 // get popular product service by type
 exports.getPopularProductServiceByType = async (type) => {
-  const products = await Product.find({ productType: type })
-    .sort({ 'reviews.length': -1 })
+  const products = await Product.find(type === 'all' ? {} : { productType: type })
+    .sort({ 'reviews.length': -1, sellCount: -1 })
     .limit(8)
     .populate('reviews');
   return products;
@@ -95,6 +94,10 @@ exports.getTopRatedProductService = async () => {
 
   topRatedProducts.sort((a, b) => b.rating - a.rating);
 
+  // Chưa có đánh giá nào → dùng sản phẩm bán chạy để khu vực này không trống
+  if (!topRatedProducts.length) {
+    return Product.find({}).sort({ sellCount: -1 }).limit(8).lean();
+  }
   return topRatedProducts;
 };
 

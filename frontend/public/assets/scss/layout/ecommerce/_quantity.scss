@@ -7,7 +7,7 @@
 .tp-product-quantity{
 	width: 100px;
 	position: relative;
-    border-radius: 20px;
+    border-radius: 6px;
 }
 
 .tp-cart-plus,
@@ -48,7 +48,7 @@
     border: 1px solid #DADCE0;
 	background-color: var(--tp-common-white);
 	padding: 0 30px;
-    border-radius: 20px;
+    border-radius: 6px;
 	@include rtl{
 		text-align: center;
 	}

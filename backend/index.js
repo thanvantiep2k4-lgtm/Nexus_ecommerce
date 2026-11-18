@@ -93,7 +93,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'Shofy API Documentation',
+    customSiteTitle: 'NexusMart API Documentation',
     swaggerOptions: {
       persistAuthorization: true,
     },
@@ -249,7 +249,7 @@ connectDB().then(() => {
 app.use('/api/v1', v1Routes);
 
 // Root route
-app.get('/', (req, res) => res.send('Shofy API is running. Documentation: /api-docs'));
+app.get('/', (req, res) => res.send('NexusMart API is running. Documentation: /api-docs'));
 
 // ---------------------------------------------------------------------------
 // 404 handler (must be after all routes)

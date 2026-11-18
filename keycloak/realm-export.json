@@ -1,7 +1,7 @@
 {
   "id": "061c89ac-fd9b-409a-9bbb-84bfc64953a7",
   "realm": "shofy",
-  "displayName": "Shofy E-Commerce",
+  "displayName": "NexusMart",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -1317,28 +1317,7 @@
   "enabledEventTypes": [],
   "adminEventsEnabled": false,
   "adminEventsDetailsEnabled": false,
-  "identityProviders": [
-    {
-      "alias": "google",
-      "displayName": "Google",
-      "providerId": "google",
-      "enabled": true,
-      "updateProfileFirstLoginMode": "on",
-      "trustEmail": true,
-      "storeToken": false,
-      "addReadTokenRoleOnCreate": false,
-      "authenticateByDefault": false,
-      "linkOnly": false,
-      "firstBrokerLoginFlowAlias": "auto-link first broker login",
-      "config": {
-        "clientId": "PLACEHOLDER_SET_VIA_KCADM",
-        "clientSecret": "PLACEHOLDER_SET_VIA_KCADM",
-        "syncMode": "IMPORT",
-        "useJwksUrl": "true",
-        "defaultScope": "openid profile email"
-      }
-    }
-  ],
+  "identityProviders": [],
   "identityProviderMappers": [],
   "components": {
     "org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy": [
@@ -2365,5 +2344,6 @@
   },
   "clientPolicies": {
     "policies": []
-  }
+  },
+  "displayNameHtml": "<b>NexusMart</b>"
 }

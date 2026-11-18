@@ -25,12 +25,12 @@ function layout(title, bodyContent) {
 </head>
 <body>
   <div class="wrapper">
-    <div class="header"><h1>Shofy</h1></div>
+    <div class="header"><h1>NexusMart</h1></div>
     <div class="body">
 ${bodyContent}
     </div>
     <div class="footer">
-      &copy; 2026 Shofy. All rights reserved.<br />
+      &copy; 2026 NexusMart. All rights reserved.<br />
       This is an automated message — please do not reply.
     </div>
   </div>
@@ -49,7 +49,7 @@ const bodies = {
       'Vendor Application Received',
       `      <h2>Application Received</h2>
       <p>Hi <strong>${d.vendorName}</strong>,</p>
-      <p>Thank you for applying to become a vendor on Shofy!</p>
+      <p>Thank you for applying to become a vendor on NexusMart!</p>
       <hr class="divider" />
       <div class="info-row"><span class="label">Store Name:</span> ${d.storeName}</div>
       <div class="info-row"><span class="label">Application Date:</span> ${d.applicationDate}</div>
@@ -62,7 +62,7 @@ const bodies = {
       'Đã nhận đơn đăng ký nhà bán hàng',
       `      <h2>Đơn đăng ký đã được nhận</h2>
       <p>Xin chào <strong>${d.vendorName}</strong>,</p>
-      <p>Cảm ơn bạn đã đăng ký trở thành nhà bán hàng trên Shofy!</p>
+      <p>Cảm ơn bạn đã đăng ký trở thành nhà bán hàng trên NexusMart!</p>
       <hr class="divider" />
       <div class="info-row"><span class="label">Tên cửa hàng:</span> ${d.storeName}</div>
       <div class="info-row"><span class="label">Ngày đăng ký:</span> ${d.applicationDate}</div>

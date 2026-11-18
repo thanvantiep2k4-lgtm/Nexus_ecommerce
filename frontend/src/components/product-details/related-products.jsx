@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { useGetRelatedProductsQuery } from '@/redux/features/productApi';
 import { useGetTopRatedProductsQuery } from '@/redux/features/productApi';
@@ -5,12 +6,15 @@ import CliconProductSmRow from '@/components/clicon/products/clicon-product-sm-r
 import ErrorMsg from '../common/error-msg';
 
 const ProductColumn = ({ title, products, isLoading }) => {
+  const { t } = useTranslation();
   let content = null;
 
   if (isLoading) {
     content = [...Array(3)].map((_, i) => <div key={i} className="cl-product-columns__skeleton" />);
   } else if (!products || products.length === 0) {
-    content = <p className="cl-product-columns__empty">No products.</p>;
+    content = (
+      <p className="cl-product-columns__empty">{t('products.empty', 'Chưa có sản phẩm.')}</p>
+    );
   } else {
     content = products.slice(0, 3).map((p) => <CliconProductSmRow key={p._id} product={p} />);
   }
@@ -26,6 +30,7 @@ const ProductColumn = ({ title, products, isLoading }) => {
 };
 
 const RelatedProducts = ({ id, relatedProducts = [] }) => {
+  const { t } = useTranslation();
   const {
     data: relatedData,
     isLoading: relatedLoading,
@@ -52,14 +57,26 @@ const RelatedProducts = ({ id, relatedProducts = [] }) => {
     <section className="cl-product-columns" style={{ borderTop: '1px solid var(--cl-border)' }}>
       <div className="container">
         <div className="row g-4">
-          <ProductColumn title="RELATED PRODUCT" products={col1} isLoading={relatedLoading} />
-          <ProductColumn title="PRODUCT ACCESSORIES" products={col2} isLoading={relatedLoading} />
           <ProductColumn
-            title="APPLE PRODUCT"
+            title={t('pd.related', 'Sản phẩm liên quan')}
+            products={col1}
+            isLoading={relatedLoading}
+          />
+          <ProductColumn
+            title={t('pd.accessories', 'Phụ kiện gợi ý')}
+            products={col2}
+            isLoading={relatedLoading}
+          />
+          <ProductColumn
+            title={t('pd.sameBrand', 'Có thể bạn thích')}
             products={col3.length > 0 ? col3 : col1}
             isLoading={relatedLoading}
           />
-          <ProductColumn title="FEATURED PRODUCTS" products={col4} isLoading={topRatedLoading} />
+          <ProductColumn
+            title={t('pd.featured', 'Sản phẩm nổi bật')}
+            products={col4}
+            isLoading={topRatedLoading}
+          />
         </div>
       </div>
     </section>

@@ -6,10 +6,10 @@ const path = require('path');
 const definition = {
   openapi: '3.0.0',
   info: {
-    title: 'Shofy E-Commerce API',
+    title: 'NexusMart E-Commerce API',
     version: '1.0.0',
     description: [
-      'REST API for the Shofy e-commerce platform.',
+      'REST API for the NexusMart e-commerce platform.',
       '',
       '**Base URL:** `/api/v1`',
       '',
@@ -17,7 +17,7 @@ const definition = {
       'Pass it in the `Authorization` header: `Authorization: Bearer <token>`',
     ].join('\n'),
     contact: {
-      name: 'Shofy Engineering',
+      name: 'NexusMart Engineering',
     },
   },
   servers: [

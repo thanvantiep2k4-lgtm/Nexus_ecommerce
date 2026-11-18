@@ -58,10 +58,8 @@ export default function SuggestedActionCard({ action }) {
   };
 
   return (
-    <div className="shofy-chat__action-card">
-      {action.description && (
-        <div className="shofy-chat__action-card-label">{action.description}</div>
-      )}
+    <div className="nx-chat__action-card">
+      {action.description && <div className="nx-chat__action-card-label">{action.description}</div>}
       <button type="button" onClick={handle}>
         {action.label || t(`chat.action${capitalize(action.type)}`, { defaultValue: action.type })}
       </button>

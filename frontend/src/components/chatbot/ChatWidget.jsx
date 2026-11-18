@@ -22,8 +22,8 @@ export default function ChatWidget() {
   const lastIsAssistant = messages.length > 0 && messages[messages.length - 1].role === 'assistant';
 
   return (
-    <div className="shofy-chat__panel" role="dialog" aria-label={t('chat.title')}>
-      <div className="shofy-chat__header">
+    <div className="nx-chat__panel" role="dialog" aria-label={t('chat.title')}>
+      <div className="nx-chat__header">
         <span>{t('chat.title')}</span>
         <div>
           <button
@@ -46,18 +46,18 @@ export default function ChatWidget() {
         </div>
       </div>
 
-      <div className="shofy-chat__messages" ref={scrollRef}>
+      <div className="nx-chat__messages" ref={scrollRef}>
         {messages.length === 0 && (
-          <div className="shofy-chat__msg shofy-chat__msg--assistant">{t('chat.welcome')}</div>
+          <div className="nx-chat__msg nx-chat__msg--assistant">{t('chat.welcome')}</div>
         )}
         {messages.map((m, i) => (
           <ChatMessage key={i} message={m} sessionId={sessionId} />
         ))}
         {isStreaming && !lastIsAssistant && (
-          <div className="shofy-chat__thinking">{t('chat.thinking')}</div>
+          <div className="nx-chat__thinking">{t('chat.thinking')}</div>
         )}
         {error && (
-          <div className="shofy-chat__msg shofy-chat__msg--assistant" style={{ color: '#c00' }}>
+          <div className="nx-chat__msg nx-chat__msg--assistant" style={{ color: '#c00' }}>
             {t(`chat.${error}`, { defaultValue: t('chat.errorGeneric') })}
           </div>
         )}

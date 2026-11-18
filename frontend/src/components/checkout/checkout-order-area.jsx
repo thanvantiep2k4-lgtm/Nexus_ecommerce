@@ -61,7 +61,14 @@ const CheckoutOrderArea = ({ checkoutData }) => {
                   </p>
                 )}
                 <p className="item-qty">
-                  {item.orderQuantity} x <span>{formatPrice(item.price)}</span>
+                  {item.orderQuantity} x{' '}
+                  <span>
+                    {formatPrice(
+                      item.discount > 0
+                        ? item.price - (item.price * item.discount) / 100
+                        : item.price
+                    )}
+                  </span>
                 </p>
               </div>
             </div>

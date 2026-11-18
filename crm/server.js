@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs');
 const session = require('express-session');
 const Keycloak = require('keycloak-connect');
 require('dotenv').config();
@@ -97,6 +98,18 @@ app.use(morgan(':method :url :status :response-time ms'));
 //   - behind nginx (strips `/admin/` → requests arrive as `/assets/...`)
 //   - direct local access (browser fetches `/admin/assets/...` from index.html)
 const reactBuildPath = path.join(__dirname, 'crm-ui', 'dist');
+const spaIndexPath = path.join(reactBuildPath, 'index.html');
+// Khi dev chưa build UI (crm-ui/dist chưa có), chuyển sang Vite dev server thay vì báo lỗi.
+const CRM_UI_DEV_URL = process.env.CRM_UI_DEV_URL || 'http://localhost:5173';
+const sendSpa = (req, res) => {
+  if (fs.existsSync(spaIndexPath)) return res.sendFile(spaIndexPath);
+  if (process.env.NODE_ENV === 'production') {
+    return res
+      .status(503)
+      .json({ success: false, message: 'CRM UI chưa được build (npm run build)' });
+  }
+  return res.redirect(CRM_UI_DEV_URL + req.path);
+};
 app.use(express.static(reactBuildPath, { index: false }));
 app.use('/admin', express.static(reactBuildPath, { index: false }));
 
@@ -199,15 +212,13 @@ app.get('/api/me', apiProtect, (req, res) => {
 
 // /no-access: requires login but NOT a CRM role.
 // Shown to authenticated users whose token lacks admin/manager/staff/shipper.
-app.get('/no-access', keycloakProtectMiddleware, (req, res) => {
-  res.sendFile(path.join(reactBuildPath, 'index.html'));
-});
+app.get('/no-access', keycloakProtectMiddleware, sendSpa);
 
 // Wildcard catch-all: serve index.html for all non-API routes so React Router
 // handles /vendors, /reviews, /coupons, /cms/*, /settings/*, /activity-log, etc.
 app.get('*', crmProtect, (req, res, next) => {
   if (req.path.startsWith('/api/')) return next();
-  res.sendFile(path.join(reactBuildPath, 'index.html'));
+  sendSpa(req, res);
 });
 
 // ─── Error handling ────────────────────────────────────────────

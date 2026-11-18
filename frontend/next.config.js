@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['lh3.googleusercontent.com', 'res.cloudinary.com'],
+    domains: ['lh3.googleusercontent.com', 'res.cloudinary.com', 'cdn.dummyjson.com'],
     formats: ['image/avif', 'image/webp'],
   },
   output: 'standalone',

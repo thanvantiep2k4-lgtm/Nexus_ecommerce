@@ -12,6 +12,9 @@ function Language({ active, handleActive }) {
 
   const handleChangeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    try {
+      localStorage.setItem('nx_lang', lng);
+    } catch (_) {}
     handleActive('');
   };
 

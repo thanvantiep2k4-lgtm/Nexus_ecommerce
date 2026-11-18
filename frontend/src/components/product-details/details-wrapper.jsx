@@ -112,8 +112,8 @@ const DetailsWrapper = ({
           </span>
         ))}
         <span className="cl-pd__rating-text">
-          <strong>{ratingVal.toFixed(1)} Star Rating</strong> ({reviewCount.toLocaleString()} User
-          feedback)
+          <strong>{ratingVal.toFixed(1)}</strong> (
+          {t('pd.reviewCount', { count: reviewCount, defaultValue: '{{count}} đánh giá' })})
         </span>
       </div>
 
@@ -123,24 +123,27 @@ const DetailsWrapper = ({
       {/* 3. Meta row */}
       <div className="cl-pd__meta">
         <div className="cl-pd__meta-item">
-          Sku: <span>{selectedVariant?.sku || sku || 'N/A'}</span>
+          {t('pd.sku', 'Mã SP')}: <span>{selectedVariant?.sku || sku || 'N/A'}</span>
         </div>
         <div className="cl-pd__meta-item">
-          Availability:{' '}
+          {t('pd.availability', 'Tình trạng')}:{' '}
           <span
             className={`cl-pd__meta-badge cl-pd__meta-badge--${isOutOfStock ? 'out-of-stock' : 'in-stock'}`}
           >
-            {isOutOfStock ? 'Out of Stock' : `${displayStock} In Stock`}
+            {isOutOfStock
+              ? t('pd.outOfStock', 'Hết hàng')
+              : t('pd.inStock', { count: displayStock, defaultValue: 'Còn {{count}} sản phẩm' })}
           </span>
         </div>
         {brand && (
           <div className="cl-pd__meta-item">
-            Brand: <span>{typeof brand === 'object' ? brand.name : brand}</span>
+            {t('pd.brand', 'Thương hiệu')}:{' '}
+            <span>{typeof brand === 'object' ? brand.name : brand}</span>
           </div>
         )}
         {category?.name && (
           <div className="cl-pd__meta-item">
-            Category: <span>{category.name}</span>
+            {t('pd.category', 'Danh mục')}: <span>{category.name}</span>
           </div>
         )}
       </div>
@@ -178,7 +181,7 @@ const DetailsWrapper = ({
       {/* Legacy color variations (when no variants array) */}
       {!selectedVariant && !variants?.length && imageURLs?.some((item) => item?.color?.name) && (
         <div className="cl-pd__color-swatches">
-          <span className="cl-pd__color-swatches-label">Color</span>
+          <span className="cl-pd__color-swatches-label">{t('pd.color', 'Màu sắc')}</span>
           <div className="cl-pd__color-swatches-list">
             {imageURLs.map((item, i) => (
               <button
@@ -218,11 +221,11 @@ const DetailsWrapper = ({
           onClick={handleAddProduct}
           disabled={isOutOfStock}
         >
-          <i className="fa-solid fa-cart-shopping" /> ADD TO CART
+          <i className="fa-solid fa-cart-shopping" /> {t('pd.addToCart', 'Thêm vào giỏ')}
         </button>
         <Link href="/cart" onClick={() => dispatch(handleModalClose())}>
           <button type="button" className="cl-pd__buy-now-btn">
-            BUY NOW
+            {t('pd.buyNow', 'Mua ngay')}
           </button>
         </Link>
       </div>
@@ -248,7 +251,7 @@ const DetailsWrapper = ({
           {t('product.addToCompare')}
         </button>
         <div className="cl-pd__secondary-action">
-          Share product:
+          {t('pd.share', 'Chia sẻ')}:
           <div className="cl-pd__share-icons">
             <a href="#" aria-label={t('aria.copyLink')}>
               <i className="fa-regular fa-copy" />
@@ -268,7 +271,9 @@ const DetailsWrapper = ({
 
       {/* 9. Safe checkout bar */}
       <div className="cl-pd__safe-checkout">
-        <p className="cl-pd__safe-checkout-title">100% Guarantee Safe Checkout</p>
+        <p className="cl-pd__safe-checkout-title">
+          {t('pd.safeCheckout', 'Thanh toán an toàn: COD · Chuyển khoản · VNPay')}
+        </p>
         <div className="cl-pd__safe-checkout-icons">
           <img src="/assets/img/product/icons/payment-option.png" alt="Payment methods" />
         </div>

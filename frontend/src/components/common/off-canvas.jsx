@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 // internal
 import { CloseTwo } from '@/svg';
-import logo from '@assets/img/logo/logo.svg';
+import BrandLogo from '@/components/common/brand-logo';
 import MobileCategory from '@/layout/headers/header-com/mobile-category';
 import { userLoggedOut } from '@/redux/features/auth/authSlice';
 import { useKeycloak } from '@/components/providers/keycloak-provider';
@@ -41,6 +40,9 @@ const OffCanvas = ({ isOffCanvasOpen, setIsCanvasOpen }) => {
 
   const handleLanguageChange = (lng) => {
     i18n.changeLanguage(lng);
+    try {
+      localStorage.setItem('nx_lang', lng);
+    } catch (_) {}
   };
 
   return (
@@ -62,7 +64,7 @@ const OffCanvas = ({ isOffCanvasOpen, setIsCanvasOpen }) => {
             <div className="offcanvas__top mb-70 d-flex justify-content-between align-items-center">
               <div className="offcanvas__logo logo">
                 <Link href="/">
-                  <Image src={logo} alt="logo" />
+                  <BrandLogo size={32} />
                 </Link>
               </div>
             </div>

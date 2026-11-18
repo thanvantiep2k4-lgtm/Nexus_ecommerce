@@ -4,12 +4,7 @@ import { useTranslation } from 'react-i18next';
 export default function ChatBubble({ onClick }) {
   const { t } = useTranslation();
   return (
-    <button
-      type="button"
-      className="shofy-chat__bubble"
-      onClick={onClick}
-      aria-label={t('chat.open')}
-    >
+    <button type="button" className="nx-chat__bubble" onClick={onClick} aria-label={t('chat.open')}>
       <svg
         viewBox="0 0 24 24"
         fill="none"

@@ -1,10 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { useGetSettingsQuery } from '@/redux/features/cmsApi';
 import { useGetShowCategoryQuery } from '@/redux/features/categoryApi';
-import logo from '@assets/img/logo/logo.svg';
+import BrandLogo from '@/components/common/brand-logo';
 
 const FooterClicon = () => {
   const { t } = useTranslation();
@@ -30,10 +29,12 @@ const FooterClicon = () => {
             <div className="col-xl-3 col-lg-4 col-md-6 col-12 mb-4 mb-xl-0">
               <div className="cl-footer__brand">
                 <Link href="/" className="cl-footer__logo">
-                  <Image src={logo} alt="logo" width={140} height={36} />
+                  <BrandLogo size={36} />
                 </Link>
                 <div className="cl-footer__contact">
-                  <p className="cl-footer__contact-label">Customer Supports:</p>
+                  <p className="cl-footer__contact-label">
+                    {t('footer.support', 'Hỗ trợ khách hàng')}:
+                  </p>
                   <a href={`tel:${phone}`} className="cl-footer__contact-phone">
                     {phone}
                   </a>
@@ -48,7 +49,9 @@ const FooterClicon = () => {
             {/* Col 2: Top Category */}
             <div className="col-xl-2 col-lg-2 col-md-6 col-6 mb-4 mb-xl-0">
               <div className="cl-footer__widget">
-                <h4 className="cl-footer__widget-title">TOP CATEGORY</h4>
+                <h4 className="cl-footer__widget-title">
+                  {t('footer.topCategory', 'Danh mục nổi bật')}
+                </h4>
                 <ul className="cl-footer__links">
                   {categoryItems.map((cat) => (
                     <li key={cat._id}>
@@ -59,7 +62,8 @@ const FooterClicon = () => {
                   ))}
                   <li>
                     <Link href="/shop" className="cl-footer__browse-link">
-                      Browse All Product <i className="fas fa-arrow-right"></i>
+                      {t('featured.browse_all', 'Xem tất cả')}{' '}
+                      <i className="fas fa-arrow-right"></i>
                     </Link>
                   </li>
                 </ul>
@@ -69,10 +73,12 @@ const FooterClicon = () => {
             {/* Col 3: Quick Links */}
             <div className="col-xl-2 col-lg-2 col-md-6 col-6 mb-4 mb-xl-0">
               <div className="cl-footer__widget">
-                <h4 className="cl-footer__widget-title">QUICK LINKS</h4>
+                <h4 className="cl-footer__widget-title">
+                  {t('footer.quickLinks', 'Liên kết nhanh')}
+                </h4>
                 <ul className="cl-footer__links">
                   <li>
-                    <Link href="/shop">Shop Product</Link>
+                    <Link href="/shop">{t('footer.shopProducts', 'Tất cả sản phẩm')}</Link>
                   </li>
                   <li>
                     <Link href="/cart">{t('header.cart')}</Link>
@@ -81,13 +87,13 @@ const FooterClicon = () => {
                     <Link href="/wishlist">{t('header.wishlist')}</Link>
                   </li>
                   <li>
-                    <Link href="/compare">Compare</Link>
+                    <Link href="/compare">{t('footer.compare', 'So sánh sản phẩm')}</Link>
                   </li>
                   <li>
-                    <Link href="/track-order">Track Order</Link>
+                    <Link href="/track-order">{t('footer.trackOrder', 'Tra cứu đơn hàng')}</Link>
                   </li>
                   <li>
-                    <Link href="/contact">Customer Help</Link>
+                    <Link href="/contact">{t('footer.help', 'Trung tâm trợ giúp')}</Link>
                   </li>
                 </ul>
               </div>
@@ -96,13 +102,15 @@ const FooterClicon = () => {
             {/* Col 4: Download App */}
             <div className="col-xl-2 col-lg-2 col-md-6 col-6 mb-4 mb-xl-0">
               <div className="cl-footer__widget">
-                <h4 className="cl-footer__widget-title">DOWNLOAD APP</h4>
+                <h4 className="cl-footer__widget-title">
+                  {t('footer.downloadApp', 'Tải ứng dụng')}
+                </h4>
                 <div className="cl-footer__app-badges">
                   <a href="#" className="cl-footer__app-badge" aria-label="Google Play">
                     <div className="cl-footer__app-badge-inner">
                       <i className="fab fa-google-play"></i>
                       <div>
-                        <span>Get it now</span>
+                        <span>{t('footer.getItNow', 'Tải ngay trên')}</span>
                         <strong>Google Play</strong>
                       </div>
                     </div>
@@ -111,7 +119,7 @@ const FooterClicon = () => {
                     <div className="cl-footer__app-badge-inner">
                       <i className="fab fa-apple"></i>
                       <div>
-                        <span>Get it now</span>
+                        <span>{t('footer.getItNow', 'Tải ngay trên')}</span>
                         <strong>App Store</strong>
                       </div>
                     </div>
@@ -123,26 +131,27 @@ const FooterClicon = () => {
             {/* Col 5: Popular Tags */}
             <div className="col-xl-3 col-lg-2 col-md-6 col-6 mb-4 mb-xl-0">
               <div className="cl-footer__widget">
-                <h4 className="cl-footer__widget-title">POPULAR TAG</h4>
+                <h4 className="cl-footer__widget-title">
+                  {t('footer.popularTags', 'Tìm kiếm phổ biến')}
+                </h4>
                 <div className="cl-footer__tags">
                   {[
-                    'Game',
-                    'iPhone',
-                    'TV',
-                    'Asus Laptops',
-                    'Macbook',
-                    'SSD',
-                    'Graphics Card',
-                    'Power Bank',
-                    'Smart TV',
-                    'Speaker',
-                    'Tablet',
-                    'Microwave',
+                    'Điện thoại',
+                    'Laptop',
+                    'Giày nam',
+                    'Túi xách',
+                    'Đồng hồ',
+                    'Nước hoa',
+                    'Nội thất',
+                    'Đồ bếp',
+                    'Thể thao',
+                    'Apple',
                     'Samsung',
+                    'Xe máy',
                   ].map((tag) => (
                     <Link
                       key={tag}
-                      href={`/shop?tag=${tag.toLowerCase()}`}
+                      href={`/search?searchText=${encodeURIComponent(tag)}`}
                       className="cl-footer__tag"
                     >
                       {tag}
@@ -159,7 +168,7 @@ const FooterClicon = () => {
       <div className="cl-footer__bottom">
         <div className="container">
           <p className="cl-footer__copyright">
-            Shofy eCommerce &copy; {year}. {t('footer.allRightsReserved')}
+            NexusMart &copy; {year}. {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

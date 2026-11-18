@@ -42,7 +42,10 @@ const CliconCategoryCard = ({ category }) => {
         <h3 className="cl-category-card__name">{parent}</h3>
         {productCount > 0 && (
           <p className="cl-category-card__count">
-            {productCount} {productCount === 1 ? 'item' : 'items'}
+            {t('categories.productCount', {
+              count: productCount,
+              defaultValue: '{{count}} sản phẩm',
+            })}
           </p>
         )}
       </div>

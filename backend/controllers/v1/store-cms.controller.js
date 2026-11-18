@@ -175,7 +175,7 @@ exports.getPublicSettings = async (req, res, next) => {
       return respond.success(
         res,
         {
-          siteName: 'Shofy',
+          siteName: 'NexusMart',
           siteDescription: '',
           logo: null,
           favicon: null,

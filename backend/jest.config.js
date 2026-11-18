@@ -2,6 +2,8 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/tests/**/*.test.js'],
   testTimeout: 10000,
+  // Giới hạn worker: mỗi suite tự bật mongodb-memory-server, chạy quá nhiều song song gây timeout chập chờn
+  maxWorkers: 2,
   verbose: true,
   globalTeardown: '<rootDir>/tests/globalTeardown.js',
   moduleNameMapper: {

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useKeycloak } from '@/components/providers/keycloak-provider';
 import keycloak from '@/lib/keycloak';
 import Loader from '@/components/loader/loader';
+import i18n from '@/i18n';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const LoginPage = () => {
     if (keycloak.authenticated) {
       router.push(safeRedirect);
     } else {
-      const locale = (router.locale || 'en').startsWith('vi') ? 'vi' : 'en';
+      const locale = (i18n.language || 'vi').startsWith('en') ? 'en' : 'vi';
       keycloak.login({
         redirectUri: window.location.origin + safeRedirect,
         locale,

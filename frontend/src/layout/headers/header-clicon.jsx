@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import useSticky from '@/hooks/use-sticky';
 import useCartInfo from '@/hooks/use-cart-info';
 import { openCartMini } from '@/redux/features/cartSlice';
-import logo from '@assets/img/logo/logo.svg';
+import BrandLogo from '@/components/common/brand-logo';
 import CliconWelcomeBar from './header-clicon-com/clicon-welcome-bar';
 import CliconMainHeader from './header-clicon-com/clicon-main-header';
 import CliconNavBar from './header-clicon-com/clicon-nav-bar';
@@ -34,19 +33,21 @@ const HeaderClicon = () => {
             <div className="container">
               <div className="cl-announcement__inner">
                 <div className="cl-announcement__content">
-                  <span className="cl-announcement__highlight">Black</span>
-                  <span className="cl-announcement__text"> Friday </span>
+                  <span className="cl-announcement__highlight">
+                    {t('announcement.highlight', 'Siêu Sale 11.11')}
+                  </span>
                   <span className="cl-announcement__deal">
-                    Up to <strong>59%</strong> OFF
+                    {' '}
+                    {t('announcement.deal', 'Giảm đến 50% · Freeship toàn quốc')}
                   </span>
                 </div>
                 <Link href="/shop" className="cl-announcement__btn">
-                  SHOP NOW <i className="fas fa-arrow-right"></i>
+                  {t('announcement.cta', 'Mua ngay')} <i className="fas fa-arrow-right"></i>
                 </Link>
                 <button
                   onClick={() => setAnnouncementVisible(false)}
                   className="cl-announcement__close"
-                  aria-label="Close announcement"
+                  aria-label={t('announcement.close', 'Đóng thông báo')}
                 >
                   <i className="fas fa-times"></i>
                 </button>
@@ -71,7 +72,7 @@ const HeaderClicon = () => {
           <div className="cl-sticky-header__inner">
             <div className="cl-sticky-header__logo">
               <Link href="/">
-                <Image src={logo} alt="logo" width={120} height={30} />
+                <BrandLogo size={30} />
               </Link>
             </div>
             <div className="cl-sticky-header__search d-none d-md-block">

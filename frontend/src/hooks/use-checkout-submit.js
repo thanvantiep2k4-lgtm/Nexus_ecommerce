@@ -111,10 +111,11 @@ const useCheckoutSubmit = () => {
   //calculate total, discount and tax
   useEffect(() => {
     const result = cart_products?.filter((p) => p.productType === discountProductType);
-    const discountProductTotal = result?.reduce(
-      (preValue, currentValue) => preValue + currentValue.price * currentValue.orderQuantity,
-      0
-    );
+    const discountProductTotal = result?.reduce((preValue, currentValue) => {
+      const { price = 0, discount = 0, orderQuantity } = currentValue;
+      const unit = discount > 0 ? price - (price * discount) / 100 : price;
+      return preValue + unit * orderQuantity;
+    }, 0);
     let discountTotal = Number(discountProductTotal * (discountPercentage / 100));
     const goodsAfterDiscount = Math.max(0, total - discountTotal);
     const taxBase = taxApplyShipping ? goodsAfterDiscount + shippingCost : goodsAfterDiscount;

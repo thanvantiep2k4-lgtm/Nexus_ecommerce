@@ -1,48 +1,48 @@
 // ============================================================
 // Clicon Design System Tokens
 // Adapted from the Clicon Figma template for homepage redesign
-// Uses `--cl-` prefix to avoid collision with Shofy `--tp-` tokens
+// Uses `--cl-` prefix to avoid collision with legacy `--tp-` tokens
 // ============================================================
 
 :root {
   // === BRAND COLORS ===
-  --cl-primary: #FA8232;
-  --cl-primary-hover: #E8741F;
-  --cl-secondary: #2DA5F3;
+  --cl-primary: #2563EB;
+  --cl-primary-hover: #1D4ED8;
+  --cl-secondary: #F59E0B;
 
   // === HEADER / FOOTER ===
-  --cl-header-bg: #1B6392;
-  --cl-header-bg-dark: #143E59;
-  --cl-footer-bg: #191C1F;
-  --cl-footer-text: #77878F;
+  --cl-header-bg: #0B1F4B;
+  --cl-header-bg-dark: #081738;
+  --cl-footer-bg: #0F172A;
+  --cl-footer-text: #94A3B8;
 
   // === TEXT ===
-  --cl-text-heading: #191C1F;
-  --cl-text-body: #475156;
-  --cl-text-secondary: #77878F;
+  --cl-text-heading: #0F172A;
+  --cl-text-body: #334155;
+  --cl-text-secondary: #64748B;
   --cl-text-white: #FFFFFF;
 
   // === BORDERS / BG ===
-  --cl-border: #E4E7E9;
-  --cl-bg-gray: #F2F4F5;
+  --cl-border: #E2E8F0;
+  --cl-bg-gray: #F5F7FA;
   --cl-bg-white: #FFFFFF;
 
   // === SEMANTIC ===
-  --cl-success: #2DB224;
-  --cl-error: #EE5858;
-  --cl-warning: #EFD33D;
-  --cl-info: #2DA5F3;
+  --cl-success: #16A34A;
+  --cl-error: #EF4444;
+  --cl-warning: #F59E0B;
+  --cl-info: #0EA5E9;
 
   // === BADGE COLORS ===
-  --cl-badge-hot: #FA8232;
-  --cl-badge-sale: #2DB224;
-  --cl-badge-soldout: #191C1F;
-  --cl-badge-deal: #2DA5F3;
-  --cl-badge-discount: #EFD33D;
+  --cl-badge-hot: #F97316;
+  --cl-badge-sale: #EF4444;
+  --cl-badge-soldout: #475569;
+  --cl-badge-deal: #2563EB;
+  --cl-badge-discount: #FEE2E2;
 
   // === TYPOGRAPHY ===
-  --cl-ff-body: 'Public Sans', sans-serif;
-  --cl-ff-heading: 'Public Sans', sans-serif;
+  --cl-ff-body: 'Be Vietnam Pro', system-ui, sans-serif;
+  --cl-ff-heading: 'Be Vietnam Pro', system-ui, sans-serif;
 
   --cl-fs-h1: 32px;
   --cl-fs-h2: 24px;
@@ -76,14 +76,14 @@
   --cl-container: 1200px;
 
   // === SHAPES ===
-  --cl-radius-sm: 3px;
+  --cl-radius-sm: 4px;
   --cl-radius-md: 6px;
-  --cl-radius-lg: 10px;
+  --cl-radius-lg: 6px;
   --cl-radius-full: 9999px;
 
   --cl-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --cl-shadow-md: 0 3px 10px rgba(0, 0, 0, 0.08);
-  --cl-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --cl-shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+  --cl-shadow-lg: 0 10px 28px rgba(15, 23, 42, 0.12);
 
   // === TRANSITIONS ===
   --cl-transition-fast: 150ms ease;

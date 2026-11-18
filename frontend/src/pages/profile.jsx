@@ -22,7 +22,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (kc?.initialized && !kc?.authenticated && kc?.login) {
-      kc.login({ redirectUri: window.location.href });
+      kc.login({ redirectUri: window.location.origin + window.location.pathname, locale: 'vi' });
     }
   }, [kc?.initialized, kc?.authenticated]);
 

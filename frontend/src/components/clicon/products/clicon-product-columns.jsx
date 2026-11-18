@@ -46,14 +46,14 @@ const CliconProductColumns = () => {
     data: offerData,
     isLoading: offerLoading,
     isError: offerError,
-  } = useGetOfferProductsQuery('electronics');
+  } = useGetOfferProductsQuery('all');
 
   const {
     data: bestData,
     isLoading: bestLoading,
     isError: bestError,
   } = useGetProductTypeQuery({
-    type: 'electronics',
+    type: 'all',
     query: 'topSellers=true&limit=3',
   });
 
@@ -68,7 +68,7 @@ const CliconProductColumns = () => {
     isLoading: newLoading,
     isError: newError,
   } = useGetProductTypeQuery({
-    type: 'electronics',
+    type: 'all',
     query: 'new=true&limit=3',
   });
 

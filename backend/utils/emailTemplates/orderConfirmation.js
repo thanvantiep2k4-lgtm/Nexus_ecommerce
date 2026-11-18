@@ -25,12 +25,12 @@ function layout(title, bodyContent) {
 </head>
 <body>
   <div class="wrapper">
-    <div class="header"><h1>Shofy</h1></div>
+    <div class="header"><h1>NexusMart</h1></div>
     <div class="body">
 ${bodyContent}
     </div>
     <div class="footer">
-      &copy; 2026 Shofy. All rights reserved.<br />
+      &copy; 2026 NexusMart. All rights reserved.<br />
       This is an automated message — please do not reply.
     </div>
   </div>

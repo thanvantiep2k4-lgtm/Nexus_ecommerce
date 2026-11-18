@@ -19,7 +19,7 @@ export default function ChatInput({ onSend, disabled }) {
   };
 
   return (
-    <div className="shofy-chat__input">
+    <div className="nx-chat__input">
       <textarea
         rows={1}
         placeholder={t('chat.placeholder')}

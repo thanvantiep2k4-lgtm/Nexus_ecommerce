@@ -47,7 +47,8 @@ export default function Home({ settings }) {
       <SEO
         pageTitle={settings?.siteName || 'Home'}
         description={
-          settings?.siteDescription || 'Shop electronics, fashion, beauty and more at Shofy'
+          settings?.siteDescription ||
+          'Mua sắm điện tử, thời trang, làm đẹp, nhà cửa và hơn thế nữa tại NexusMart'
         }
         url="/"
       />

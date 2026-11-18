@@ -56,7 +56,13 @@ export const ProductBadgeAuto = ({
     return <ProductBadge variant="sold-out" className={className} />;
   }
   if (discount > 0) {
-    return <ProductBadge variant="sale" discountPercent={discount} className={className} />;
+    return (
+      <ProductBadge
+        variant="discount"
+        discountPercent={Math.round(discount)}
+        className={className}
+      />
+    );
   }
   if (featured) {
     return <ProductBadge variant="hot" className={className} />;

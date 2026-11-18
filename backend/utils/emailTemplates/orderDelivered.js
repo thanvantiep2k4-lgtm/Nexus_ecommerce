@@ -25,12 +25,12 @@ function layout(title, bodyContent) {
 </head>
 <body>
   <div class="wrapper">
-    <div class="header"><h1>Shofy</h1></div>
+    <div class="header"><h1>NexusMart</h1></div>
     <div class="body">
 ${bodyContent}
     </div>
     <div class="footer">
-      &copy; 2026 Shofy. All rights reserved.<br />
+      &copy; 2026 NexusMart. All rights reserved.<br />
       This is an automated message — please do not reply.
     </div>
   </div>
@@ -51,7 +51,7 @@ const bodies = {
       <p>Hi <strong>${d.customerName}</strong>,</p>
       <p>We're happy to let you know that your order <strong>#${d.orderNumber}</strong> was delivered on <strong>${d.deliveredDate}</strong>.</p>
       <p>We hope you love your purchase! If anything is not right, please reach out to our support team within 30 days.</p>
-      <p>Thank you for shopping with Shofy!</p>`
+      <p>Thank you for shopping with NexusMart!</p>`
     ),
   vi: (d) =>
     layout(
@@ -60,7 +60,7 @@ const bodies = {
       <p>Xin chào <strong>${d.customerName}</strong>,</p>
       <p>Đơn hàng <strong>#${d.orderNumber}</strong> của bạn đã được giao vào ngày <strong>${d.deliveredDate}</strong>.</p>
       <p>Chúc bạn hài lòng với sản phẩm! Nếu có vấn đề, vui lòng liên hệ bộ phận hỗ trợ trong vòng 30 ngày.</p>
-      <p>Cảm ơn bạn đã mua sắm tại Shofy!</p>`
+      <p>Cảm ơn bạn đã mua sắm tại NexusMart!</p>`
     ),
 };
 

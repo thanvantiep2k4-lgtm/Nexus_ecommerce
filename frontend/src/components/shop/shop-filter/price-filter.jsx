@@ -5,12 +5,12 @@ import useCurrency from '@/hooks/use-currency';
 
 const PRICE_PRESETS = [
   { kind: 'all', min: 0, max: null },
-  { kind: 'under', cap: 20, min: 0, max: 20 },
-  { kind: 'range', min: 25, max: 100 },
-  { kind: 'range', min: 100, max: 300 },
-  { kind: 'range', min: 300, max: 500 },
-  { kind: 'range', min: 500, max: 1000 },
-  { kind: 'range', min: 1000, max: 10000 },
+  { kind: 'under', cap: 200000, min: 0, max: 200000 },
+  { kind: 'range', min: 200000, max: 500000 },
+  { kind: 'range', min: 500000, max: 1000000 },
+  { kind: 'range', min: 1000000, max: 5000000 },
+  { kind: 'range', min: 5000000, max: 20000000 },
+  { kind: 'over', min: 20000000, max: null },
 ];
 
 const PriceFilter = ({ priceFilterValues, maxPrice }) => {
@@ -22,6 +22,11 @@ const PriceFilter = ({ priceFilterValues, maxPrice }) => {
   const presetLabel = (preset) => {
     if (preset.kind === 'all') return t('shop.allPrice');
     if (preset.kind === 'under') return t('shop.underAmount', { amount: formatPrice(preset.cap) });
+    if (preset.kind === 'over')
+      return t('shop.overAmount', {
+        amount: formatPrice(preset.min),
+        defaultValue: 'Trên {{amount}}',
+      });
     return t('shop.amountRange', { min: formatPrice(preset.min), max: formatPrice(preset.max) });
   };
 

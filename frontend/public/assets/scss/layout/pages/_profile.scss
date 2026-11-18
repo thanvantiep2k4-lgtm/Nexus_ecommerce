@@ -16,7 +16,7 @@
 
 .cl-profile-sidebar {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
   overflow: hidden;
 
@@ -103,7 +103,7 @@
 
 .cl-profile-content {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
   padding: 32px;
   min-height: 500px;
@@ -152,7 +152,7 @@
 
 .cl-dash-info-card {
   border: 1px solid #e9e9e9;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 20px;
 
   &__title {
@@ -240,7 +240,7 @@
 }
 
 .cl-dash-stat {
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 20px;
   display: flex;
   align-items: center;
@@ -344,7 +344,7 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.4px;
@@ -667,7 +667,7 @@
 
 .cl-payment-card {
   width: 220px;
-  border-radius: 12px;
+  border-radius: 6px;
   padding: 20px;
   color: #fff;
   position: relative;
@@ -763,7 +763,7 @@
 
 .cl-address-card {
   border: 1px solid #e9e9e9;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 20px;
   margin-bottom: 20px;
 
@@ -841,7 +841,7 @@
 
 .cl-modal {
   background: #fff;
-  border-radius: 12px;
+  border-radius: 6px;
   padding: 32px;
   width: 100%;
   max-width: 480px;
@@ -926,7 +926,7 @@
     position: absolute;
     inset: 0;
     background: #ddd;
-    border-radius: 24px;
+    border-radius: 6px;
     transition: background 0.2s;
   }
 
@@ -1006,7 +1006,7 @@
 
 .cl-browsing-card {
   border: 1px solid #e9e9e9;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   text-decoration: none;
   display: block;

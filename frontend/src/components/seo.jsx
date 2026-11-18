@@ -1,11 +1,12 @@
 import Head from 'next/head';
 
 const SEO = ({ pageTitle, description, image, url, noindex = false, type = 'website' }) => {
-  const siteName = 'Shofy';
+  const siteName = 'NexusMart';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
   const title = pageTitle ? `${pageTitle} — ${siteName}` : siteName;
   const desc =
-    description || 'Shop the latest products at Shofy — your one-stop online marketplace';
+    description ||
+    'NexusMart — sàn thương mại điện tử đa nhà bán, hàng chính hãng, giao nhanh toàn quốc';
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
 
   return (
@@ -19,7 +20,8 @@ const SEO = ({ pageTitle, description, image, url, noindex = false, type = 'webs
         <meta name="robots" content="index, follow" />
       )}
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-      <link rel="icon" href="/favicon.png" />
+      <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      <link rel="alternate icon" href="/favicon.png" />
       {fullUrl && <link rel="canonical" href={fullUrl} />}
 
       {/* Open Graph */}

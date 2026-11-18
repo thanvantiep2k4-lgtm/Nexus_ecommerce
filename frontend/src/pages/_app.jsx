@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import ReactModal from 'react-modal';
 import '../styles/index.scss';
 import '@/styles/chatbot.scss';
+import '@/styles/nexus-theme.scss';
+import '@/styles/nexus-layout.scss';
 import i18n from '@/i18n';
 import KeycloakProvider from '@/components/providers/keycloak-provider';
 import ThemeApplicator from '@/components/providers/theme-applicator';
@@ -22,16 +24,11 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     // Detect real language after hydration to avoid SSR mismatch.
     // i18n starts with "en" on both server and client; we switch here.
-    const saved = localStorage.getItem('i18nextLng');
-    const browser = navigator.language?.split('-')[0];
-    const lang = SUPPORTED_LANGS.includes(saved)
-      ? saved
-      : SUPPORTED_LANGS.includes(browser)
-        ? browser
-        : 'en';
+    const saved = localStorage.getItem('nx_lang');
+    const lang = SUPPORTED_LANGS.includes(saved) ? saved : 'vi';
     if (lang !== i18n.language) {
       i18n.changeLanguage(lang);
-      localStorage.setItem('i18nextLng', lang);
+      localStorage.setItem('nx_lang', lang);
     }
   }, []);
 

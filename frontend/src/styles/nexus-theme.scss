@@ -1,0 +1,117 @@
+// ============================================================
+// NexusMart theme — lớp ghi đè cuối cùng cho storefront
+// Đồng nhất font, bo góc 4–6px, màu và một số chi tiết UI.
+// ============================================================
+
+:root {
+  --nx-font: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --nx-radius-sm: 4px;
+  --nx-radius: 6px;
+  --tp-ff-body: var(--nx-font);
+  --tp-ff-heading: var(--nx-font);
+  --tp-ff-p: var(--nx-font);
+  --tp-ff-jost: var(--nx-font);
+  --tp-ff-roboto: var(--nx-font);
+  --tp-theme-primary: #2563eb;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span,
+li,
+label {
+  font-family: var(--nx-font);
+}
+
+// Giữ font icon
+.fa,
+.fas,
+.far,
+.fal,
+.fat,
+.fab,
+.fa-solid,
+.fa-regular,
+.fa-light,
+.fa-brands,
+[class^='fa-'],
+[class*=' fa-'] {
+  font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Brands' !important;
+}
+.fab,
+.fa-brands {
+  font-family: 'Font Awesome 6 Brands' !important;
+}
+
+body {
+  color: var(--cl-text-body);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Bo góc thống nhất 4–6px
+.btn,
+.form-control,
+.form-select,
+.dropdown-menu,
+.modal-content,
+.card,
+.alert,
+.badge,
+.nice-select,
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='password'],
+input[type='number'],
+input[type='search'],
+textarea,
+select {
+  border-radius: var(--nx-radius) !important;
+}
+
+// Ảnh sản phẩm: không méo, nền trắng
+img[src*='cdn.dummyjson.com'] {
+  object-fit: contain;
+}
+
+// Focus rõ ràng cho bàn phím
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--cl-primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #dbeafe;
+  color: #0f172a;
+}
+
+// Nhãn giá trên banner: dạng pill thay vì hình tròn cố định (giá VND dài)
+.cl-double-banner__price-circle,
+.cl-full-banner__price-circle {
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  padding: 8px 14px !important;
+  border-radius: var(--nx-radius) !important;
+  font-size: 15px !important;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1.2;
+}

@@ -20,11 +20,11 @@ export default function ChatMessage({ message, sessionId }) {
 
   return (
     <>
-      <div className={`shofy-chat__msg shofy-chat__msg--${message.role}`}>{message.content}</div>
+      <div className={`nx-chat__msg nx-chat__msg--${message.role}`}>{message.content}</div>
       {message.suggestedActions &&
         message.suggestedActions.map((a, i) => <SuggestedActionCard key={i} action={a} />)}
       {message.role === 'assistant' && message.messageId && (
-        <div className="shofy-chat__feedback">
+        <div className="nx-chat__feedback">
           <button
             type="button"
             className={rated === 'up' ? 'active' : ''}

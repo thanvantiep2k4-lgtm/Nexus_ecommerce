@@ -14,10 +14,10 @@ const SHIPPING_RATES_VND = {
 };
 
 const TABS = [
-  { id: 'desc', label: 'DESCRIPTION' },
-  { id: 'additional', label: 'ADDITIONAL INFORMATION' },
-  { id: 'specification', label: 'SPECIFICATION' },
-  { id: 'review', label: 'REVIEW' },
+  { id: 'desc', label: 'Mô tả', key: 'pd.tabDesc' },
+  { id: 'additional', label: 'Thông tin thêm', key: 'pd.tabAdditional' },
+  { id: 'specification', label: 'Thông số', key: 'pd.tabSpec' },
+  { id: 'review', label: 'Đánh giá', key: 'pd.tabReview' },
 ];
 
 const DetailsTabNav = ({ product }) => {
@@ -48,7 +48,9 @@ const DetailsTabNav = ({ product }) => {
             className={`cl-pd__tab-btn${activeTab === tab.id ? ' cl-pd__tab-btn--active' : ''}`}
             onClick={() => setActiveTab(tab.id)}
           >
-            {tab.id === 'review' ? `${tab.label} (${totalReviews})` : tab.label}
+            {tab.id === 'review'
+              ? `${t(tab.key || '', tab.label)} (${totalReviews})`
+              : t(tab.key || '', tab.label)}
           </button>
         ))}
       </div>
@@ -59,20 +61,23 @@ const DetailsTabNav = ({ product }) => {
         {activeTab === 'desc' && (
           <div className="cl-pd__desc-3col">
             <div className="cl-pd__desc-section">
-              <h4>Description</h4>
+              <h4>{t('pd.description', 'Mô tả sản phẩm')}</h4>
               <p>{description}</p>
             </div>
             <div className="cl-pd__desc-section">
-              <h4>Feature</h4>
+              <h4>{t('pd.features', 'Cam kết')}</h4>
               <ul>
                 <li>
-                  <i className="fa-solid fa-shield-halved" /> Free 1 Year Warranty
+                  <i className="fa-solid fa-shield-halved" />{' '}
+                  {t('pd.warranty', 'Bảo hành chính hãng 12 tháng')}
                 </li>
                 <li>
-                  <i className="fa-solid fa-truck-fast" /> Free Shipping &amp; Fasted Delivery
+                  <i className="fa-solid fa-truck-fast" />{' '}
+                  {t('pd.fastShipping', 'Giao nhanh, freeship đơn từ 500.000đ')}
                 </li>
                 <li>
-                  <i className="fa-solid fa-money-bill-wave" /> 100% Money-back guarantee
+                  <i className="fa-solid fa-money-bill-wave" />{' '}
+                  {t('pd.refund', 'Hoàn tiền 100% nếu hàng lỗi')}
                 </li>
                 <li>
                   <i className="fa-solid fa-headset" /> 24/7 Customer support
@@ -150,7 +155,9 @@ const DetailsTabNav = ({ product }) => {
                 </tbody>
               </table>
             ) : (
-              <p style={{ color: 'var(--cl-text-secondary)' }}>No specifications available.</p>
+              <p style={{ color: 'var(--cl-text-secondary)' }}>
+                {t('pd.noSpec', 'Chưa có thông số kỹ thuật.')}
+              </p>
             )}
           </div>
         )}
@@ -172,7 +179,9 @@ const DetailsTabNav = ({ product }) => {
                 )}
 
                 {!reviewsLoading && reviews.length === 0 && (
-                  <p style={{ color: 'var(--cl-text-secondary)' }}>There are no reviews yet.</p>
+                  <p style={{ color: 'var(--cl-text-secondary)' }}>
+                    {t('pd.noReviews', 'Chưa có đánh giá nào.')}
+                  </p>
                 )}
 
                 {!reviewsLoading &&
@@ -205,7 +214,9 @@ const DetailsTabNav = ({ product }) => {
               </div>
             </div>
             <div className="col-lg-6">
-              <h5 style={{ fontWeight: 600, marginBottom: 16 }}>Review this product</h5>
+              <h5 style={{ fontWeight: 600, marginBottom: 16 }}>
+                {t('pd.writeReview', 'Đánh giá sản phẩm này')}
+              </h5>
               <p style={{ color: 'var(--cl-text-secondary)', fontSize: 13 }}>
                 Your email address will not be published. Required fields are marked *
               </p>

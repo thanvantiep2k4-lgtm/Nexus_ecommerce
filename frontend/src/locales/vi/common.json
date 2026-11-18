@@ -44,7 +44,17 @@
     "talkToUs": "Liên hệ với chúng tôi",
     "gotQuestions": "Có câu hỏi? Gọi cho chúng tôi",
     "copyright": "© {{year}} Bảo lưu mọi quyền",
-    "allRightsReserved": "Bảo lưu mọi quyền."
+    "allRightsReserved": "Bảo lưu mọi quyền.",
+    "support": "Hỗ trợ khách hàng",
+    "topCategory": "Danh mục nổi bật",
+    "quickLinks": "Liên kết nhanh",
+    "shopProducts": "Tất cả sản phẩm",
+    "compare": "So sánh sản phẩm",
+    "trackOrder": "Tra cứu đơn hàng",
+    "help": "Trung tâm trợ giúp",
+    "downloadApp": "Tải ứng dụng",
+    "getItNow": "Tải ngay trên",
+    "popularTags": "Tìm kiếm phổ biến"
   },
   "product": {
     "addToCart": "Thêm vào giỏ",
@@ -82,15 +92,19 @@
     "courierValue": "2-4 ngày, miễn phí",
     "localShipping": "Vận chuyển nội địa:",
     "localShippingValue": "tối đa 1 tuần, {{amount}}",
-    "upsGround": "UPS Ground:",
+    "upsGround": "Giao tiết kiệm (GHTK):",
     "upsGroundValue": "4-6 ngày, {{amount}}",
-    "unishopGlobal": "Unishop Global Export:",
-    "unishopGlobalValue": "3-4 ngày, {{amount}}"
+    "unishopGlobal": "Giao hoả tốc (GHN):",
+    "unishopGlobalValue": "3-4 ngày, {{amount}}",
+    "verifiedPurchase": "Đã mua hàng",
+    "storeTeam": "Đội ngũ cửa hàng",
+    "repliedOn": "phản hồi ngày {{date}}",
+    "image_alt": "Ảnh sản phẩm"
   },
   "shop": {
     "title": "Cửa hàng",
     "filters": "Bộ lọc",
-    "sortBy": "Sắp xếp theo",
+    "sortBy": "Sắp xếp",
     "showingResults": "Hiển thị {{from}}-{{to}} trong {{total}} kết quả",
     "noProducts": "Không tìm thấy sản phẩm",
     "noProductsTitle": "Rất tiếc, không tìm thấy sản phẩm nào!",
@@ -105,7 +119,7 @@
     "activeFilters": "Bộ lọc đang dùng:",
     "resultsFound": "Tìm thấy {{count}} kết quả.",
     "searchPlaceholder": "Tìm kiếm...",
-    "popularTags": "Thẻ phổ biến",
+    "popularTags": "Nhóm sản phẩm",
     "filterCategory": "Danh mục",
     "filterBrand": "Thương hiệu",
     "filterTag": "Thẻ",
@@ -118,7 +132,14 @@
     "maxPricePlaceholder": "Giá cao nhất",
     "allPrice": "Tất cả mức giá",
     "underAmount": "Dưới {{amount}}",
-    "amountRange": "{{min}} đến {{max}}"
+    "amountRange": "{{min}} đến {{max}}",
+    "mostPopular": "Phổ biến nhất",
+    "sortPopular": "Phổ biến nhất",
+    "sortPriceAsc": "Giá: thấp đến cao",
+    "sortPriceDesc": "Giá: cao đến thấp",
+    "sortNewest": "Mới nhất",
+    "overAmount": "Trên {{amount}}",
+    "popularBrands": "Thương hiệu nổi bật"
   },
   "cart": {
     "title": "Giỏ hàng",
@@ -143,7 +164,15 @@
     "freeShipping": "Đơn hàng đủ điều kiện miễn phí vận chuyển!",
     "addMore": "Mua thêm {{amount}} để được miễn phí vận chuyển",
     "flatRate": "Phí cố định",
-    "localPickup": "Nhận tại cửa hàng"
+    "localPickup": "Nhận tại cửa hàng",
+    "added": "Đã thêm vào giỏ hàng",
+    "removeItem": "Xoá {{title}}",
+    "emptyCart": "Giỏ hàng của bạn đang trống",
+    "goToShop": "Tiếp tục mua sắm",
+    "viewCart": "Xem giỏ hàng",
+    "checkout": "Thanh toán",
+    "decrease": "Giảm số lượng",
+    "increase": "Tăng số lượng"
   },
   "checkout": {
     "title": "Thanh toán",
@@ -257,7 +286,9 @@
     "edit": "Sửa",
     "close": "Đóng",
     "followUs": "Theo dõi chúng tôi:",
-    "currency": "Tiền tệ"
+    "currency": "Tiền tệ",
+    "default": "Mặc định",
+    "removeItem": "Xoá"
   },
   "language": {
     "en": "English",
@@ -304,7 +335,12 @@
     "noResults": "Không có kết quả cho \"{{query}}\"",
     "loading": "Đang tìm kiếm…",
     "error": "Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.",
-    "promptEnter": "Nhập từ khoá để tìm sản phẩm."
+    "promptEnter": "Nhập từ khoá để tìm sản phẩm.",
+    "category": "Danh mục",
+    "allCategories": "Tất cả danh mục",
+    "placeholder": "Tìm sản phẩm, thương hiệu, nhà bán...",
+    "label": "Tìm kiếm sản phẩm",
+    "submit": "Tìm kiếm"
   },
   "error": {
     "generic": "Đã có lỗi xảy ra",
@@ -321,7 +357,8 @@
     "404title": "404, Không tìm thấy trang",
     "subtitle": "Đã xảy ra lỗi. Trang bạn yêu cầu không tìm thấy. Liên kết có thể bị hỏng hoặc trang đã bị xóa.",
     "goBack": "Quay lại",
-    "goHome": "Về trang chủ"
+    "goHome": "Về trang chủ",
+    "products": "Không tải được sản phẩm."
   },
   "coupon": {
     "noCouponsFound": "Không tìm thấy mã giảm giá",
@@ -355,7 +392,9 @@
     "nextCategories": "Danh mục sau",
     "dismiss": "Đóng",
     "close": "Đóng",
-    "removeItem": "Xóa {{label}}"
+    "removeItem": "Xóa {{label}}",
+    "prevSlide": "Slide trước",
+    "nextSlide": "Slide tiếp theo"
   },
   "review": {
     "writePlaceholder": "Viết đánh giá của bạn...",
@@ -384,10 +423,16 @@
     "macTitle": "Macbook Pro",
     "macSpecs": "Chip Apple M1 Max. RAM 32GB, SSD 1TB",
     "macAlt": "Macbook Pro",
-    "productAlt": "Sản phẩm"
+    "productAlt": "Sản phẩm",
+    "fashionTag": "Thời trang bán chạy",
+    "homeTag": "Nhà cửa & Đời sống",
+    "productDesc": "{{category}} · {{brand}} — hàng chính hãng, giao nhanh toàn quốc",
+    "saveTag": "Tiết kiệm {{percent}}%",
+    "techSpecs": "Công nghệ {{brand}} chính hãng · Bảo hành 12 tháng · Trả góp 0%",
+    "loading": "Đang tải..."
   },
   "hero": {
-    "shopNow": "MUA NGAY",
+    "shopNow": "Mua ngay",
     "priceFrom": "Từ",
     "slide1Subtitle": "Bắt đầu chỉ từ",
     "slide1Title": "Bộ Sưu Tập Trang Trí Nhà Đẹp Nhất",
@@ -401,7 +446,11 @@
     "promo1Name": "iPhone 14 Pro",
     "promo1Subtitle": "Điện thoại Apple",
     "promo2Name": "Tai nghe Sony",
-    "promo2Subtitle": "Âm thanh không dây"
+    "promo2Subtitle": "Âm thanh không dây",
+    "exploreDeals": "Xem ưu đãi",
+    "promoTitle": "Deal hôm nay, giá không đợi ai",
+    "promoDesc": "Đừng bỏ lỡ ưu đãi tốt nhất trong ngày",
+    "promoCta": "Săn deal"
   },
   "features": {
     "delivery": "Giao Hàng Nhanh",
@@ -428,7 +477,8 @@
     "loading": "Đang tải danh mục...",
     "browseTitle": "Khám phá danh mục",
     "productCount_one": "{{count}} sản phẩm",
-    "productCount_other": "{{count}} sản phẩm"
+    "productCount_other": "{{count}} sản phẩm",
+    "productCount": "{{count}} sản phẩm"
   },
   "trackOrder": {
     "title": "Theo Dõi Đơn Hàng",
@@ -660,7 +710,8 @@
   },
   "orderDetail": {
     "bankInstructionsTitle": "Hướng dẫn chuyển khoản",
-    "bankInstructionsNote": "Vui lòng chuyển khoản theo thông tin bên dưới. Đơn hàng sẽ được xử lý sau khi chúng tôi nhận được thanh toán."
+    "bankInstructionsNote": "Vui lòng chuyển khoản theo thông tin bên dưới. Đơn hàng sẽ được xử lý sau khi chúng tôi nhận được thanh toán.",
+    "statusChanged": "Trạng thái: {{status}}"
   },
   "chat": {
     "title": "Trợ lý mua sắm",
@@ -682,5 +733,96 @@
     "close": "Đóng trò chuyện",
     "newSession": "Bắt đầu trò chuyện mới",
     "errorGeneric": "Có lỗi xảy ra. Vui lòng thử lại."
+  },
+  "order": {
+    "placed": "Đã đặt hàng",
+    "processing": "Đang xử lý",
+    "shipped": "Đang giao",
+    "delivered": "Đã giao",
+    "cancelled": "Đã huỷ",
+    "pending": "Chờ xác nhận",
+    "confirmed": "Đã xác nhận",
+    "cancel": "Đã huỷ"
+  },
+  "newsletter": {
+    "invalid_email": "Vui lòng nhập email hợp lệ.",
+    "success": "Cảm ơn bạn đã đăng ký!",
+    "title": "Đăng ký nhận ưu đãi",
+    "subtitle": "Nhận deal mới, mã giảm giá và tin sản phẩm sớm nhất qua email.",
+    "placeholder": "Nhập địa chỉ email của bạn...",
+    "email_label": "Địa chỉ email",
+    "submitting": "Đang đăng ký...",
+    "cta": "Đăng ký",
+    "brands_label": "Thương hiệu đối tác"
+  },
+  "products": {
+    "empty": "Chưa có sản phẩm."
+  },
+  "featured": {
+    "badge": "Ưu đãi đặc biệt",
+    "discount": "Giảm đến 32%",
+    "promo_title": "Cho mọi sản phẩm công nghệ",
+    "offer_note": "Ưu đãi kết thúc cuối tuần này",
+    "shop_now": "Mua ngay",
+    "browse_all": "Xem tất cả"
+  },
+  "tabs": {
+    "all": "Tất cả"
+  },
+  "columns": {
+    "flash_sale": "Flash Sale hôm nay",
+    "best_sellers": "Bán chạy",
+    "top_rated": "Đánh giá cao",
+    "new_arrival": "Hàng mới về"
+  },
+  "product_section": {
+    "default_title": "Điện tử & Công nghệ"
+  },
+  "promo": {
+    "featured": "Sản phẩm nổi bật",
+    "discount_tag": "Giảm đến 20%",
+    "discount_note": "Cho phụ kiện công nghệ tuần này"
+  },
+  "pd": {
+    "reviewCount": "{{count}} đánh giá",
+    "sku": "Mã SP",
+    "availability": "Tình trạng",
+    "outOfStock": "Hết hàng",
+    "inStock": "Còn {{count}} sản phẩm",
+    "brand": "Thương hiệu",
+    "category": "Danh mục",
+    "color": "Màu sắc",
+    "addToCart": "Thêm vào giỏ",
+    "buyNow": "Mua ngay",
+    "share": "Chia sẻ",
+    "safeCheckout": "Thanh toán an toàn: COD · Chuyển khoản · VNPay",
+    "tabDesc": "Mô tả",
+    "tabAdditional": "Thông tin thêm",
+    "tabSpec": "Thông số",
+    "tabReview": "Đánh giá",
+    "description": "Mô tả sản phẩm",
+    "features": "Cam kết",
+    "warranty": "Bảo hành chính hãng 12 tháng",
+    "fastShipping": "Giao nhanh, freeship đơn từ 500.000đ",
+    "refund": "Hoàn tiền 100% nếu hàng lỗi",
+    "noSpec": "Chưa có thông số kỹ thuật.",
+    "noReviews": "Chưa có đánh giá nào.",
+    "writeReview": "Đánh giá sản phẩm này",
+    "related": "Sản phẩm liên quan",
+    "accessories": "Phụ kiện gợi ý",
+    "sameBrand": "Có thể bạn thích",
+    "featured": "Sản phẩm nổi bật",
+    "size": "Kích cỡ",
+    "selectSize": "Chọn kích cỡ",
+    "memory": "Bộ nhớ RAM",
+    "selectMemory": "Chọn RAM",
+    "storage": "Dung lượng",
+    "selectStorage": "Chọn dung lượng"
+  },
+  "announcement": {
+    "highlight": "Siêu Sale 11.11",
+    "deal": "Giảm đến 50% · Freeship toàn quốc",
+    "cta": "Mua ngay",
+    "close": "Đóng thông báo"
   }
 }

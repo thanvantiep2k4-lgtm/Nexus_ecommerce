@@ -43,12 +43,12 @@ function layout(title, bodyContent) {
 </head>
 <body>
   <div class="wrapper">
-    <div class="header"><h1>Shofy</h1></div>
+    <div class="header"><h1>NexusMart</h1></div>
     <div class="body">
 ${bodyContent}
     </div>
     <div class="footer">
-      &copy; 2026 Shofy. All rights reserved.<br />
+      &copy; 2026 NexusMart. All rights reserved.<br />
       This is an automated message — please do not reply.
     </div>
   </div>
@@ -166,7 +166,7 @@ const templates = [
       <p>Hi <strong>{{customerName}}</strong>,</p>
       <p>We're happy to let you know that your order <strong>#{{orderNumber}}</strong> was delivered on <strong>{{deliveredDate}}</strong>.</p>
       <p>We hope you love your purchase! If anything is not right, please reach out to our support team within 30 days.</p>
-      <p>Thank you for shopping with Shofy!</p>`
+      <p>Thank you for shopping with NexusMart!</p>`
     ),
     bodyVi: layout(
       'Đơn hàng đã giao thành công',
@@ -174,7 +174,7 @@ const templates = [
       <p>Xin chào <strong>{{customerName}}</strong>,</p>
       <p>Đơn hàng <strong>#{{orderNumber}}</strong> của bạn đã được giao vào ngày <strong>{{deliveredDate}}</strong>.</p>
       <p>Chúc bạn hài lòng với sản phẩm! Nếu có vấn đề, vui lòng liên hệ bộ phận hỗ trợ trong vòng 30 ngày.</p>
-      <p>Cảm ơn bạn đã mua sắm tại Shofy!</p>`
+      <p>Cảm ơn bạn đã mua sắm tại NexusMart!</p>`
     ),
     variables: ['customerName', 'orderNumber', 'deliveredDate'],
     isDefault: true,
@@ -280,7 +280,7 @@ const templates = [
       'Vendor Application Received',
       `      <h2>Application Received</h2>
       <p>Hi <strong>{{vendorName}}</strong>,</p>
-      <p>Thank you for applying to become a vendor on Shofy!</p>
+      <p>Thank you for applying to become a vendor on NexusMart!</p>
       <hr class="divider" />
       <div class="info-row"><span class="label">Store Name:</span> {{storeName}}</div>
       <div class="info-row"><span class="label">Application Date:</span> {{applicationDate}}</div>
@@ -292,7 +292,7 @@ const templates = [
       'Đã nhận đơn đăng ký nhà bán hàng',
       `      <h2>Đơn đăng ký đã được nhận</h2>
       <p>Xin chào <strong>{{vendorName}}</strong>,</p>
-      <p>Cảm ơn bạn đã đăng ký trở thành nhà bán hàng trên Shofy!</p>
+      <p>Cảm ơn bạn đã đăng ký trở thành nhà bán hàng trên NexusMart!</p>
       <hr class="divider" />
       <div class="info-row"><span class="label">Tên cửa hàng:</span> {{storeName}}</div>
       <div class="info-row"><span class="label">Ngày đăng ký:</span> {{applicationDate}}</div>
@@ -317,7 +317,7 @@ const templates = [
       <p>We are delighted to inform you that your vendor application for <strong>{{storeName}}</strong> has been approved!</p>
       <p>You can now log in to your vendor dashboard and start adding products.</p>
       <a href="{{dashboardUrl}}" class="btn">Go to Vendor Dashboard</a>
-      <p style="margin-top:24px;">Welcome to the Shofy vendor community!</p>`
+      <p style="margin-top:24px;">Welcome to the NexusMart vendor community!</p>`
     ),
     bodyVi: layout(
       'Đơn đăng ký nhà bán hàng được phê duyệt',

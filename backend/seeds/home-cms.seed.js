@@ -12,7 +12,7 @@
 const path = require('path');
 const { MongoClient, ObjectId } = require(path.join(__dirname, '..', 'node_modules', 'mongodb'));
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://187.124.3.207:27017/shofy';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/shofy';
 
 async function seed() {
   const client = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 8000 });
@@ -56,7 +56,7 @@ async function seed() {
     publishedAt: now,
     blocks,
     seo: {
-      metaTitle: 'Shofy — Curated Vietnamese Marketplace',
+      metaTitle: 'NexusMart — Curated Vietnamese Marketplace',
       metaDescription:
         'Discover fashion, beauty, electronics, and more from trusted Vietnamese vendors.',
     },

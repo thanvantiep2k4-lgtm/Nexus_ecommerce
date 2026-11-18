@@ -16,19 +16,19 @@ const themeSchema = new mongoose.Schema(
   {
     primaryColor: {
       type: String,
-      default: '#0989FF',
+      default: '#2563EB',
     },
     secondaryColor: {
       type: String,
-      default: '#821F40',
+      default: '#F59E0B',
     },
     accentColor: {
       type: String,
-      default: '#F57F17',
+      default: '#EF4444',
     },
     fontFamily: {
       type: String,
-      default: 'Jost',
+      default: 'Be Vietnam Pro',
     },
     headerStyle: {
       type: String,
@@ -189,7 +189,7 @@ const siteSettingSchema = new mongoose.Schema(
     siteName: {
       type: String,
       required: [true, 'Please provide a site name'],
-      default: 'Shofy',
+      default: 'NexusMart',
     },
     siteDescription: {
       type: String,

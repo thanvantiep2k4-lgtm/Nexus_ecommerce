@@ -151,7 +151,8 @@ exports.getAllProducts = async (req, res, next) => {
 
     // tag
     if (q.tag) {
-      filter.tags = q.tag;
+      const tagText = String(q.tag).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.tags = new RegExp(`^${tagText}$`, 'i');
     }
 
     const sortObj = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };

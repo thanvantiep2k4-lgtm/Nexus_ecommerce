@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { getSocket } from '@/utils/socketClient';
 import { useSendChatMessageMutation } from '@/redux/features/chat/chatApi';
 
-const SESSION_KEY = 'shofy_chat_session';
+const SESSION_KEY = 'nx_chat_session';
 
 function getOrCreateSessionId() {
   if (typeof window === 'undefined') return uuidv4();

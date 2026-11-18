@@ -48,10 +48,10 @@ export function articleJsonLd(post, siteUrl = '') {
     image: post.featuredImage,
     datePublished: post.publishedAt || post.createdAt,
     dateModified: post.updatedAt,
-    author: { '@type': 'Person', name: post.author?.name || 'Shofy' },
+    author: { '@type': 'Person', name: post.author?.name || 'NexusMart' },
     publisher: {
       '@type': 'Organization',
-      name: 'Shofy',
+      name: 'NexusMart',
       url: siteUrl,
     },
   };
@@ -76,7 +76,7 @@ export function organizationJsonLd(siteUrl = '') {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Shofy',
+    name: 'NexusMart',
     url: siteUrl,
   };
 }

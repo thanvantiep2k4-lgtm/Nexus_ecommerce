@@ -1,4 +1,4 @@
-.shofy-chat {
+.nx-chat {
   &__bubble {
     position: fixed;
     bottom: 24px;
@@ -36,7 +36,7 @@
     height: 560px;
     max-height: calc(100vh - 48px);
     background: #fff;
-    border-radius: 12px;
+    border-radius: 6px;
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
     display: flex;
     flex-direction: column;
@@ -84,7 +84,7 @@
   &__msg {
     max-width: 80%;
     padding: 10px 14px;
-    border-radius: 12px;
+    border-radius: 6px;
     font-size: 14px;
     line-height: 1.4;
     white-space: pre-wrap;
@@ -111,7 +111,7 @@
     margin-top: 4px;
     padding: 10px;
     border: 1px solid #e5e5ea;
-    border-radius: 10px;
+    border-radius: 6px;
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -125,7 +125,7 @@
     button {
       width: 100%;
       padding: 8px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: none;
       background: var(--tp-theme-primary, #0989FF);
       color: #fff;
@@ -148,7 +148,7 @@
       flex: 1;
       resize: none;
       border: 1px solid #ddd;
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 8px 10px;
       font-size: 14px;
       max-height: 80px;
@@ -162,7 +162,7 @@
 
     button {
       padding: 0 14px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: none;
       background: var(--tp-theme-primary, #0989FF);
       color: #fff;

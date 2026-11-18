@@ -9,8 +9,10 @@ const useCartInfo = () => {
   useEffect(() => {
     const cart = cart_products.reduce(
       (cartTotal, cartItem) => {
-        const { price, orderQuantity } = cartItem;
-        const itemTotal = price * orderQuantity;
+        const { price = 0, discount = 0, orderQuantity } = cartItem;
+        // Giá đã giảm (discount là %), khớp với giá hiển thị ở từng dòng giỏ hàng
+        const unitPrice = discount > 0 ? price - (price * discount) / 100 : price;
+        const itemTotal = unitPrice * orderQuantity;
         cartTotal.total += itemTotal;
         cartTotal.quantity += orderQuantity;
 

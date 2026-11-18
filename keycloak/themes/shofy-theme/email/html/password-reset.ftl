@@ -1,5 +1,5 @@
 <html>
-<body style="margin:0; padding:0; font-family:'Jost', 'Segoe UI', Tahoma, sans-serif; background-color:#f8faff;">
+<body style="margin:0; padding:0; font-family:'Be Vietnam Pro', 'Segoe UI', Tahoma, sans-serif; background-color:#f8faff;">
     <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8faff; padding:40px 0;">
         <tr>
             <td align="center">
@@ -7,7 +7,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="background:linear-gradient(135deg, #010F1C 0%, #1a2a3c 100%); padding:32px 40px; text-align:center;">
-                            <span style="font-size:28px; font-weight:700; color:#ffffff; letter-spacing:1px;">Shofy</span>
+                            <span style="font-size:28px; font-weight:700; color:#ffffff; letter-spacing:1px;">NexusMart</span>
                         </td>
                     </tr>
                     <!-- Body -->
@@ -42,7 +42,7 @@
 
                             <hr style="border:none; border-top:1px solid #EAEBED; margin:28px 0 16px;" />
                             <p style="font-size:12px; color:#A0A2A4; margin:0; text-align:center;">
-                                Shofy E-Commerce &copy; 2024
+                                NexusMart &copy; 2024
                             </p>
                         </td>
                     </tr>

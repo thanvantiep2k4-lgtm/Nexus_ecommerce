@@ -40,8 +40,8 @@
 
             <!-- Logo -->
             <div class="shofy-logo">
-                <svg width="120" height="36" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <text x="0" y="28" font-family="Jost, sans-serif" font-size="30" font-weight="700" fill="#010F1C">Shofy</text>
+                <svg width="180" height="36" viewBox="0 0 180 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="27" font-family="Be Vietnam Pro, sans-serif" font-size="26" font-weight="700" fill="#0F172A">Nexus<tspan fill="#2563EB">Mart</tspan></text>
                 </svg>
             </div>
 

@@ -374,7 +374,7 @@ exports.unpublishBlogPost = async (req, res, next) => {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_SETTINGS = {
-  siteName: 'Shofy',
+  siteName: 'NexusMart',
   siteDescription: 'Your one-stop e-commerce destination',
 };
 
