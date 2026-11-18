@@ -113,7 +113,6 @@ The widget appears on every page of the storefront as a floating bubble (bottom-
 ## Documentation
 
 - [Deployment Guide](DEPLOYMENT.md) — Docker, manual deploy, SSL, backups
-- [Admin Guide](ADMIN_GUIDE.md) — CRM user documentation
 - [API Docs](http://localhost:4000/api-docs) — Swagger UI (when running)
 
 ## Testing

@@ -93,7 +93,7 @@ backend/
 
 ### Socket.io Events
 
-CORS allows localhost:3001, 3001, 8080. Emitted by controllers on every CRUD success:
+CORS allows localhost:3001, 8081. Emitted by controllers on every CRUD success:
 
 | Domain | Events |
 |--------|--------|

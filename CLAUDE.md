@@ -217,7 +217,6 @@ User applies via profile → admin sees in CRM Vendor Management → approves (s
 ### Documentation
 - **README.md** — architecture overview, quick start, project structure, features
 - **DEPLOYMENT.md** — Docker, manual deploy, SSL/Nginx, backup/restore
-- **ADMIN_GUIDE.md** — full CRM user documentation
 - **scripts/backup.sh** — MongoDB backup with compression + retention
 
 ## Phase 6 Status (Complete) — AI Chatbot

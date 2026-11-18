@@ -70,3 +70,7 @@ frontend/test-results/
 # Vendor reference template (Clicon HTML starter)
 clicon-html/
 .gitnexus
+
+# ── Misc ──
+cookies.txt
+package-old.json
