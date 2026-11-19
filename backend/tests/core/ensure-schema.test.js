@@ -81,6 +81,24 @@ describe('ensure-schema: ràng buộc ngay trong CSDL', () => {
     });
   });
 
+  test('state_events: thiếu trường bắt buộc bị từ chối; sự kiện khởi tạo (from = null) được chấp nhận', async () => {
+    const events = main().collection('state_events');
+    const base = {
+      entityType: 'order',
+      entityId: new mongoose.Types.ObjectId(),
+      to: 'UNPAID',
+      action: 'CREATE',
+      actor: { type: 'user' },
+      at: new Date(),
+    };
+    const { action, ...noAction } = base;
+    await rejectedByValidator(events.insertOne(noAction));
+    await rejectedByValidator(events.insertOne({ ...base, actor: {} })); // actor thiếu type
+    await rejectedByValidator(events.insertOne({ ...base, entityId: 'khong-phai-objectid' }));
+    await expect(events.insertOne({ ...base, from: null })).resolves.toBeDefined();
+    await expect(events.insertOne({ ...base, from: 'UNPAID', to: 'TO_CONFIRM', action: 'PAID' })).resolves.toBeDefined();
+  });
+
   test('ví: số dư âm bị từ chối, mỗi shop một ví', async () => {
     const wallets = main().collection('wallet_balances');
     await rejectedByValidator(wallets.insertOne({ shopId: 's1', available: -1 }));

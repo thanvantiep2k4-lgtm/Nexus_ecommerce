@@ -100,6 +100,33 @@ const COLLECTIONS = [
     },
   },
 
+  {
+    db: MAIN_DB,
+    name: 'state_events',
+    // Nhật ký chuyển trạng thái do core/stateMachine.js ghi (models/StateEvent.js). `from` là null ở
+    // sự kiện khởi tạo. Chỉ mục chính (entityType, entityId, at) cho truy vấn timeline.
+    validator: {
+      $jsonSchema: {
+        bsonType: 'object',
+        required: ['entityType', 'entityId', 'to', 'action', 'actor', 'at'],
+        properties: {
+          entityType: { bsonType: 'string' },
+          entityId: { bsonType: 'objectId' },
+          from: { bsonType: ['string', 'null'] },
+          to: { bsonType: 'string' },
+          action: { bsonType: 'string' },
+          actor: {
+            bsonType: 'object',
+            required: ['type'],
+            properties: { type: { bsonType: 'string' } },
+          },
+          at: { bsonType: 'date' },
+        },
+      },
+    },
+    indexes: [{ key: { entityType: 1, entityId: 1, at: 1 }, options: {} }],
+  },
+
   // ── Collection sẽ dùng ở bước Sổ cái / Ví (tạo sẵn để user và quyền đã đúng từ đầu) ──
   {
     db: LEDGER_DB,

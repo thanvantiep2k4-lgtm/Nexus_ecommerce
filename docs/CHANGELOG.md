@@ -5,6 +5,12 @@ Quy tắc cập nhật: xem mục "Cập nhật tài liệu khi thay đổi API"
 
 ## [Chưa phát hành]
 
+### Máy trạng thái (khung dùng chung)
+- Thêm `backend/core/stateMachine.js`: `defineMachine` (kiểm tra bảng chuyển trạng thái ngay lúc khởi động), `transition()` (một hàm duy nhất đổi trạng thái, chạy trong một transaction: kiểm tra đường đi, loại tác nhân, quyền, guard; đổi trạng thái có điều kiện; effects; ghi sự kiện; afterCommit), `availableActions`, `toMermaid`/`toMarkdownTable` (sinh tài liệu từ bảng). Hướng dẫn: `docs/guides/state-machine.md`.
+- Thêm collection `state_events` (model `StateEvent`): nhật ký chuyển trạng thái chung cho mọi loại đối tượng, ghi cùng transaction với việc đổi trạng thái. Timeline đơn hàng = lọc `entityType: 'order'` (thay cho `order_events` trong kế hoạch). `npm run schema:ensure` gắn validator và chỉ mục cho collection này.
+- **Không có thay đổi API và chưa áp vào code đơn hàng thật** (làm ở bước 32). Hiện trạng thái đơn vẫn bị gán trực tiếp ở `admin.order.controller.js` và `routes/v1/payment.js`; các chỗ đó sẽ chuyển sang `transition()` khi làm máy trạng thái đơn hàng.
+- Tác nhân `system` (job, webhook) gọi lại hành động đã hoàn tất được coi là thành công và bỏ qua (`idempotent: true`), người dùng gọi lại thì nhận `409 INVALID_TRANSITION`.
+
 ### Hàng đợi job (Redis + BullMQ + worker + Bull Board)
 - Thêm service `redis` (AOF, `noeviction`, có mật khẩu) và `worker` vào `docker-compose.yml` / `docker-compose.prod.yml`; `npm run infra:up` nay bật cả Redis, `npm run dev` nay chạy cả worker. Production bắt buộc đặt `REDIS_PASS` và Redis không publish cổng. Hướng dẫn: `docs/guides/redis-bullmq.md`.
 - ⚠️ **Không tương thích (biến môi trường):** thêm `REDIS_URL`, `WORKER_CONCURRENCY`, `BULL_BOARD_USER`, `BULL_BOARD_PASS`, `BULL_BOARD_READONLY` vào `backend/.env` (mẫu ở `backend/.env.example`); compose thêm `REDIS_PASS`, `REDIS_PORT`. Thiếu `REDIS_URL` thì mặc định `redis://localhost:6379` (không mật khẩu) nên sẽ không kết nối được Redis có mật khẩu.

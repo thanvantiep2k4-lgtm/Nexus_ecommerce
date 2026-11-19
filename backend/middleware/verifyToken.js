@@ -226,6 +226,12 @@ module.exports = async (req, res, next) => {
       error.code,
       error.stack?.split('\n')[1]
     );
+    // VẤN ĐỀ ĐÃ BIẾT: khối catch này đổi MỌI lỗi thành 401 "Invalid token", kể cả lỗi KHÔNG liên quan
+    // token như MongoDB không kết nối được (`MongooseError`, `MongoServerSelectionError`, `Authentication
+    // failed`). Khi DB chết, người dùng ĐÃ đăng nhập hợp lệ vẫn nhận 401 ở /user/profile, /user/preferences…
+    // và giao diện tưởng token hỏng (dễ bị đẩy đi đăng nhập lại), trong khi nguyên nhân thật là DB.
+    // Dấu hiệu nhận biết: response có `reason: "MongooseError"` (xem dòng dưới). Nên trả 503 cho lỗi
+    // hạ tầng và chỉ trả 401 cho lỗi token thật (JsonWebTokenError, TokenExpiredError).
     // 401 (not 403) so frontend auth interceptors know to re-login.
     // Include error.name + message so the frontend can show a helpful reason
     // and we can diagnose without SSH-ing into the server.
