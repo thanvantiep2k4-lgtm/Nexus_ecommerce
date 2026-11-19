@@ -16,6 +16,7 @@ const coupon = require('./coupon.validation');
 const vendor = require('./vendor.validation');
 const cms = require('./cms.validation');
 const currencyAudit = require('./currencyAudit.validation');
+const system = require('./system.validation');
 
 module.exports = {
   // Product
@@ -33,6 +34,9 @@ module.exports = {
   createUser: user.createUser,
   addStaff: user.addStaff,
   updatePreferences: user.updatePreferences,
+
+  // System (hàng đợi job)
+  enqueueDemoJob: system.enqueueDemoJob,
 
   // Review
   createReview: review.createReview,

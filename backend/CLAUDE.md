@@ -16,6 +16,9 @@ npm run dev                 # nodemon, port 4000 (watches index.js)
 npm start                   # production
 npm run seed                # node seeds/index.js — DESTRUCTIVELY clears ALL collections then bulk inserts
 node scripts/backfill-embeddings.js   # one-shot chatbot embedding backfill
+npm run worker              # job worker (Redis + BullMQ) — separate process from the API; `worker:dev` auto-restarts
+npm run job:demo            # end-to-end check of delayed jobs (needs Redis + a running worker)
+npm run schema:ensure       # MongoDB validators + indexes (idempotent; run on deploy)
 node seeds/email-templates.seed.js    # seed 9 default email templates
 ```
 

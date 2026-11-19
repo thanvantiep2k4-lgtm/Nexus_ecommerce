@@ -5,6 +5,15 @@ Quy tắc cập nhật: xem mục "Cập nhật tài liệu khi thay đổi API"
 
 ## [Chưa phát hành]
 
+### Hàng đợi job (Redis + BullMQ + worker + Bull Board)
+- Thêm service `redis` (AOF, `noeviction`, có mật khẩu) và `worker` vào `docker-compose.yml` / `docker-compose.prod.yml`; `npm run infra:up` nay bật cả Redis, `npm run dev` nay chạy cả worker. Production bắt buộc đặt `REDIS_PASS` và Redis không publish cổng. Hướng dẫn: `docs/guides/redis-bullmq.md`.
+- ⚠️ **Không tương thích (biến môi trường):** thêm `REDIS_URL`, `WORKER_CONCURRENCY`, `BULL_BOARD_USER`, `BULL_BOARD_PASS`, `BULL_BOARD_READONLY` vào `backend/.env` (mẫu ở `backend/.env.example`); compose thêm `REDIS_PASS`, `REDIS_PORT`. Thiếu `REDIS_URL` thì mặc định `redis://localhost:6379` (không mật khẩu) nên sẽ không kết nối được Redis có mật khẩu.
+- Thêm `backend/core/redis.js`, `core/queues.js` (`enqueue`, `cancelJob`), `jobs/`, `worker.js`; scripts `npm run worker`, `worker:dev`, `job:demo`. API chỉ đẩy job vào Redis nên **worker tắt thì API vẫn chạy**; **Redis tắt** thì endpoint cần hàng đợi trả `503 QUEUE_UNAVAILABLE` (không treo) và tự dùng lại được khi Redis sống lại.
+- **Mới:** `POST /api/v1/admin/system/jobs/demo` (role admin) đẩy job thử `demo-delay` hẹn `delayMs` (mặc định 60000, tối đa 3600000), `failTimes` (0–2) để thử cơ chế thử lại; trả `201`, `503` khi Redis không sẵn sàng. `GET /api/v1/admin/system/jobs/{id}` xem trạng thái (`404` nếu job đã bị dọn, job xong được giữ tối đa 1 giờ).
+- **Mới:** Bull Board tại `/admin/queues` (HTTP Basic, chỉ bật khi đặt `BULL_BOARD_USER`/`BULL_BOARD_PASS`); không mở ra Internet.
+- Sửa `services/exchangeRateService.js`: lỗi MongoDB khi đánh dấu `stale` không còn làm sập cả tiến trình API (trước đây là unhandled rejection).
+- Thêm `backend/.dockerignore`: trước đây `node_modules` của máy dev và file `.env` (chứa bí mật) bị đóng gói vào image backend.
+
 ### Hạ tầng dữ liệu (MongoDB)
 - ⚠️ **Không tương thích:** MongoDB chạy **replica set 1 node có xác thực** (`docker-compose.yml`). `MONGO_URI` phải có user và mật khẩu, ví dụ `mongodb://nexus_app:…@localhost:27017/nexusmart?authSource=admin&directConnection=true` (xem `backend/.env.example`). Volume MongoDB cũ (không xác thực) phải xoá một lần; cách làm ở `docs/PROJECT_PLAN.md` mục 3. Ảnh hưởng: mọi thành viên, `backend/.env`, `crm/.env`.
 - Thêm user theo quyền tối thiểu: `nexus_app` (đọc/ghi DB `nexusmart`, chỉ `find` + `insert` ở DB sổ cái `nexusmart_ledger`), `nexus_backup`, `nexus_readonly`. Định nghĩa: `scripts/mongo/users.config.js`.

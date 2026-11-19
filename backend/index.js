@@ -82,6 +82,14 @@ app.get('/health', (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// Bull Board — trang quản trị hàng đợi job (chỉ bật khi đặt BULL_BOARD_USER/PASS).
+// Gắn TRƯỚC các rate limiter bên dưới vì trang tự gọi API liên tục để làm mới số liệu.
+// Chi tiết và cảnh báo bảo mật: config/bullBoard.js
+// ---------------------------------------------------------------------------
+
+require('./config/bullBoard').mountBullBoard(app);
+
+// ---------------------------------------------------------------------------
 // Swagger UI — API documentation (outside rate limiter so docs stay accessible)
 // ---------------------------------------------------------------------------
 

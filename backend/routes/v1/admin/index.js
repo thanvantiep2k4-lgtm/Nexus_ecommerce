@@ -23,6 +23,7 @@ const currencyAuditCtrl = require('../../../controllers/v1/currencyAudit.control
 const analyticsCtrl = require('../../../controllers/v1/analytics.controller');
 const activityLogCtrl = require('../../../controllers/v1/activityLog.controller');
 const chatbotAdminCtrl = require('../../../controllers/v1/chatbot-admin.controller');
+const systemCtrl = require('../../../controllers/v1/system.controller');
 const { logActivity } = require('../../../middleware/activityLog');
 const respond = require('../../../utils/respond');
 
@@ -838,5 +839,78 @@ router.delete(
 // ---------------------------------------------------------------------------
 router.get('/chat/sessions', authorization('admin', 'manager'), chatbotAdminCtrl.listSessions);
 router.get('/chat/analytics', authorization('admin', 'manager'), chatbotAdminCtrl.getAnalytics);
+
+// ---------------------------------------------------------------------------
+// System — hàng đợi job (Redis + BullMQ). Chỉ admin.
+// ---------------------------------------------------------------------------
+
+/**
+ * @swagger
+ * /api/v1/admin/system/jobs/demo:
+ *   post:
+ *     summary: Đẩy một job thử vào hàng đợi (kiểm chứng hẹn giờ)
+ *     description: |
+ *       Đẩy job `demo-delay` vào hàng đợi `system`, hẹn giờ `delayMs`. Cần worker đang chạy
+ *       (`npm run worker`) để job được xử lý; API vẫn trả 201 dù worker đang tắt, job nằm chờ trong Redis.
+ *     tags: [Admin System]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               delayMs:
+ *                 type: integer
+ *                 minimum: 0
+ *                 maximum: 3600000
+ *                 default: 60000
+ *               failTimes:
+ *                 type: integer
+ *                 minimum: 0
+ *                 maximum: 2
+ *                 default: 0
+ *                 description: Số lần cố ý lỗi trước khi thành công (thử cơ chế thử lại)
+ *     responses:
+ *       201:
+ *         description: Job đã được đẩy vào hàng đợi (data.id dùng cho GET .../jobs/{id})
+ *       403:
+ *         description: Chỉ role admin
+ *       422:
+ *         description: Validation error
+ *       503:
+ *         description: Redis không sẵn sàng (QUEUE_UNAVAILABLE), API khác vẫn hoạt động
+ */
+router.post(
+  '/system/jobs/demo',
+  authorization('admin'),
+  validate(v.enqueueDemoJob),
+  systemCtrl.enqueueDemoJob
+);
+
+/**
+ * @swagger
+ * /api/v1/admin/system/jobs/{id}:
+ *   get:
+ *     summary: Xem trạng thái một job thử
+ *     tags: [Admin System]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: "state: waiting | delayed | active | completed | failed; result có khi đã xong"
+ *       404:
+ *         description: Job không tồn tại hoặc đã bị dọn (job xong được giữ tối đa 1 giờ)
+ *       503:
+ *         description: Redis không sẵn sàng (QUEUE_UNAVAILABLE)
+ */
+router.get('/system/jobs/:id', authorization('admin'), systemCtrl.getJob);
 
 module.exports = router;

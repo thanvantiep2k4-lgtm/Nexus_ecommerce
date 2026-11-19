@@ -47,6 +47,35 @@ services:
       retries: 20
       start_period: 30s
 
+  # Redis: hàng đợi job (BullMQ) và dữ liệu tạm. Giải thích các tham số ở docker-compose.yml.
+  # Production KHÔNG có mật khẩu mặc định và KHÔNG publish cổng: chỉ backend/worker trong mạng Docker
+  # gọi được. Mật khẩu chứa ký tự đặc biệt (@ : / ? # %) phải mã hoá URL khi nằm trong REDIS_URL.
+  redis:
+    image: redis:7-alpine
+    container_name: nexusmart-redis
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --maxmemory
+      - 400mb
+      - --maxmemory-policy
+      - noeviction
+      - --requirepass
+      - ${REDIS_PASS:?cần đặt REDIS_PASS}
+    environment:
+      REDIS_PASS: ${REDIS_PASS:?cần đặt REDIS_PASS}
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASS\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   postgres:
     image: postgres:16-alpine
     container_name: nexusmart-postgres
@@ -102,6 +131,7 @@ services:
     env_file: ./backend/.env
     environment:
       MONGO_URI: mongodb://nexus_app:${MONGO_APP_PASS:?}@mongodb:27017/nexusmart?authSource=admin&replicaSet=rs0
+      REDIS_URL: redis://:${REDIS_PASS:?}@redis:6379
       PORT: 4000
       NODE_ENV: production
       KEYCLOAK_JWKS_URI: http://keycloak:8180/realms/shofy/protocol/openid-connect/certs
@@ -109,6 +139,26 @@ services:
       - "127.0.0.1:4000:4000"
     depends_on:
       mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Worker ── tiến trình riêng xử lý job từ Redis (cùng image với backend, khác lệnh khởi động).
+  # Tắt worker thì API vẫn chạy; job nằm chờ trong Redis đến khi worker bật lại.
+  worker:
+    image: ${BACKEND_IMAGE:-ghcr.io/dtug20/nexusmart-backend:latest}
+    container_name: nexusmart-worker
+    restart: unless-stopped
+    command: ["node", "worker.js"]
+    env_file: ./backend/.env
+    environment:
+      MONGO_URI: mongodb://nexus_app:${MONGO_APP_PASS:?}@mongodb:27017/nexusmart?authSource=admin&replicaSet=rs0
+      REDIS_URL: redis://:${REDIS_PASS:?}@redis:6379
+      NODE_ENV: production
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   # ── Frontend ──
@@ -160,4 +210,5 @@ services:
 
 volumes:
   mongodata:
+  redisdata:
   pgdata:

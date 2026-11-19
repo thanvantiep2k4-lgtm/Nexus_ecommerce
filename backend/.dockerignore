@@ -1,0 +1,31 @@
+# Context build của image backend (và worker) là thư mục này, nên .dockerignore phải nằm ở ĐÂY
+# (file .dockerignore ở gốc repo không có tác dụng với context ./backend).
+#
+# VẤN ĐỀ ĐÃ BIẾT trước khi có file này: Dockerfile chạy `npm ci` rồi `COPY . .`, nên không có
+# .dockerignore thì:
+#  1. node_modules của máy dev (Windows, ~190MB) bị chép ĐÈ lên node_modules sạch vừa cài trong image,
+#     có thể hỏng với module native và làm image phình to;
+#  2. file `.env` (mật khẩu DB, khoá API, secret Keycloak) bị đóng gói thẳng vào image: ai lấy được
+#     image (ví dụ trên registry) là có hết bí mật. Bí mật phải đưa vào lúc chạy (env_file/environment
+#     trong docker-compose), không được nằm trong image.
+
+node_modules
+npm-debug.log*
+
+# Bí mật và cấu hình riêng của từng máy
+.env
+.env.*
+!.env.example
+
+# Không cần trong image chạy
+tests
+coverage
+*.test.js
+.git
+.gitignore
+.vscode
+.idea
+logs
+*.log
+Dockerfile
+.dockerignore

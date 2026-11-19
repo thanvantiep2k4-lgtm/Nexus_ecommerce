@@ -40,9 +40,21 @@ async function refreshRates() {
     console.log('[exchangeRate] refreshed:', rates);
   } catch (err) {
     console.error('[exchangeRate] refresh failed:', err.message);
-    await ExchangeRate.updateOne({}, { $set: { stale: true } });
+    // Việc đánh dấu `stale` cũng là ghi MongoDB nên cũng có thể lỗi (ví dụ MongoDB đang chết). Phải
+    // tự bắt lỗi ở đây: `refreshRates()` được gọi không có `.catch` (lúc khởi động và trong cron),
+    // nên lỗi ném ra từ khối catch này thành "unhandled rejection" và Node 15+ SẬP CẢ TIẾN TRÌNH API.
+    // Trước đây chỉ cần MongoDB chập chờn lúc khởi động hoặc đúng giờ cron là API tự tắt.
+    try {
+      await ExchangeRate.updateOne({}, { $set: { stale: true } });
+    } catch (markErr) {
+      console.error('[exchangeRate] không đánh dấu được stale:', markErr.message);
+    }
   }
 }
+
+// VẤN ĐỀ ĐÃ BIẾT: cron chạy TRONG tiến trình API. Chạy 2 bản API thì tỉ giá bị làm mới 2 lần mỗi giờ
+// (trùng, tốn quota API ngoài). Nên chuyển sang job lặp của worker (jobs/index.js, registerSchedulers):
+// lịch nằm trong Redis nên chỉ chạy đúng một lần dù có bao nhiêu worker.
 
 function startCron() {
   cron.schedule('0 * * * *', refreshRates); // every hour, top of hour
