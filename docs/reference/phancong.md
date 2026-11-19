@@ -6,7 +6,7 @@ Xây dựng giao diện trang chủ, danh mục sản phẩmvà chi tiết sản
 Xây dựng giao diện giỏ hàng, thanh toán, thông tin giao hàng; CRUD API giỏ hàng, quản lý số lượng sản phẩm, tính tổng tiền, mã giảm giá, xác nhận đặt hàng và xử lý quy trình checkout.
 @Thai: Client: Order, Payment & Vendor
 Xây dựng giao diện lịch sử đơn hàng, theo dõi vận chuyển và quản lý nhà bán hàng; CRUD API đơn hàng, trạng thái giao hàng, thanh toán VNPay, COD, đăng ký và quản lý nhà bán hàng, quản lý sản phẩm và đơn hàng của nhà bán hàng.
-@505 : Client: AI Chatbot & Review
+@Tiệp : Client: AI Chatbot & Review
 Xây dựng giao diện chatbot tư vấn khách hàng; tích hợp AI tư vấn, tìm kiếm và gợi ý sản phẩm, tra cứu đơn hàng; xây dựng API đánh giá, nhận xét sản phẩm, kiểm duyệt đánh giá và kiểm thử chatbot.
 
 

@@ -1,6 +1,7 @@
 # NexusMart E-Commerce Platform
 
 > **Thành viên nhóm: đọc [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) trước.** Đó là kế hoạch thống nhất (kiến trúc, port, phân công, quy ước Git).
+> **Phạm vi nghiệp vụ và phân công v2: [KE_HOACH_NGHIEP_VU.md](KE_HOACH_NGHIEP_VU.md).**
 > Tên cũ trong code vẫn là "Shofy" (đang đổi tên).
 
 Multi-vendor marketplace with CMS-driven storefront, built with Express.js, Next.js 13, React 19 + Ant Design 6, and MongoDB.

@@ -1,6 +1,7 @@
 # CLAUDE.md
 
 > **ĐỌC [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) TRƯỚC KHI LÀM BẤT CỨ VIỆC GÌ.** Đó là kế hoạch thống nhất của cả nhóm: kiến trúc, chuẩn port/env, phân công từng người, quy ước Git. Mọi thay đổi phải bám theo file đó.
+> **Phạm vi nghiệp vụ, đặc tả 12 phân hệ (M1–M12) và phân công v2:** [KE_HOACH_NGHIEP_VU.md](KE_HOACH_NGHIEP_VU.md) ở gốc repo.
 
 ## Tổng quan
 
@@ -36,6 +37,28 @@ cd crm/crm-ui && npx tsc --noEmit
 - **Đa tiền tệ:** không hardcode ký hiệu tiền. Dùng bộ format tiền tệ của dự án.
 - Không commit file `.env`. Chỉ sửa `.env.example` khi thêm biến mới.
 - Port và biến môi trường theo bảng trong docs/PROJECT_PLAN.md. Không tự đổi.
+
+## Cập nhật tài liệu khi thay đổi API (bắt buộc với mọi AI agent)
+
+**Khi nào áp dụng:** mọi thay đổi chạm tới API, gồm: thêm/sửa/xoá endpoint; đổi request, response, mã lỗi; đổi quyền truy cập (role, permission, khoanh vùng theo shop); đổi luồng trạng thái hoặc thời hạn xử lý (SLA); đổi model Mongoose mà API trả về hoặc nhận vào; thêm/sửa webhook (thanh toán, vận chuyển) hay sự kiện Socket.io. Thường là các file trong `backend/routes/`, `backend/controllers/`, `backend/validations/`, `backend/models/`, `backend/services/`.
+
+**Phải cập nhật trong cùng commit/PR với code** (file chưa có thì tạo mới theo đúng đường dẫn):
+
+| File | Cập nhật gì |
+|---|---|
+| Chú thích Swagger (JSDoc) trên route | Nguồn gốc của tài liệu API. Phải khớp code: path, tham số, body, response, quyền |
+| `docs/api/API.md` | Bảng endpoint theo nhóm (`store`, `user`, `seller`/`vendor`, `admin`, `auth`, `webhooks`, Socket.io): method, path, quyền cần có, mô tả ngắn, body/response chính, trạng thái (`mới` / `đã đổi` / `đã bỏ`) |
+| `docs/specs/<phân hệ>.md` | Mục **Hiện trạng** (đã làm / chưa làm / khác đặc tả), danh sách API của phân hệ, bảng chuyển trạng thái nếu luồng thay đổi |
+| `docs/data-model.md` | Khi sửa model: trường mới/đổi/bỏ, index, quan hệ |
+| `docs/STATUS.md` | Tick hạng mục đã xong, cập nhật % và ngày cập nhật của phân hệ |
+| `docs/CHANGELOG.md` | Thêm dòng vào mục `[Chưa phát hành]`, đúng phân hệ, dạng `Thêm/Sửa/Xoá: <mô tả> (<METHOD> <path>)` |
+
+**Quy tắc ghi:**
+- Viết tiếng Việt, mô tả **đúng trạng thái code thực tế**, không ghi theo kế hoạch hay dự định.
+- Thay đổi không tương thích ngược (đổi tên trường, đổi path, bỏ endpoint, đổi quyền) đánh dấu `⚠️ Không tương thích` ở `CHANGELOG.md` và `API.md`, ghi rõ phía nào (storefront, CRM, Seller Center) phải sửa theo.
+- Không để tài liệu mâu thuẫn với code: sửa hoặc xoá mô tả cũ, không chỉ thêm dòng mới.
+- Tên file spec theo phân hệ: `M01-nha-ban`, `M02-san-pham`, `M03-tim-kiem`, `M04-gio-hang-checkout`, `M05-khuyen-mai`, `M06-don-hang`, `M07-thanh-toan`, `M08-tra-hang`, `M09-tai-chinh`, `M10-danh-gia-hieu-suat`, `M11-cms-thong-bao`, `M12-quan-tri` (ví dụ `docs/specs/M06-don-hang.md`).
+- Khi xong việc, báo lại danh sách file tài liệu đã cập nhật. Thay đổi không ảnh hưởng API (refactor nội bộ, sửa style, test) thì không cần cập nhật, nhưng phải nói rõ là không có thay đổi API.
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence

@@ -23,6 +23,8 @@ Tests: Jest (`npm test`) — 3 specs in `tests/` (health, store products, store 
 
 API docs: Swagger UI at `GET /api-docs`, raw spec at `GET /api-docs.json`.
 
+**Required after any API change** (endpoint, request/response, permissions, status flow, returned model, webhook, Socket.io event): in the same commit/PR, update the Swagger JSDoc, `docs/api/API.md`, `docs/specs/<module>.md`, `docs/data-model.md` (if a model changed), `docs/STATUS.md` and `docs/CHANGELOG.md`. Create any file that does not exist yet. Full rules: section "Cập nhật tài liệu khi thay đổi API" in the root `CLAUDE.md`.
+
 ## Architecture
 
 ### Tech Stack

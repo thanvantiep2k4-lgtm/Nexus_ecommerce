@@ -309,8 +309,8 @@ Lỗi đã sửa trong lần chạy này:
 |---|---|---|
 | Cao | Backend **tin tổng tiền do client gửi** khi tạo đơn (có thể sửa giá ở trình duyệt) | Tuấn |
 | Cao | VNPay chưa có key sandbox, chưa test được trọn luồng; MoMo vẫn là stub | Thái |
-| TB | Chatbot chưa chạy thật vì thiếu `GEMINI_API_KEY` | 505 |
-| TB | Đánh giá sản phẩm tự duyệt, chưa có trang duyệt | 505 |
+| TB | Chatbot chưa chạy thật vì thiếu `GEMINI_API_KEY` | Tiệp |
+| TB | Đánh giá sản phẩm tự duyệt, chưa có trang duyệt | Tiệp |
 | TB | ESLint CRM còn lỗi luật `react-hooks` / `no-explicit-any` (code cũ) | Tân |
 | TB | Giỏ hàng chỉ lưu trên trình duyệt: seed lại dữ liệu thì giỏ cũ trỏ tới sản phẩm không còn (ra trang 404) | Tuấn |
 | Thấp | `statusHistory` của đơn không ghi mốc "pending" ban đầu; nhật ký hoạt động ghi `resourceType` = undefined | Thái, Tân |

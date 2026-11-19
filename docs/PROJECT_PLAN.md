@@ -3,6 +3,7 @@
 > **BẮT BUỘC: mọi thành viên (và mọi AI/Claude Code dùng trong repo này) phải đọc hết file này trước khi viết code.**
 > Khi file này mâu thuẫn với `phancong.md` hoặc các file `CLAUDE.md` cũ, **file này thắng**.
 > Muốn đổi kế hoạch: sửa file này bằng một PR riêng và báo cả nhóm. Không tự đổi port, tên biến môi trường, cấu trúc API.
+> **Phạm vi nghiệp vụ và phân công (v2):** xem [`KE_HOACH_NGHIEP_VU.md`](../KE_HOACH_NGHIEP_VU.md) ở gốc repo. Về phạm vi tính năng và phân công, file đó thay cho mục 5–7 bên dưới; các quy ước kỹ thuật trong file này vẫn giữ nguyên.
 
 Đề tài: **Xây dựng sàn thương mại điện tử NexusMart tích hợp trợ lý AI**. CSDL: MongoDB.
 (Tên cũ trong code là "Shofy". Repo được fork từ một template, đang trong quá trình đổi tên.)
@@ -57,7 +58,7 @@ Luồng gọi: `Storefront → Backend`, `CRM UI → CRM server (8081) → Backe
 
 ### 2.4 Cấu trúc thư mục và quy ước code (thống nhất, không tự đổi)
 
-- **Tài liệu** chỉ nằm trong `docs/` (mục lục: `docs/README.md`). Không để file `.md` rải rác trong code, ngoại lệ `README.md`/`CLAUDE.md`/`AGENTS.md`.
+- **Tài liệu** chỉ nằm trong `docs/` (mục lục: `docs/README.md`). Không để file `.md` rải rác trong code, ngoại lệ `README.md`/`CLAUDE.md`/`AGENTS.md`/`KE_HOACH_NGHIEP_VU.md`.
 - **Backend:** thư mục số nhiều `controllers/`, `models/`. Mỗi resource một file: `controllers/v1/<resource>.controller.js`, `models/<Resource>.js`, `validations/<resource>.validation.js`. Dữ liệu seed ở `seeds/data/`, runner `seeds/index.js`. Không đặt logic nghiệp vụ trong `routes/`.
 - **Frontend:** component theo tính năng trong `src/components/<feature>/`, trang trong `src/pages/`, gọi API qua RTK Query trong `src/redux/features/`. Import dùng alias `@/`.
 - **CRM UI:** mỗi tính năng một thư mục `src/features/<tên>/`, gọi API qua `src/services/api.ts`, import dùng alias `@/`.
@@ -181,7 +182,7 @@ Phạm vi: giỏ hàng, checkout, coupon; `frontend/src/redux/features/cartSlice
 - [ ] **P0** Storefront: khi đã đăng nhập dùng RTK Query cho giỏ; **merge giỏ localStorage → server** khi login; khách vãng lai vẫn dùng localStorage.
 - [ ] **P0** **Server tính tổng tiền**: tạm tính, giảm giá coupon, phí ship theo Shipping Settings, thuế theo Tax Settings. Client không được gửi giá lên để tin.
 - [ ] **P1** Coupon: hiển thị rõ lý do không áp dụng; hết lượt; nhiều điều kiện.
-- [ ] **P1** Chatbot `proposeAddToCart` gọi Cart API thật (phối hợp 505).
+- [ ] **P1** Chatbot `proposeAddToCart` gọi Cart API thật (phối hợp Tiệp).
 - [ ] **P1** Hỗ trợ Thái: trang **Đơn hàng** và **Rút tiền** của Vendor Dashboard (mục 6.4).
 - [ ] **P1** Jest cho cart + checkout; Playwright: thêm giỏ → checkout → đặt hàng COD.
 
@@ -195,7 +196,7 @@ Phạm vi: đơn hàng, thanh toán, nhà bán; `backend/services/paymentService
 - [ ] **P1** **Tích hợp GHN hoặc GHTK sandbox**: tính phí khi checkout, tạo vận đơn khi admin xác nhận, nhận webhook cập nhật `statusHistory`.
 - [ ] **P2** Stripe (chỉ nếu còn thời gian). Test đơn nhiều nhà bán (tách đơn con, tính hoa hồng).
 
-### 6.5 505 — Client: AI Chatbot & Review
+### 6.5 Tiệp — Client: AI Chatbot & Review
 Phạm vi: `backend/services/chatbot/`, `frontend/src/components/chatbot/`, review.
 
 - [ ] **P0** **Duyệt đánh giá**: `user.controller.addReview` đặt `status:'pending'`; route admin `/reviews` (list lọc status/rating, approve, reject kèm lý do, reply, delete); trang CRM `features/reviews/ReviewsPage.tsx` (thống kê + bulk action); storefront chỉ hiện review `approved`, giữ huy hiệu "đã mua hàng", báo "đang chờ duyệt" cho người gửi.
@@ -211,7 +212,7 @@ Phạm vi: `backend/services/chatbot/`, `frontend/src/components/chatbot/`, revi
 
 | Tuần | Mục tiêu |
 |---|---|
-| **1** | Cả nhóm chạy được hệ thống trên máy mình (mục 3). Tạo nhánh. Tài rebrand. Tân bắt đầu Brand + Menu. Tuấn bắt đầu Cart API. Thái bắt đầu Vendor UI + VNPay. 505 làm duyệt review + Atlas |
+| **1** | Cả nhóm chạy được hệ thống trên máy mình (mục 3). Tạo nhánh. Tài rebrand. Tân bắt đầu Brand + Menu. Tuấn bắt đầu Cart API. Thái bắt đầu Vendor UI + VNPay. Tiệp làm duyệt review + Atlas |
 | **2** | Cart API xong + merge giỏ. Form nhà bán (Tài). Menu editor xong. Vendor UI: Tổng quan + Sản phẩm |
 | **3** | Homepage builder. UI mẫu email. Vendor UI: Đơn + Rút tiền. VNPay E2E xong. Chatbot eval |
 | **4** | MoMo, GHN/GHTK. Server tính tổng tiền. Theme + phân quyền CRM. Playwright E2E |

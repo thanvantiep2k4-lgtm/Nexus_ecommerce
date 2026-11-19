@@ -1,6 +1,11 @@
 # AGENTS.md
 
 > Đọc `docs/PROJECT_PLAN.md` trước khi làm bất cứ việc gì: đó là kế hoạch thống nhất của cả nhóm (port, env, phân công, quy ước).
+> Phạm vi nghiệp vụ, đặc tả 12 phân hệ (M1–M12) và phân công v2: `KE_HOACH_NGHIEP_VU.md` ở gốc repo.
+
+## Cập nhật tài liệu khi thay đổi API
+
+Mọi thay đổi chạm tới API (endpoint, request/response, quyền, luồng trạng thái, model trả về, webhook, sự kiện Socket.io) phải cập nhật tài liệu **trong cùng commit/PR**: chú thích Swagger, `docs/api/API.md`, `docs/specs/<phân hệ>.md`, `docs/data-model.md` (nếu sửa model), `docs/STATUS.md`, `docs/CHANGELOG.md`. File chưa có thì tạo mới. Chi tiết từng file và quy tắc ghi: mục **"Cập nhật tài liệu khi thay đổi API"** trong `CLAUDE.md` ở gốc repo.
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
