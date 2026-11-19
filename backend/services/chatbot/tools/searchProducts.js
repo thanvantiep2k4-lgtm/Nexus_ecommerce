@@ -58,7 +58,7 @@ module.exports = (register) =>
       }
       if (filters.color) q['imageURLs.color.name'] = { $regex: filters.color, $options: 'i' };
       if (filters.size) q.sizes = { $regex: filters.size, $options: 'i' };
-      q.status = { $ne: 'out-of-stock' };
+      q.status = { $nin: ['out-of-stock', 'discontinued'] };
 
       const items = await Product.find(q)
         .limit(limit)

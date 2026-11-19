@@ -63,20 +63,20 @@ function PublishCard({
   saving,
 }: PublishCardProps) {
   return (
-    <Card title="Publish" size="small" style={{ marginBottom: 12 }}>
-      <Form.Item label="Status" style={{ marginBottom: 8 }}>
+    <Card title="Xuất bản" size="small" style={{ marginBottom: 12 }}>
+      <Form.Item label="Trạng thái" style={{ marginBottom: 8 }}>
         <Select
           value={status}
           onChange={onStatusChange}
           options={[
-            { value: 'draft', label: 'Draft' },
-            { value: 'published', label: 'Published' },
-            { value: 'archived', label: 'Archived' },
+            { value: 'draft', label: 'Bản nháp' },
+            { value: 'published', label: 'Đã xuất bản' },
+            { value: 'archived', label: 'Đã lưu trữ' },
           ]}
           style={{ width: '100%' }}
         />
       </Form.Item>
-      <Form.Item label="Publish Date" style={{ marginBottom: 8 }}>
+      <Form.Item label="Ngày xuất bản" style={{ marginBottom: 8 }}>
         <Input
           type="datetime-local"
           value={publishedAt}
@@ -85,10 +85,10 @@ function PublishCard({
       </Form.Item>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <Button onClick={onSaveDraft} loading={saving} size="small">
-          Save Draft
+          Lưu nháp
         </Button>
         <Button type="primary" onClick={onPublish} loading={saving} size="small">
-          Publish
+          Xuất bản
         </Button>
       </Space>
     </Card>
@@ -188,12 +188,12 @@ export default function BlogEditorPage() {
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
-      toast.success('Post saved');
+      toast.success('Đã lưu bài viết');
       if (isNew && result?.data?._id) {
         navigate(`/cms/blog/${result.data._id}`, { replace: true });
       }
     },
-    onError: () => toast.error('Failed to save post'),
+    onError: () => toast.error('Lưu bài viết thất bại'),
   });
 
   const handleSaveDraft = () => saveMutation.mutate(buildPayload('draft'));
@@ -220,10 +220,10 @@ export default function BlogEditorPage() {
       >
         <Space>
           <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/cms/blog')}>
-            Back
+            Quay lại
           </Button>
           <Title level={4} style={{ margin: 0 }}>
-            {isNew ? 'New Post' : 'Edit Post'}
+            {isNew ? 'Thêm bài viết' : 'Sửa bài viết'}
           </Title>
         </Space>
         <Button
@@ -232,7 +232,7 @@ export default function BlogEditorPage() {
           loading={saveMutation.isPending}
           onClick={() => saveMutation.mutate(buildPayload())}
         >
-          Save
+          Lưu
         </Button>
       </div>
 
@@ -243,7 +243,7 @@ export default function BlogEditorPage() {
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Post title"
+              placeholder="Tiêu đề bài viết"
               size="large"
               style={{
                 fontSize: 20,
@@ -272,25 +272,25 @@ export default function BlogEditorPage() {
               />
             </div>
 
-            <Form.Item label="Excerpt" style={{ marginBottom: 12 }}>
+            <Form.Item label="Tóm tắt" style={{ marginBottom: 12 }}>
               <Input.TextArea
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
                 rows={2}
-                placeholder="Short description shown in lists..."
+                placeholder="Mô tả ngắn hiển thị trong danh sách..."
               />
             </Form.Item>
 
-            <Form.Item label="Body Content" style={{ marginBottom: 0 }}>
+            <Form.Item label="Nội dung" style={{ marginBottom: 0 }}>
               <Input.TextArea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={16}
-                placeholder="Write your post content here (HTML supported)..."
+                placeholder="Nhập nội dung bài viết (hỗ trợ HTML)..."
                 style={{ fontFamily: 'monospace', fontSize: 13 }}
               />
               <Text type="secondary" style={{ fontSize: 11 }}>
-                Rich text editor will be added in a future update. HTML is supported.
+                Trình soạn thảo văn bản sẽ được bổ sung trong bản cập nhật sau. Hiện hỗ trợ HTML.
               </Text>
             </Form.Item>
           </Card>
@@ -302,19 +302,19 @@ export default function BlogEditorPage() {
               header={
                 <Space>
                   <GlobalOutlined />
-                  <span>Vietnamese Translation</span>
+                  <span>Bản dịch tiếng Việt</span>
                 </Space>
               }
             >
               <Form layout="vertical">
-                <Form.Item label="Title (VI)">
+                <Form.Item label="Tiêu đề (VI)">
                   <Input
                     value={titleVi}
                     onChange={(e) => setTitleVi(e.target.value)}
                     placeholder="Tiêu đề bài viết"
                   />
                 </Form.Item>
-                <Form.Item label="Excerpt (VI)">
+                <Form.Item label="Tóm tắt (VI)">
                   <Input.TextArea
                     value={excerptVi}
                     onChange={(e) => setExcerptVi(e.target.value)}
@@ -322,7 +322,7 @@ export default function BlogEditorPage() {
                     placeholder="Mô tả ngắn..."
                   />
                 </Form.Item>
-                <Form.Item label="Body (VI)" style={{ marginBottom: 0 }}>
+                <Form.Item label="Nội dung (VI)" style={{ marginBottom: 0 }}>
                   <Input.TextArea
                     value={contentVi}
                     onChange={(e) => setContentVi(e.target.value)}
@@ -349,39 +349,39 @@ export default function BlogEditorPage() {
               saving={saveMutation.isPending}
             />
 
-            <Card title="Featured Image" size="small" style={{ marginBottom: 12 }}>
+            <Card title="Ảnh đại diện" size="small" style={{ marginBottom: 12 }}>
               <ImageUpload
                 value={featuredImage}
                 onChange={(url) => setFeaturedImage(url)}
-                placeholder="Upload Featured Image"
+                placeholder="Tải ảnh đại diện"
                 width="100%"
                 height={160}
               />
             </Card>
 
-            <Card title="Category" size="small" style={{ marginBottom: 12 }}>
+            <Card title="Danh mục" size="small" style={{ marginBottom: 12 }}>
               <Input
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                placeholder="e.g. Fashion, Tech"
+                placeholder="VD: Thời trang, Công nghệ"
               />
             </Card>
 
-            <Card title="Tags" size="small" style={{ marginBottom: 12 }}>
+            <Card title="Thẻ" size="small" style={{ marginBottom: 12 }}>
               <Select
                 mode="tags"
                 value={tags}
                 onChange={(v: string[]) => setTags(v)}
-                placeholder="Add tags..."
+                placeholder="Thêm thẻ..."
                 style={{ width: '100%' }}
                 tokenSeparators={[',']}
               />
             </Card>
 
-            <Card title="Options" size="small" style={{ marginBottom: 12 }}>
+            <Card title="Tuỳ chọn" size="small" style={{ marginBottom: 12 }}>
               <Space>
                 <Switch checked={featured} onChange={setFeatured} size="small" />
-                <Text>Featured post</Text>
+                <Text>Bài viết nổi bật</Text>
               </Space>
             </Card>
 
@@ -389,7 +389,7 @@ export default function BlogEditorPage() {
               <Form layout="vertical">
                 <Form.Item style={{ marginBottom: 8 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 12 }}>Meta Title</Text>
+                    <Text style={{ fontSize: 12 }}>Tiêu đề meta</Text>
                     <Text type="secondary" style={{ fontSize: 11 }}>
                       {seoTitle.length}/60
                     </Text>
@@ -403,7 +403,7 @@ export default function BlogEditorPage() {
                 </Form.Item>
                 <Form.Item style={{ marginBottom: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 12 }}>Meta Description</Text>
+                    <Text style={{ fontSize: 12 }}>Mô tả meta</Text>
                     <Text type="secondary" style={{ fontSize: 11 }}>
                       {seoDescription.length}/160
                     </Text>

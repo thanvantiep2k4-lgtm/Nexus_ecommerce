@@ -34,10 +34,10 @@ export default function CurrencyAuditPage() {
     mutationFn: ({ id, fromCurrency }: { id: string; fromCurrency: 'USD' | 'VND' }) =>
       currencyAuditApi.normalizeOne(id, fromCurrency),
     onSuccess: () => {
-      message.success('Product reviewed');
+      message.success('Đã duyệt sản phẩm');
       queryClient.invalidateQueries({ queryKey: ['currency-audit'] });
     },
-    onError: () => message.error('Failed to update product'),
+    onError: () => message.error('Cập nhật sản phẩm thất bại'),
   });
 
   const normalizeBulk = useMutation({
@@ -47,18 +47,18 @@ export default function CurrencyAuditPage() {
       const skipped = (res.notFound?.length ?? 0) + (res.invalidIds?.length ?? 0);
       message.success(
         skipped > 0
-          ? `${res.updated} products updated (${skipped} skipped)`
-          : `${res.updated} products updated`
+          ? `Đã cập nhật ${res.updated} sản phẩm (bỏ qua ${skipped})`
+          : `Đã cập nhật ${res.updated} sản phẩm`
       );
       setSelectedIds([]);
       queryClient.invalidateQueries({ queryKey: ['currency-audit'] });
     },
-    onError: () => message.error('Bulk update failed'),
+    onError: () => message.error('Cập nhật hàng loạt thất bại'),
   });
 
   const columns: TableProps<AuditProduct>['columns'] = [
     {
-      title: 'Image',
+      title: 'Ảnh',
       dataIndex: 'img',
       key: 'img',
       width: 80,
@@ -74,7 +74,7 @@ export default function CurrencyAuditPage() {
       ),
     },
     {
-      title: 'Title',
+      title: 'Tên sản phẩm',
       dataIndex: 'title',
       key: 'title',
       render: (t: string, r) => (
@@ -87,7 +87,7 @@ export default function CurrencyAuditPage() {
       ),
     },
     {
-      title: 'Current Price',
+      title: 'Giá hiện tại',
       dataIndex: 'price',
       key: 'price',
       width: 140,
@@ -99,7 +99,7 @@ export default function CurrencyAuditPage() {
       ),
     },
     {
-      title: 'If USD → VND',
+      title: 'Nếu quy đổi USD → VND',
       dataIndex: 'suggestedVndPrice',
       key: 'suggestedVndPrice',
       width: 160,
@@ -107,41 +107,41 @@ export default function CurrencyAuditPage() {
       render: (v: number) => <Text type="secondary">{v?.toLocaleString('vi-VN') ?? '—'} ₫</Text>,
     },
     {
-      title: 'Reviewed',
+      title: 'Đã duyệt',
       dataIndex: 'currencyReviewedAt',
       key: 'currencyReviewedAt',
       width: 130,
       render: (d: string | null) =>
         d ? (
           <Tag color="green" icon={<CheckCircleOutlined />}>
-            Reviewed
+            Đã duyệt
           </Tag>
         ) : (
           <Tag color="orange" icon={<WarningOutlined />}>
-            Pending
+            Chờ duyệt
           </Tag>
         ),
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       width: 280,
       render: (_: unknown, record: AuditProduct) => (
         <Space>
           <Popconfirm
-            title={`Convert ${record.title} from USD?`}
-            description={`Price will become ${record.suggestedVndPrice?.toLocaleString('vi-VN')} ₫`}
+            title={`Quy đổi "${record.title}" từ USD?`}
+            description={`Giá mới sẽ là ${record.suggestedVndPrice?.toLocaleString('vi-VN')} ₫`}
             onConfirm={() => normalizeOne.mutate({ id: record._id, fromCurrency: 'USD' })}
           >
             <Button size="small" type="primary" danger>
-              Convert from USD
+              Quy đổi từ USD
             </Button>
           </Popconfirm>
           <Button
             size="small"
             onClick={() => normalizeOne.mutate({ id: record._id, fromCurrency: 'VND' })}
           >
-            Mark as VND
+            Đánh dấu là VND
           </Button>
         </Space>
       ),
@@ -150,37 +150,37 @@ export default function CurrencyAuditPage() {
 
   return (
     <div>
-      <PageHeader title="Currency Audit" />
+      <PageHeader title="Kiểm tra tiền tệ" />
       <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
-        Review products with suspicious USD-magnitude prices and normalize them to VND base.
+        Rà soát các sản phẩm có giá nghi là theo USD và chuẩn hoá về VND.
       </Text>
 
       <Card size="small" style={{ marginBottom: 16 }}>
         <Space size="large" wrap>
           <Space>
             <Switch checked={showReviewed} onChange={setShowReviewed} />
-            <Text>Show reviewed products</Text>
+            <Text>Hiện sản phẩm đã duyệt</Text>
           </Space>
           {selectedIds.length > 0 && (
             <Space>
-              <Text>{selectedIds.length} selected</Text>
+              <Text>Đã chọn {selectedIds.length}</Text>
               <Popconfirm
-                title={`Convert ${selectedIds.length} products from USD?`}
+                title={`Quy đổi ${selectedIds.length} sản phẩm từ USD?`}
                 onConfirm={() => normalizeBulk.mutate({ ids: selectedIds, fromCurrency: 'USD' })}
               >
                 <Button type="primary" danger icon={<DollarOutlined />}>
-                  Bulk Convert from USD
+                  Quy đổi hàng loạt từ USD
                 </Button>
               </Popconfirm>
               <Button
                 onClick={() => normalizeBulk.mutate({ ids: selectedIds, fromCurrency: 'VND' })}
               >
-                Bulk Mark as VND
+                Đánh dấu hàng loạt là VND
               </Button>
             </Space>
           )}
           <Text type="secondary">
-            Current USD→VND rate: {data?.currentRate?.toLocaleString('vi-VN') ?? '—'}
+            Tỷ giá USD→VND hiện tại: {data?.currentRate?.toLocaleString('vi-VN') ?? '—'}
           </Text>
         </Space>
       </Card>

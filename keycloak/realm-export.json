@@ -67,6 +67,15 @@
         "attributes": {}
       },
       {
+        "id": "7b1e2c4a-9d3f-4e8b-a6c1-5f2d8e9a0b17",
+        "name": "vendor",
+        "description": "Approved marketplace seller",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "061c89ac-fd9b-409a-9bbb-84bfc64953a7",
+        "attributes": {}
+      },
+      {
         "id": "05574fc2-bb23-4fcf-a82a-8c8e6da5103f",
         "name": "shipper",
         "description": "can update status of order",
@@ -996,7 +1005,11 @@
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
       "defaultClientScopes": [
-        "shofy-scope"
+        "shofy-scope",
+        "roles",
+        "profile",
+        "basic",
+        "email"
       ],
       "optionalClientScopes": [
         "offline_access"

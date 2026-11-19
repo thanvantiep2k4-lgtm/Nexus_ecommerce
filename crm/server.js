@@ -114,9 +114,10 @@ app.use(express.static(reactBuildPath, { index: false }));
 app.use('/admin', express.static(reactBuildPath, { index: false }));
 
 // ─── Role-based protection ─────────────────────────────────────
-// Only admin, manager, staff, shipper can access CRM
+// Only admin, manager, staff, shipper, vendor can access CRM
+// (vendor-only users see the restricted Vendor Portal menu in the SPA)
 
-const CRM_ROLES = ['admin', 'manager', 'staff', 'shipper'];
+const CRM_ROLES = ['admin', 'manager', 'staff', 'shipper', 'vendor'];
 
 const keycloakProtectMiddleware = keycloak.protect();
 
@@ -173,6 +174,8 @@ app.use('/api/coupons', apiProtect, require('./routes/coupon.routes'));
 
 // Phase 4 — Vendors, Analytics, Activity Log
 app.use('/api/vendors', apiProtect, require('./routes/vendor.routes'));
+// Vendor self-service portal (role 'vendor', enforced by backend)
+app.use('/api/vendor-portal', apiProtect, require('./routes/vendor-portal.routes'));
 app.use('/api/analytics', apiProtect, require('./routes/analytics.routes'));
 app.use('/api/activity-log', apiProtect, require('./routes/activity-log.routes'));
 app.use('/api/chat', apiProtect, require('./routes/chatbot.routes'));

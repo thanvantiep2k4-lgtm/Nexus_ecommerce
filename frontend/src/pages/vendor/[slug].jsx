@@ -3,29 +3,32 @@ import dayjs from 'dayjs';
 // internal
 import SEO from '@/components/seo';
 import Wrapper from '@/layout/wrapper';
-import Header from '@/layout/headers/header';
-import Footer from '@/layout/footers/footer';
+import HeaderClicon from '@/layout/headers/header-clicon';
+import FooterClicon from '@/layout/footers/footer-clicon';
 import useCurrency from '@/hooks/use-currency';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Vendor store page — server-rendered storefront for a single vendor.
  * Route: /vendor/[slug]
  */
-const VendorStorePage = ({ vendor, products, pagination }) => {
+const VendorStorePage = ({ vendor, stats, products, pagination }) => {
+  const { t } = useTranslation();
   const { formatPrice } = useCurrency();
-  const memberSince = vendor?.createdAt ? dayjs(vendor.createdAt).format('MMMM YYYY') : null;
+  const memberSince = vendor?.createdAt ? dayjs(vendor.createdAt).format('MM/YYYY') : null;
 
-  const storeName = vendor?.vendorProfile?.storeName || vendor?.name || 'Vendor Store';
+  const storeName =
+    vendor?.vendorProfile?.storeName || vendor?.name || t('vendorStore.fallbackName');
   const storeBio = vendor?.vendorProfile?.storeBio || vendor?.vendorProfile?.storeDescription || '';
   const storeSlug = vendor?.vendorProfile?.storeSlug || '';
   const storeLogo = vendor?.vendorProfile?.storeLogo || null;
   const storeBanner = vendor?.vendorProfile?.storeBanner || null;
-  const productCount = pagination?.total ?? products?.length ?? 0;
+  const productCount = stats?.productCount ?? pagination?.totalItems ?? products?.length ?? 0;
 
   return (
     <Wrapper>
       <SEO pageTitle={`${storeName} — NexusMart`} />
-      <Header />
+      <HeaderClicon />
 
       <main>
         {/* Vendor banner */}
@@ -106,12 +109,12 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
               )}
               <div className="d-flex gap-3 mt-1" style={{ fontSize: '13px', color: '#666' }}>
                 <span>
-                  <strong>{productCount}</strong> {productCount === 1 ? 'Product' : 'Products'}
+                  <strong>{productCount}</strong> {t('vendorStore.products')}
                 </span>
                 {memberSince && (
                   <>
                     <span>|</span>
-                    <span>Member since {memberSince}</span>
+                    <span>{t('vendorStore.memberSince', { date: memberSince })}</span>
                   </>
                 )}
               </div>
@@ -131,7 +134,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
                 paddingBottom: '10px',
               }}
             >
-              Products by {storeName}
+              {t('vendorStore.productsBy', { store: storeName })}
             </h3>
 
             {products && products.length > 0 ? (
@@ -155,7 +158,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
                         </Link>
                         {product.status === 'out-of-stock' && (
                           <div className="tp-product-badge">
-                            <span className="product-hot">out-stock</span>
+                            <span className="product-hot">{t('vendorStore.outOfStock')}</span>
                           </div>
                         )}
                       </div>
@@ -197,9 +200,9 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
               </div>
             ) : (
               <div className="text-center py-60">
-                <p className="text-muted">This vendor has no products listed yet.</p>
+                <p className="text-muted">{t('vendorStore.empty')}</p>
                 <Link href="/shop" className="tp-btn mt-3">
-                  Browse All Products
+                  {t('vendorStore.browseAll')}
                 </Link>
               </div>
             )}
@@ -207,7 +210,7 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
         </section>
       </main>
 
-      <Footer primary_style={true} />
+      <FooterClicon />
     </Wrapper>
   );
 };
@@ -215,26 +218,29 @@ const VendorStorePage = ({ vendor, products, pagination }) => {
 export async function getServerSideProps({ params }) {
   const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
   try {
-    const [vendorRes, productsRes] = await Promise.all([
-      fetch(`${API_URL}/api/v1/store/vendors/${params.slug}`),
-      fetch(`${API_URL}/api/v1/store/products?vendor=${params.slug}&page=1&limit=20`),
-    ]);
-
+    // 1) resolve the store by slug — the response is { vendor, stats }
+    const vendorRes = await fetch(
+      `${API_URL}/api/v1/store/vendors/${encodeURIComponent(params.slug)}`
+    );
     if (!vendorRes.ok) {
       return { notFound: true };
     }
-
     const vendorData = await vendorRes.json();
-
-    if (!vendorData.success) {
+    const vendor = vendorData?.data?.vendor;
+    if (!vendorData.success || !vendor?._id) {
       return { notFound: true };
     }
 
+    // 2) products are filtered by vendor _id (the API ignores a slug here)
+    const productsRes = await fetch(
+      `${API_URL}/api/v1/store/products?vendor=${vendor._id}&page=1&limit=40&sortBy=sellCount&sortOrder=desc`
+    );
     const productsData = productsRes.ok ? await productsRes.json() : { data: [], pagination: null };
 
     return {
       props: {
-        vendor: vendorData.data,
+        vendor,
+        stats: vendorData.data.stats || null,
         products: productsData.data || [],
         pagination: productsData.pagination || null,
       },

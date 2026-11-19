@@ -64,10 +64,10 @@ export default function ShippingSettingsPage() {
       const values = await form.validateFields();
       const ids = methods.map((m) => m.id.trim());
       if (ids.some((id) => !id)) {
-        throw new Error('Method id is required');
+        throw new Error('Vui lòng nhập ID phương thức');
       }
       if (new Set(ids).size !== ids.length) {
-        throw new Error('Method ids must be unique');
+        throw new Error('ID phương thức không được trùng nhau');
       }
       return settingsApi.update({
         shipping: {
@@ -175,7 +175,12 @@ export default function ShippingSettingsPage() {
       width: 60,
       align: 'center',
       render: (_, _record, index) => (
-        <Popconfirm title="Xoá phương thức này?" onConfirm={() => removeMethod(index)}>
+        <Popconfirm
+          title="Xoá phương thức này?"
+          onConfirm={() => removeMethod(index)}
+          okText="Xoá"
+          cancelText="Huỷ"
+        >
           <Button danger size="small" icon={<DeleteOutlined />} />
         </Popconfirm>
       ),
@@ -236,7 +241,7 @@ export default function ShippingSettingsPage() {
               <Form.Item
                 name="defaultShippingCost"
                 label="Phí ship mặc định (₫)"
-                tooltip="Dùng khi không match phương thức nào"
+                tooltip="Áp dụng khi không khớp phương thức nào"
               >
                 <InputNumber
                   min={0}

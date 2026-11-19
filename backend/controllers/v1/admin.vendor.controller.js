@@ -30,9 +30,9 @@ exports.listVendors = async (req, res, next) => {
     const { page, limit, skip, sortBy, sortOrder } = getPaginationParams(req.query);
     const q = req.query;
 
-    // Match vendors (role === 'vendor') OR users with any vendorProfile.verificationStatus
+    // Match vendors (role === 'vendor') OR users who submitted an application (have a storeName)
     const filter = {
-      $or: [{ role: 'vendor' }, { 'vendorProfile.verificationStatus': { $exists: true } }],
+      $or: [{ role: 'vendor' }, { 'vendorProfile.storeName': { $exists: true, $ne: '' } }],
     };
 
     if (q.status) {
@@ -55,7 +55,7 @@ exports.listVendors = async (req, res, next) => {
         {
           $or: filter.$or || [
             { role: 'vendor' },
-            { 'vendorProfile.verificationStatus': { $exists: true } },
+            { 'vendorProfile.storeName': { $exists: true, $ne: '' } },
           ],
         },
         searchFilter,
@@ -92,7 +92,7 @@ exports.getVendorStats = async (req, res, next) => {
       User.aggregate([
         {
           $match: {
-            $or: [{ role: 'vendor' }, { 'vendorProfile.verificationStatus': { $exists: true } }],
+            $or: [{ role: 'vendor' }, { 'vendorProfile.storeName': { $exists: true, $ne: '' } }],
           },
         },
         {

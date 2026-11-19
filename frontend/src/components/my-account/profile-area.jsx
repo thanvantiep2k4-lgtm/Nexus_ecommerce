@@ -6,8 +6,9 @@ import OrderHistory from './order-history';
 import AccountSetting from './account-setting';
 import CardsAddress from './cards-address';
 import BrowsingHistory from './browsing-history';
+import BecomeVendor from './become-vendor';
 
-const VALID_TABS = ['dashboard', 'orders', 'cards', 'browsing', 'setting'];
+const VALID_TABS = ['dashboard', 'orders', 'cards', 'browsing', 'vendor', 'setting'];
 
 const ProfileArea = ({ orderData }) => {
   const router = useRouter();
@@ -37,6 +38,8 @@ const ProfileArea = ({ orderData }) => {
         return <CardsAddress setActiveTab={handleSetActiveTab} />;
       case 'browsing':
         return <BrowsingHistory />;
+      case 'vendor':
+        return <BecomeVendor />;
       case 'setting':
         return <AccountSetting />;
       default:

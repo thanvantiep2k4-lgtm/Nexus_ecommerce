@@ -1,5 +1,5 @@
 jest.mock('@google/generative-ai', () => {
-  const sendMessageStream = jest.fn().mockResolvedValue({
+  const generateContentStream = jest.fn().mockResolvedValue({
     stream: (async function* () {
       yield { text: () => 'hello', functionCalls: () => [] };
     })(),
@@ -8,8 +8,7 @@ jest.mock('@google/generative-ai', () => {
       candidates: [{ content: { parts: [{ text: 'hello' }] } }],
     }),
   });
-  const startChat = jest.fn().mockReturnValue({ sendMessageStream });
-  const getGenerativeModel = jest.fn().mockReturnValue({ startChat });
+  const getGenerativeModel = jest.fn().mockReturnValue({ generateContentStream });
   return { GoogleGenerativeAI: jest.fn().mockImplementation(() => ({ getGenerativeModel })) };
 });
 

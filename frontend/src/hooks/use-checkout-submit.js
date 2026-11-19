@@ -6,12 +6,34 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 //internal import
 import useCartInfo from './use-cart-info';
+import useShipping from './use-shipping';
 import { set_shipping } from '@/redux/features/order/orderSlice';
 import { set_coupon } from '@/redux/features/coupon/couponSlice';
 import { notifyError, notifySuccess } from '@/utils/toast';
 import { useSaveOrderMutation } from '@/redux/features/order/orderApi';
 import { useGetOfferCouponsQuery } from '@/redux/features/coupon/couponApi';
-import { useValidateCouponMutation, useGetSettingsQuery } from '@/redux/features/cmsApi';
+import {
+  useValidateCouponMutation,
+  useGetSettingsQuery,
+  useGetAddressesQuery,
+  useAddAddressMutation,
+} from '@/redux/features/cmsApi';
+import keycloak from '@/lib/keycloak';
+
+// Checkout form fields restored from the last order / profile
+const PREFILL_FIELDS = [
+  'firstName',
+  'lastName',
+  'companyName',
+  'address',
+  'country',
+  'state',
+  'city',
+  'zipCode',
+  'contactNo',
+  'email',
+];
+const LAST_INFO_KEY = 'shipping_info';
 
 const useCheckoutSubmit = () => {
   const { t, i18n } = useTranslation();
@@ -25,8 +47,12 @@ const useCheckoutSubmit = () => {
   const { cart_products } = useSelector((state) => state.cart);
   // user
   const { user } = useSelector((state) => state.auth);
-  // shipping_info
-  const { shipping_info, shipping_method_id } = useSelector((state) => state.order);
+  // saved addresses (used to auto-save the first address after an order)
+  const isAuthenticated = typeof window !== 'undefined' && keycloak.authenticated;
+  const { data: addressData, isSuccess: addressesLoaded } = useGetAddressesQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const [addAddress] = useAddAddressMutation();
   // site settings (shipping methods + free shipping threshold)
   const { data: settingsData } = useGetSettingsQuery();
   // total amount
@@ -37,15 +63,15 @@ const useCheckoutSubmit = () => {
   const [cartTotal, setCartTotal] = useState('');
   // minimumAmount
   const [minimumAmount, setMinimumAmount] = useState(0);
-  // shippingCost — derived from settings.shipping.methods + selected method id.
-  // Threshold is informational only (banner hint on cart) — user's explicit
-  // method choice is always honored, even when total >= freeShippingThreshold.
-  const shippingMethods = Array.isArray(settingsData?.data?.shipping?.methods)
-    ? settingsData.data.shipping.methods.filter((m) => m && m.enabled !== false)
-    : [];
-  const selectedMethod =
-    shippingMethods.find((m) => m.id === shipping_method_id) || shippingMethods[0];
-  const shippingCost = Number(selectedMethod?.cost ?? 0);
+  // shippingCost — shared with the cart page (free only above the threshold)
+  const {
+    methods: shippingMethods,
+    selectedId: shippingMethodId,
+    shippingCost,
+    select: selectShippingMethod,
+    eligibleFree,
+    remaining: freeShipRemaining,
+  } = useShipping();
   // legacy setter kept as no-op for back-compat (was unused outside the hook)
   const setShippingCost = () => {};
   // tax — derived from settings.tax. Applied to (subtotal - discount [+ shipping])
@@ -77,6 +103,7 @@ const useCheckoutSubmit = () => {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm();
 
@@ -157,7 +184,12 @@ const useCheckoutSubmit = () => {
       }).unwrap();
 
       if (result?.valid) {
-        setCouponApplyMsg(`Your Coupon ${result.couponCode || couponCode} is Applied!`);
+        setCouponApplyMsg(
+          t('checkout.couponApplied', {
+            code: result.couponCode || couponCode,
+            defaultValue: 'Đã áp dụng mã {{code}}!',
+          })
+        );
         setMinimumAmount(0);
         setDiscountProductType(result.productType || '');
         setDiscountPercentage(result.discountPercentage || 0);
@@ -202,11 +234,18 @@ const useCheckoutSubmit = () => {
     }
 
     if (total < result[0]?.minimumAmount) {
-      notifyError(`Minimum ${result[0].minimumAmount} USD required for Apply this coupon!`);
+      notifyError(
+        t('checkout.couponMinimum', {
+          defaultValue: 'Đơn hàng chưa đạt giá trị tối thiểu để dùng mã này',
+        })
+      );
       return;
     } else {
       setCouponApplyMsg(
-        `Your Coupon ${result[0].title} is Applied on ${result[0].productType} productType!`
+        t('checkout.couponApplied', {
+          code: result[0].couponCode,
+          defaultValue: 'Đã áp dụng mã {{code}}!',
+        })
       );
       setMinimumAmount(result[0]?.minimumAmount);
       setDiscountProductType(result[0].productType);
@@ -224,22 +263,59 @@ const useCheckoutSubmit = () => {
     setShippingCost(value);
   };
 
-  //set values from shipping_info
+  // Prefill the form: last checkout info (localStorage) first, then the
+  // profile (name / email / phone). Only EMPTY fields are filled so a saved
+  // address picked by <CheckoutSavedAddresses> or user typing is never wiped.
   useEffect(() => {
-    setValue('firstName', shipping_info.firstName);
-    setValue('lastName', shipping_info.lastName);
-    setValue('country', shipping_info.country);
-    setValue('address', shipping_info.address);
-    setValue('city', shipping_info.city);
-    setValue('zipCode', shipping_info.zipCode);
-    setValue('contactNo', shipping_info.contactNo);
-    setValue('email', shipping_info.email);
-    setValue('orderNote', shipping_info.orderNote);
-  }, [user, setValue, shipping_info, router]);
+    let last = {};
+    try {
+      last = JSON.parse(localStorage.getItem(LAST_INFO_KEY) || '{}') || {};
+    } catch {
+      last = {};
+    }
+    const fullName = (user?.name || '').trim();
+    const [first, ...rest] = fullName.split(/\s+/);
+    const fromProfile = {
+      firstName: fullName.includes(' ') ? first : fullName,
+      lastName: fullName.includes(' ') ? rest.join(' ') : '',
+      email: user?.email && !user.email.endsWith('@keycloak.local') ? user.email : '',
+      contactNo: user?.phone || '',
+      country: 'Việt Nam',
+    };
+    PREFILL_FIELDS.forEach((field) => {
+      if (getValues(field)) return;
+      const value = last[field] || fromProfile[field];
+      if (value) setValue(field, value, { shouldValidate: false });
+    });
+  }, [user, setValue, getValues]);
 
   // submitHandler
+  // First order of a logged-in customer without a saved address → save it as
+  // the default so the next checkout is pre-filled from the address book.
+  const saveFirstAddress = (data) => {
+    const raw = addressData?.data ?? addressData?.addresses ?? addressData;
+    const hasAddresses = Array.isArray(raw) && raw.length > 0;
+    if (!isAuthenticated || !addressesLoaded || hasAddresses) return;
+    addAddress({
+      fullName: data.firstName,
+      lastName: data.lastName || '',
+      company: data.companyName || '',
+      phone: data.contactNo,
+      email: data.email,
+      address: data.address,
+      city: data.city,
+      state: data.state || '',
+      zipCode: data.zipCode,
+      country: data.country,
+      label: 'billing',
+      isDefault: true,
+    }).catch(() => {});
+  };
+
   const submitHandler = async (data) => {
-    dispatch(set_shipping(data));
+    const { orderNote: _note, ...reusable } = data;
+    dispatch(set_shipping(reusable));
+    saveFirstAddress(data);
     setIsCheckoutSubmit(true);
     setBankDetails(null);
 
@@ -262,7 +338,7 @@ const useCheckoutSubmit = () => {
       city: data.city,
       country: data.country,
       zipCode: data.zipCode,
-      shippingOption: data.shippingOption,
+      shippingOption: shippingMethodId || data.shippingOption,
       status: 'Pending',
       cart: cart_products,
       paymentMethod: normalisedMethod,
@@ -332,6 +408,11 @@ const useCheckoutSubmit = () => {
     taxRate,
     taxLabel,
     taxEnabled,
+    shippingMethods,
+    shippingMethodId,
+    selectShippingMethod,
+    eligibleFree,
+    freeShipRemaining,
   };
 };
 

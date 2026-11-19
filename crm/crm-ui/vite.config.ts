@@ -24,6 +24,11 @@ export default defineConfig(({ command, mode }) => ({
         target: 'http://localhost:8081',
         changeOrigin: true,
       },
+      // Đăng xuất do CRM server (8081) xử lý: huỷ session rồi chuyển sang Keycloak
+      '/logout': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+      },
     },
   },
   build: {

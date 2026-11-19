@@ -380,7 +380,11 @@ exports.applyForVendor = async (req, res, next) => {
     }
 
     // Prevent re-application if already pending or approved
-    const existingStatus = user.vendorProfile?.verificationStatus;
+    // Only a real application has a storeName — legacy records may carry a
+    // stray default 'pending' status without ever having applied.
+    const existingStatus = user.vendorProfile?.storeName
+      ? user.vendorProfile.verificationStatus
+      : null;
     if (existingStatus === 'pending') {
       return respond.error(
         res,

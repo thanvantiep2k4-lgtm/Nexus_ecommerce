@@ -297,7 +297,7 @@ async function seed() {
       img: 'https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png',
       title: p.title,
       slug,
-      unit: 'piece',
+      unit: 'cái',
       imageURLs: [
         {
           color: { name: 'Default', clrCode: '#000000' },

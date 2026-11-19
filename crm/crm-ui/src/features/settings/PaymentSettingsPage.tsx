@@ -34,31 +34,31 @@ const GATEWAYS = [
     value: 'stripe',
     label: 'Stripe',
     icon: <CreditCardOutlined />,
-    description: 'Credit/Debit cards via Stripe',
+    description: 'Thẻ tín dụng/ghi nợ qua Stripe',
   },
   {
     value: 'cod',
-    label: 'Cash on Delivery',
+    label: 'Thanh toán khi nhận hàng (COD)',
     icon: <DollarOutlined />,
-    description: 'Pay when you receive your order',
+    description: 'Khách thanh toán khi nhận hàng',
   },
   {
     value: 'vnpay',
     label: 'VNPay',
     icon: <BankOutlined />,
-    description: 'Vietnam domestic payment gateway',
+    description: 'Cổng thanh toán nội địa Việt Nam',
   },
   {
     value: 'momo',
     label: 'MoMo',
     icon: <MobileOutlined />,
-    description: 'MoMo e-wallet (Vietnam)',
+    description: 'Ví điện tử MoMo',
   },
   {
     value: 'bank-transfer',
-    label: 'Bank Transfer',
+    label: 'Chuyển khoản ngân hàng',
     icon: <BankOutlined />,
-    description: 'Direct bank transfer',
+    description: 'Chuyển khoản trực tiếp qua ngân hàng',
   },
 ];
 
@@ -102,9 +102,9 @@ export default function PaymentSettingsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['site-settings'] });
       queryClient.invalidateQueries({ queryKey: ['site-settings', 'public'] });
-      toast.success('Payment settings saved');
+      toast.success('Đã lưu cài đặt thanh toán');
     },
-    onError: () => toast.error('Failed to save payment settings'),
+    onError: () => toast.error('Lưu cài đặt thanh toán thất bại'),
   });
 
   if (isLoading) {
@@ -118,7 +118,7 @@ export default function PaymentSettingsPage() {
   return (
     <div>
       <PageHeader
-        title="Payment Settings"
+        title="Cài đặt thanh toán"
         extra={
           <Button
             type="primary"
@@ -126,7 +126,7 @@ export default function PaymentSettingsPage() {
             loading={saveMutation.isPending}
             onClick={() => saveMutation.mutate()}
           >
-            Save Changes
+            Lưu thay đổi
           </Button>
         }
       />
@@ -136,7 +136,7 @@ export default function PaymentSettingsPage() {
         <Card
           title={
             <Title level={5} style={{ margin: 0 }}>
-              Payment Gateways
+              Cổng thanh toán
             </Title>
           }
           size="small"
@@ -181,23 +181,23 @@ export default function PaymentSettingsPage() {
             const gateways: string[] = getFieldValue('enabledGateways') ?? [];
             if (!gateways.includes('bank-transfer')) return null;
             return (
-              <Card title="Bank Transfer Details" style={{ marginTop: 16 }}>
+              <Card title="Thông tin chuyển khoản" style={{ marginTop: 16 }}>
                 <Alert
                   type="info"
                   showIcon
                   style={{ marginBottom: 16 }}
-                  message="VietQR will be auto-generated for the selected bank"
-                  description="The customer's banking app will pre-fill bank, account number, amount, and transfer note from the QR. You only need to upload a custom QR if your bank is not in the list."
+                  message="Mã VietQR sẽ được tạo tự động cho ngân hàng đã chọn"
+                  description="Ứng dụng ngân hàng của khách sẽ tự điền ngân hàng, số tài khoản, số tiền và nội dung chuyển khoản từ mã QR. Bạn chỉ cần tải QR riêng nếu ngân hàng của bạn không có trong danh sách."
                 />
 
                 <Form.Item
-                  label="Bank"
+                  label="Ngân hàng"
                   name={['bankTransfer', 'bankName']}
-                  rules={[{ required: true, message: 'Bank is required' }]}
+                  rules={[{ required: true, message: 'Vui lòng chọn ngân hàng' }]}
                 >
                   <Select
                     showSearch
-                    placeholder="Select your bank"
+                    placeholder="Chọn ngân hàng"
                     optionFilterProp="label"
                     options={VN_BANKS.map((b) => ({
                       value: b.shortName,
@@ -219,37 +219,37 @@ export default function PaymentSettingsPage() {
                 </Form.Item>
 
                 <Form.Item
-                  label="Account Number"
+                  label="Số tài khoản"
                   name={['bankTransfer', 'accountNumber']}
-                  rules={[{ required: true, message: 'Account number is required' }]}
+                  rules={[{ required: true, message: 'Vui lòng nhập số tài khoản' }]}
                 >
-                  <Input placeholder="e.g. 0123456789" />
+                  <Input placeholder="VD: 0123456789" />
                 </Form.Item>
 
                 <Form.Item
-                  label="Account Holder"
+                  label="Chủ tài khoản"
                   name={['bankTransfer', 'accountName']}
-                  rules={[{ required: true, message: 'Account holder is required' }]}
+                  rules={[{ required: true, message: 'Vui lòng nhập tên chủ tài khoản' }]}
                 >
-                  <Input placeholder="e.g. SHOFY CO., LTD" />
+                  <Input placeholder="VD: CONG TY TNHH SHOFY" />
                 </Form.Item>
 
-                <Form.Item label="Branch (optional)" name={['bankTransfer', 'branch']}>
-                  <Input placeholder="e.g. Hanoi Branch" />
+                <Form.Item label="Chi nhánh (không bắt buộc)" name={['bankTransfer', 'branch']}>
+                  <Input placeholder="VD: Chi nhánh Hà Nội" />
                 </Form.Item>
 
                 <Form.Item
-                  label="Transfer Content Template (optional)"
+                  label="Mẫu nội dung chuyển khoản (không bắt buộc)"
                   name={['bankTransfer', 'transferContentTemplate']}
-                  extra="Use {orderId} as a placeholder. e.g. SHOFY-{orderId}"
+                  extra="Dùng {orderId} làm biến thay thế. VD: SHOFY-{orderId}"
                 >
                   <Input placeholder="SHOFY-{orderId}" />
                 </Form.Item>
 
                 <Form.Item
-                  label="Custom QR override (optional)"
+                  label="Mã QR tuỳ chỉnh (không bắt buộc)"
                   name={['bankTransfer', 'qrImageUrl']}
-                  extra="Only upload if your bank is not in the list above. Otherwise the storefront auto-generates a VietQR."
+                  extra="Chỉ tải lên nếu ngân hàng của bạn không có trong danh sách trên. Nếu không, cửa hàng sẽ tự tạo mã VietQR."
                 >
                   <ImageUpload />
                 </Form.Item>

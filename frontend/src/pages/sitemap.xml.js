@@ -42,11 +42,6 @@ function generateSiteMap(baseUrl, products, blogs) {
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  <url>
-    <loc>${baseUrl}/contact</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
 ${productEntries}
 ${blogEntries}
 </urlset>`;

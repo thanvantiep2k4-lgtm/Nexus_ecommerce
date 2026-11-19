@@ -5,7 +5,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Headphones Wireless.",
     "slug": "headphones-wireless.",
-    "unit": "3pcs",
+    "unit": "3 cái",
     "imageURLs": [
       {
         "color": {
@@ -98,7 +98,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Gaming Headphone",
     "slug": "gaming-headphone",
-    "unit": "5pcs",
+    "unit": "5 cái",
     "imageURLs": [
       {
         "color": {
@@ -186,7 +186,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Headphone with Mic",
     "slug": "headphone-with-mic",
-    "unit": "4pcs",
+    "unit": "4 cái",
     "imageURLs": [
       {
         "color": {
@@ -271,7 +271,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Galaxy Android Tablet",
     "slug": "galaxy-android-tablet",
-    "unit": "8pcs",
+    "unit": "8 cái",
     "imageURLs": [
       {
         "color": {
@@ -363,7 +363,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "iPhone 14 Pro",
     "slug": "iPhone-14-pro",
-    "unit": "10pcs",
+    "unit": "10 cái",
     "imageURLs": [
       {
         "color": {
@@ -457,7 +457,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Apple iPad Air",
     "slug": "apple-iPad-air",
-    "unit": "12pcs",
+    "unit": "12 cái",
     "imageURLs": [
       {
         "color": {
@@ -542,7 +542,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "DeepCool Air Cooler",
     "slug": "deepCool-air-cooler",
-    "unit": "15pcs",
+    "unit": "15 cái",
     "imageURLs": [
       {
         "color": {
@@ -633,7 +633,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Antec Air Cooler",
     "slug": "antec-air-cooler",
-    "unit": "15pcs",
+    "unit": "15 cái",
     "imageURLs": [
       {
         "color": {
@@ -728,7 +728,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Apple Watch Sport Band",
     "slug": "apple-watch-sport-band",
-    "unit": "18pcs",
+    "unit": "18 cái",
     "imageURLs": [
       {
         "color": {
@@ -823,7 +823,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Sony Smart Watch",
     "slug": "sony-smart-watch",
-    "unit": "12pcs",
+    "unit": "12 cái",
     "imageURLs": [
       {
         "color": {
@@ -914,7 +914,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Sony Lady Fitness Watch",
     "slug": "sony-lady-fitness-watch",
-    "unit": "10pcs",
+    "unit": "10 cái",
     "imageURLs": [
       {
         "color": {
@@ -1013,7 +1013,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Lenovo Wireless Bluetooth",
     "slug": "lenovo-wireless-bluetooth",
-    "unit": "7pcs",
+    "unit": "7 cái",
     "imageURLs": [
       {
         "color": {
@@ -1101,7 +1101,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Lenovo Sports Bluetooth",
     "slug": "lenovo-sports-bluetooth",
-    "unit": "7pcs",
+    "unit": "7 cái",
     "imageURLs": [
       {
         "color": {
@@ -1189,7 +1189,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Whitetails Women's Dress",
     "slug": "whitetails-women's-dress",
-    "unit": "10pcs",
+    "unit": "10 cái",
     "imageURLs": [
       {
         "color": {
@@ -1284,7 +1284,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Boys Graphic T-Shirt",
     "slug": "boys-graphic-t-shirt",
-    "unit": "12pcs",
+    "unit": "12 cái",
     "imageURLs": [
       {
         "color": {
@@ -1375,7 +1375,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Milumia Blouse",
     "slug": "milumia-blouse",
-    "unit": "17pcs",
+    "unit": "17 cái",
     "imageURLs": [
       {
         "color": {
@@ -1469,7 +1469,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Tall Easy Tote-2",
     "slug": "tall-easy-tote-2",
-    "unit": "5pcs",
+    "unit": "5 cái",
     "imageURLs": [
       {
         "color": {
@@ -1560,7 +1560,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Traveling Bag",
     "slug": "traveling-bag",
-    "unit": "5pcs",
+    "unit": "5 cái",
     "imageURLs": [
       {
         "color": {
@@ -1654,7 +1654,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Nike Retro GTS-2",
     "slug": "nike-retro-gts-2",
-    "unit": "4pcs",
+    "unit": "4 cái",
     "imageURLs": [
       {
         "color": {
@@ -1745,7 +1745,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Jefferson Star Wars™",
     "slug": "jefferson-star-wars™",
-    "unit": "4pcs",
+    "unit": "4 cái",
     "imageURLs": [
       {
         "color": {
@@ -1839,7 +1839,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Baby Cotton Bodysuits",
     "slug": "baby-cotton-bodysuits",
-    "unit": "12pcs",
+    "unit": "12 cái",
     "imageURLs": [
       {
         "color": {
@@ -1931,7 +1931,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "INIKA Mineral Sunkissed",
     "slug": "inika-mineral-sunkissed",
-    "unit": "15pcs",
+    "unit": "15 cái",
     "imageURLs": [
       {
         "color": {
@@ -2025,7 +2025,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Grand Plumping Highlighter",
     "slug": "grand-plumping-highlighter",
-    "unit": "10pcs",
+    "unit": "10 cái",
     "imageURLs": [
       {
         "color": {
@@ -2109,7 +2109,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Brand Cosmetic Product",
     "slug": "brand-cosmetic-product",
-    "unit": "12pcs",
+    "unit": "12 cái",
     "imageURLs": [
       {
         "color": {
@@ -2196,7 +2196,7 @@ const products = [
     "img": "https://res.cloudinary.com/PLACEHOLDER/image/upload/v1/shofy/seed/placeholder.png",
     "title": "Wet Dewy Cream Beige",
     "slug": "wet-dewy-cream-beige",
-    "unit": "12pcs",
+    "unit": "12 cái",
     "imageURLs": [
       {
         "color": {

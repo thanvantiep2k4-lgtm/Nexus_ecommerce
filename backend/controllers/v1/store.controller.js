@@ -144,10 +144,8 @@ exports.getAllProducts = async (req, res, next) => {
       filter.featured = true;
     }
 
-    // status
-    if (q.status) {
-      filter.status = q.status;
-    }
+    // status — storefront never lists discontinued products unless asked explicitly
+    filter.status = q.status ? q.status : { $ne: 'discontinued' };
 
     // tag
     if (q.tag) {
@@ -745,7 +743,7 @@ exports.listVendors = async (req, res, next) => {
     // Attach product count for each vendor
     const vendorIds = vendors.map((v) => v._id);
     const productCounts = await Product.aggregate([
-      { $match: { vendor: { $in: vendorIds } } },
+      { $match: { vendor: { $in: vendorIds }, status: { $ne: 'discontinued' } } },
       { $group: { _id: '$vendor', count: { $sum: 1 } } },
     ]);
     const countMap = {};
@@ -790,7 +788,7 @@ exports.getVendorBySlug = async (req, res, next) => {
     const vendorId = new mongoose.Types.ObjectId(vendor._id);
 
     const [productCount, ratingAgg] = await Promise.all([
-      Product.countDocuments({ vendor: vendorId }),
+      Product.countDocuments({ vendor: vendorId, status: { $ne: 'discontinued' } }),
       Product.aggregate([
         { $match: { vendor: vendorId } },
         {
@@ -850,7 +848,8 @@ exports.trackOrder = async (req, res, next) => {
       email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
     };
 
-    const trimmed = orderId.trim();
+    // Customers often copy the displayed "#1422" — ignore a leading '#'
+    const trimmed = orderId.trim().replace(/^#/, '');
     if (/^\d+$/.test(trimmed)) {
       query.invoice = Number(trimmed);
     } else if (mongoose.Types.ObjectId.isValid(trimmed)) {

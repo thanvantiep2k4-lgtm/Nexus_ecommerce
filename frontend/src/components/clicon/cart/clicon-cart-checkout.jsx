@@ -1,42 +1,25 @@
-import React, { useMemo, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import useCartInfo from '@/hooks/use-cart-info';
 import useCurrency from '@/hooks/use-currency';
+import useShipping from '@/hooks/use-shipping';
 import { useGetSettingsQuery } from '@/redux/features/cmsApi';
-import { set_shipping_method_id } from '@/redux/features/order/orderSlice';
 import { ClButton } from '@/components/clicon/ui';
-
-const FALLBACK_METHODS = [
-  { id: 'free', label: 'Free shipping', labelVi: 'Miễn phí', cost: 0, enabled: true },
-  { id: 'flat', label: 'Flat rate', labelVi: 'Phí cố định', cost: 20000, enabled: true },
-  { id: 'pickup', label: 'Local pickup', labelVi: 'Nhận tại cửa hàng', cost: 25000, enabled: true },
-];
 
 const CliconCartCheckout = () => {
   const { t, i18n } = useTranslation();
   const { total } = useCartInfo();
   const { formatPrice } = useCurrency();
   const { data: settingsData } = useGetSettingsQuery();
-  const dispatch = useDispatch();
-  const selectedId = useSelector((state) => state.order.shipping_method_id);
-
-  const methods = useMemo(() => {
-    const raw = settingsData?.data?.shipping?.methods;
-    const list = Array.isArray(raw) && raw.length > 0 ? raw : FALLBACK_METHODS;
-    return list.filter((m) => m && m.enabled !== false);
-  }, [settingsData]);
-
-  useEffect(() => {
-    if (!methods.length) return;
-    if (!methods.find((m) => m.id === selectedId)) {
-      dispatch(set_shipping_method_id(methods[0].id));
-    }
-  }, [methods, selectedId, dispatch]);
-
-  const selected = methods.find((m) => m.id === selectedId);
-  const shipCost = selected?.cost ?? 0;
+  const {
+    methods,
+    selectedId,
+    shippingCost: shipCost,
+    select,
+    eligibleFree,
+    remaining,
+  } = useShipping();
 
   // Tax — matches useCheckoutSubmit logic so cart and checkout agree.
   const taxConfig = settingsData?.data?.tax || {};
@@ -75,7 +58,7 @@ const CliconCartCheckout = () => {
                 type="radio"
                 name="shipping"
                 checked={selectedId === m.id}
-                onChange={() => dispatch(set_shipping_method_id(m.id))}
+                onChange={() => select(m.id)}
               />
               <span>
                 {getLabel(m)}
@@ -84,6 +67,14 @@ const CliconCartCheckout = () => {
             </label>
           ))}
         </div>
+        {!eligibleFree && remaining > 0 && (
+          <p className="cl-cart-summary__shipping-hint">
+            {t('checkout.freeShipHint', {
+              amount: formatPrice(remaining),
+              defaultValue: 'Mua thêm {{amount}} để được miễn phí vận chuyển',
+            })}
+          </p>
+        )}
       </div>
 
       {/* Tax */}

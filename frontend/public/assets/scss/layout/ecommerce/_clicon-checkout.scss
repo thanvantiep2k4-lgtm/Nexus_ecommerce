@@ -813,3 +813,37 @@
   color: var(--clicon-text-muted, #6b7280);
   font-size: 0.85em;
 }
+
+// Shipping method picker in the order summary
+.cl-checkout__ship-methods {
+  margin: -4px 0 12px;
+  padding: 10px 12px;
+  background: #f7f8fa;
+  border-radius: 6px;
+}
+
+.cl-checkout__ship-method {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #475156;
+  cursor: pointer;
+
+  input {
+    accent-color: var(--cl-primary);
+  }
+
+  .cost {
+    margin-left: auto;
+    font-weight: 600;
+    color: #191c1f;
+  }
+}
+
+.cl-checkout__ship-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #2db224;
+}

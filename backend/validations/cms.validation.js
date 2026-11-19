@@ -69,24 +69,35 @@ const updateMenu = createMenu.fork(['name', 'location'], (f) => f.optional());
 // Banners
 // ---------------------------------------------------------------------------
 
+// Must stay in sync with models/Banner.js (enums + sub-schemas)
+const BANNER_TYPES = ['announcement-bar', 'popup', 'hero-slide', 'promotional-banner', 'category-banner'];
+
 const schedulingSchema = Joi.object({
   startDate: Joi.alternatives().try(Joi.date(), Joi.string().allow('', null)).optional(),
   endDate: Joi.alternatives().try(Joi.date(), Joi.string().allow('', null)).optional(),
+  isAlwaysActive: Joi.boolean().optional(),
+}).options({ stripUnknown: true });
+
+const targetingSchema = Joi.object({
+  pages: Joi.array().items(Joi.string()).optional(),
+  userSegments: Joi.array().items(Joi.string()).optional(),
 }).options({ stripUnknown: true });
 
 const createBanner = Joi.object({
   title: Joi.string().required(),
-  type: Joi.string().valid('hero', 'promo', 'sidebar', 'popup', 'announcement').optional(),
+  type: Joi.string()
+    .valid(...BANNER_TYPES)
+    .required(),
   content: Joi.object().unknown(true).optional(),
   scheduling: schedulingSchema.optional(),
+  targeting: targetingSchema.optional(),
   status: Joi.string().valid('active', 'inactive', 'scheduled').optional(),
   priority: Joi.number().integer().min(0).optional(),
-  imageUrl: Joi.string().allow('', null).optional(),
-  link: Joi.string().allow('', null).optional(),
-  position: Joi.string().allow('', null).optional(),
+  dismissible: Joi.boolean().optional(),
+  position: Joi.string().valid('top', 'bottom', 'modal', 'inline').optional(),
 }).options({ stripUnknown: true });
 
-const updateBanner = createBanner.fork(['title'], (f) => f.optional());
+const updateBanner = createBanner.fork(['title', 'type'], (f) => f.optional());
 
 // ---------------------------------------------------------------------------
 // Blog

@@ -104,7 +104,8 @@ const userSchema = mongoose.Schema(
       verificationStatus: {
         type: String,
         enum: ['pending', 'approved', 'rejected', 'suspended'],
-        default: 'pending',
+        // No default: only set when the user actually applies (POST /user/vendor/apply).
+        // A default here made every new user look like a pending vendor applicant.
       },
       rejectionReason: { type: String },
     },

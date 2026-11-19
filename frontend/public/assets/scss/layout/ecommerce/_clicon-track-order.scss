@@ -350,3 +350,16 @@
   font-size: var(--cl-fs-caption);
   color: var(--cl-text-secondary);
 }
+
+.cl-track-detail__cancelled {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 24px;
+  padding: 14px 18px;
+  border-radius: 6px;
+  background: #fdecec;
+  color: #ee5858;
+  font-weight: 600;
+  font-size: 14px;
+}

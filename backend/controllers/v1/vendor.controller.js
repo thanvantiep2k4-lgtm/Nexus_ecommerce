@@ -201,6 +201,11 @@ exports.createProduct = async (req, res, next) => {
       body.slug = toSlug(body.title);
     }
 
+    // Fill model-required fields the vendor form may omit
+    if (!body.parent && body.category?.name) body.parent = body.category.name;
+    if (!body.children) body.children = body.parent || '';
+    if (!body.unit) body.unit = 'cái';
+
     // Validate variant SKU uniqueness
     if (body.variants) {
       const skuError = validateVariantSkus(body.variants);
@@ -367,7 +372,7 @@ exports.getOrders = async (req, res, next) => {
         .skip(skip)
         .limit(limit)
         .select(
-          'name address email contact city country status paymentMethod totalAmount createdAt items statusHistory trackingNumber carrier'
+          'invoice name address email contact city country status paymentMethod totalAmount createdAt items statusHistory trackingNumber carrier'
         )
         .lean(),
     ]);

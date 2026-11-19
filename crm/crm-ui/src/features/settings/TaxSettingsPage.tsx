@@ -109,7 +109,7 @@ export default function TaxSettingsPage() {
         type="info"
         showIcon
         style={{ marginBottom: 16 }}
-        message="Giá hiển thị trên storefront là giá CHƯA bao gồm thuế. Thuế được cộng thêm vào tổng đơn ở bước checkout."
+        message="Giá hiển thị trên cửa hàng là giá CHƯA bao gồm thuế. Thuế được cộng thêm vào tổng đơn ở bước thanh toán."
       />
 
       <Form form={form} layout="vertical" initialValues={DEFAULT_TAX}>
@@ -136,7 +136,7 @@ export default function TaxSettingsPage() {
               <Form.Item
                 name="rate"
                 label="Thuế suất (%)"
-                rules={[{ required: true, message: 'Bắt buộc' }]}
+                rules={[{ required: true, message: 'Vui lòng nhập thuế suất' }]}
               >
                 <InputNumber
                   min={0}
@@ -150,9 +150,9 @@ export default function TaxSettingsPage() {
             <Col xs={24} sm={8}>
               <Form.Item
                 name="applyToShipping"
-                label="Tính thuế cả phí ship"
+                label="Tính thuế cả phí vận chuyển"
                 valuePropName="checked"
-                tooltip="Bật = thuế tính trên (subtotal − discount + shipping). Tắt = chỉ tính trên (subtotal − discount)."
+                tooltip="Bật = thuế tính trên (tạm tính − giảm giá + phí vận chuyển). Tắt = chỉ tính trên (tạm tính − giảm giá)."
               >
                 <Switch />
               </Form.Item>
@@ -173,7 +173,7 @@ export default function TaxSettingsPage() {
           </Row>
 
           <Text type="secondary">
-            Ví dụ với thuế suất 10%: nếu subtotal = 500.000 ₫, shipping = 25.000 ₫, discount = 0 →
+            Ví dụ với thuế suất 10%: nếu tạm tính = 500.000 ₫, phí vận chuyển = 25.000 ₫, giảm giá = 0 →
             Thuế = (500.000 + 25.000) × 10% = 52.500 ₫. Tổng = 577.500 ₫.
           </Text>
         </Card>

@@ -64,7 +64,8 @@ const DetailsWrapper = ({
       ? 'in-stock'
       : 'out-of-stock'
     : status;
-  const isOutOfStock = displayStatus === 'out-of-stock';
+  const isDiscontinued = status === 'discontinued';
+  const isOutOfStock = displayStatus === 'out-of-stock' || isDiscontinued;
   const displayStock = selectedVariant?.stock ?? quantity ?? '';
 
   const discountedPrice =
@@ -130,9 +131,11 @@ const DetailsWrapper = ({
           <span
             className={`cl-pd__meta-badge cl-pd__meta-badge--${isOutOfStock ? 'out-of-stock' : 'in-stock'}`}
           >
-            {isOutOfStock
-              ? t('pd.outOfStock', 'Hết hàng')
-              : t('pd.inStock', { count: displayStock, defaultValue: 'Còn {{count}} sản phẩm' })}
+            {isDiscontinued
+              ? t('pd.discontinued', 'Ngừng kinh doanh')
+              : isOutOfStock
+                ? t('pd.outOfStock', 'Hết hàng')
+                : t('pd.inStock', { count: displayStock, defaultValue: 'Còn {{count}} sản phẩm' })}
           </span>
         </div>
         {brand && (

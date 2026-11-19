@@ -243,7 +243,19 @@
     "haveCoupon": "Have a coupon?",
     "clickHereToEnterCode": "Click here to enter your code",
     "addressDefault": "Default",
-    "useDifferentAddress": "+ Use a different address"
+    "useDifferentAddress": "+ Use a different address",
+    "required": {
+      "firstName": "Full name is required",
+      "address": "Address is required",
+      "country": "Country is required",
+      "city": "City is required",
+      "zipCode": "Zip code is required",
+      "email": "Email is required",
+      "contactNo": "Phone number is required"
+    },
+    "freeShipHint": "Add {{amount}} more to get free shipping",
+    "couponApplied": "Coupon {{code}} applied!",
+    "couponMinimum": "Your order does not meet the minimum amount for this coupon"
   },
   "auth": {
     "login": "Login",
@@ -541,7 +553,8 @@
     "payStatusPaid": "Paid",
     "payStatusUnpaid": "Unpaid",
     "payStatusPending": "Pending",
-    "payStatusFailed": "Failed"
+    "payStatusFailed": "Failed",
+    "cancelledBanner": "This order has been cancelled"
   },
   "breadcrumb": {
     "home": "Home",
@@ -689,7 +702,8 @@
     "browsingDisabled": "Browsing history is disabled. Turn it on to track your product views.",
     "noBrowsingHistory": "No browsing history yet. Visit some products!",
     "noSearchResults": "No results match your search.",
-    "clearAllHistory": "Clear All History"
+    "clearAllHistory": "Clear All History",
+    "becomeSeller": "Become a Seller"
   },
   "badge": {
     "hot": "HOT",
@@ -817,12 +831,56 @@
     "memory": "Memory",
     "selectMemory": "Select memory",
     "storage": "Storage",
-    "selectStorage": "Select storage"
+    "selectStorage": "Select storage",
+    "discontinued": "Discontinued"
   },
   "announcement": {
     "highlight": "11.11 Mega Sale",
     "deal": "Up to 50% off · Free nationwide shipping",
     "cta": "Shop now",
     "close": "Close announcement"
+  },
+  "vendorApply": {
+    "title": "Sell on NexusMart",
+    "benefit1": "Reach thousands of customers across the marketplace",
+    "benefit2": "Manage products, orders and revenue in the Seller Center",
+    "benefit3": "Fast payouts straight to your bank account",
+    "storeName": "Store name",
+    "storeNamePlaceholder": "e.g. Tech Corner",
+    "storeNameRequired": "Store name must be 2–100 characters",
+    "storeDescription": "Store description",
+    "storeDescriptionPlaceholder": "What do you sell? What makes your store special?",
+    "bankInfo": "Payout bank account",
+    "bankName": "Bank name",
+    "branch": "Branch",
+    "accountNumber": "Account number",
+    "accountName": "Account holder",
+    "submit": "Submit application",
+    "submitted": "Application submitted! We will review it shortly.",
+    "failed": "Could not submit your application.",
+    "reason": "Reason",
+    "reapply": "Apply again",
+    "openSellerCenter": "Open Seller Center",
+    "status": {
+      "pending": "Pending review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "suspended": "Suspended"
+    },
+    "statusDesc": {
+      "pending": "Your application is being reviewed by our team. You will receive an email once it is approved.",
+      "approved": "Your store is live! Sign out and sign in again, then open the Seller Center to start listing products.",
+      "rejected": "Unfortunately your application was not approved. You can update your details and apply again.",
+      "suspended": "Your store is temporarily suspended. Please contact support for details."
+    }
+  },
+  "vendorStore": {
+    "fallbackName": "Store",
+    "products": "products",
+    "memberSince": "Member since {{date}}",
+    "outOfStock": "Out of stock",
+    "productsBy": "Products by {{store}}",
+    "empty": "This vendor has no products listed yet.",
+    "browseAll": "Browse all products"
   }
 }

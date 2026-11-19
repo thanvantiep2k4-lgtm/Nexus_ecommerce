@@ -42,13 +42,13 @@ const PAGE_SIZE = 10;
 const DEBOUNCE_MS = 300;
 
 const PRODUCT_TYPE_OPTIONS = [
-  { value: '', label: 'All Types' },
-  { value: 'electronics', label: 'Electronics' },
-  { value: 'fashion', label: 'Fashion' },
-  { value: 'beauty', label: 'Beauty' },
-  { value: 'furniture', label: 'Furniture' },
-  { value: 'foods', label: 'Foods' },
-  { value: 'sports', label: 'Sports' },
+  { value: '', label: 'Tất cả loại' },
+  { value: 'electronics', label: 'Điện tử' },
+  { value: 'fashion', label: 'Thời trang' },
+  { value: 'beauty', label: 'Làm đẹp' },
+  { value: 'furniture', label: 'Nội thất' },
+  { value: 'foods', label: 'Thực phẩm' },
+  { value: 'sports', label: 'Thể thao' },
 ];
 
 interface Filters {
@@ -112,10 +112,10 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
     mutationFn: (data: Partial<Coupon>) => couponsApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
-      toast.success('Coupon created successfully');
+      toast.success('Tạo mã giảm giá thành công');
       onClose();
     },
-    onError: () => toast.error('Failed to create coupon'),
+    onError: () => toast.error('Tạo mã giảm giá thất bại'),
   });
 
   const updateMutation = useMutation({
@@ -123,10 +123,10 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
       couponsApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
-      toast.success('Coupon updated successfully');
+      toast.success('Cập nhật mã giảm giá thành công');
       onClose();
     },
-    onError: () => toast.error('Failed to update coupon'),
+    onError: () => toast.error('Cập nhật mã giảm giá thất bại'),
   });
 
   const isLoading = createMutation.isPending || updateMutation.isPending;
@@ -152,11 +152,11 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
 
   return (
     <Modal
-      title={isEdit ? 'Edit Coupon' : 'Create Coupon'}
+      title={isEdit ? 'Sửa mã giảm giá' : 'Tạo mã giảm giá'}
       open={open}
       onCancel={onClose}
       onOk={handleSubmit}
-      okText={isEdit ? 'Update' : 'Create'}
+      okText={isEdit ? 'Cập nhật' : 'Tạo'}
       confirmLoading={isLoading}
       width={640}
       afterOpenChange={handleAfterOpenChange}
@@ -167,10 +167,10 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
           <Col span={24}>
             <Form.Item
               name="title"
-              label="Title"
-              rules={[{ required: true, message: 'Title is required' }]}
+              label="Tiêu đề"
+              rules={[{ required: true, message: 'Vui lòng nhập tiêu đề' }]}
             >
-              <Input placeholder="Summer Sale 20% Off" />
+              <Input placeholder="Khuyến mãi hè giảm 20%" />
             </Form.Item>
           </Col>
         </Row>
@@ -179,8 +179,8 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
           <Col xs={24} sm={12}>
             <Form.Item
               name="couponCode"
-              label="Coupon Code"
-              rules={[{ required: true, message: 'Coupon code is required' }]}
+              label="Mã giảm giá"
+              rules={[{ required: true, message: 'Vui lòng nhập mã giảm giá' }]}
               normalize={(v: string) => v?.toUpperCase()}
             >
               <Input placeholder="SUMMER20" style={{ fontFamily: 'monospace', fontWeight: 600 }} />
@@ -189,12 +189,12 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
           <Col xs={24} sm={12}>
             <Form.Item
               name="productType"
-              label="Product Type"
-              rules={[{ required: true, message: 'Product type is required' }]}
+              label="Loại sản phẩm"
+              rules={[{ required: true, message: 'Vui lòng chọn loại sản phẩm' }]}
             >
               <Select
                 options={PRODUCT_TYPE_OPTIONS.filter((o) => o.value !== '')}
-                placeholder="Select product type"
+                placeholder="Chọn loại sản phẩm"
               />
             </Form.Item>
           </Col>
@@ -204,8 +204,8 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
           <Col xs={24} sm={12}>
             <Form.Item
               name="discountPercentage"
-              label="Discount (%)"
-              rules={[{ required: true, message: 'Discount is required' }]}
+              label="Giảm giá (%)"
+              rules={[{ required: true, message: 'Vui lòng nhập mức giảm' }]}
             >
               <InputNumber min={1} max={100} style={{ width: '100%' }} suffix="%" />
             </Form.Item>
@@ -213,9 +213,9 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
           <Col xs={24} sm={12}>
             <Form.Item
               name="minimumAmount"
-              label="Minimum Order Amount"
-              tooltip="Stored as VND. CRM/storefront displays it in the user's chosen currency."
-              rules={[{ required: true, message: 'Minimum amount is required' }]}
+              label="Giá trị đơn tối thiểu"
+              tooltip="Lưu theo VND. CRM/cửa hàng hiển thị theo đơn vị tiền tệ người dùng chọn."
+              rules={[{ required: true, message: 'Vui lòng nhập giá trị tối thiểu' }]}
             >
               <InputNumber min={0} precision={0} style={{ width: '100%' }} prefix="₫" />
             </Form.Item>
@@ -226,8 +226,8 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
           <Col xs={24} sm={12}>
             <Form.Item
               name="startTime"
-              label="Start Date & Time"
-              rules={[{ required: true, message: 'Start time is required' }]}
+              label="Thời gian bắt đầu"
+              rules={[{ required: true, message: 'Vui lòng chọn thời gian bắt đầu' }]}
             >
               <Input type="datetime-local" />
             </Form.Item>
@@ -235,8 +235,8 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
           <Col xs={24} sm={12}>
             <Form.Item
               name="endTime"
-              label="End Date & Time"
-              rules={[{ required: true, message: 'End time is required' }]}
+              label="Thời gian kết thúc"
+              rules={[{ required: true, message: 'Vui lòng chọn thời gian kết thúc' }]}
             >
               <Input type="datetime-local" />
             </Form.Item>
@@ -245,21 +245,21 @@ function CouponModal({ open, editing, onClose }: CouponModalProps) {
 
         <Row gutter={16}>
           <Col xs={24} sm={12}>
-            <Form.Item name="usageLimit" label="Total Usage Limit">
-              <InputNumber min={1} style={{ width: '100%' }} placeholder="Unlimited" />
+            <Form.Item name="usageLimit" label="Giới hạn tổng lượt dùng">
+              <InputNumber min={1} style={{ width: '100%' }} placeholder="Không giới hạn" />
             </Form.Item>
           </Col>
           <Col xs={24} sm={12}>
-            <Form.Item name="perUserLimit" label="Per User Limit">
-              <InputNumber min={1} style={{ width: '100%' }} placeholder="Unlimited" />
+            <Form.Item name="perUserLimit" label="Giới hạn mỗi người dùng">
+              <InputNumber min={1} style={{ width: '100%' }} placeholder="Không giới hạn" />
             </Form.Item>
           </Col>
         </Row>
 
-        <Form.Item name="status" label="Status">
+        <Form.Item name="status" label="Trạng thái">
           <Radio.Group>
-            <Radio value="active">Active</Radio>
-            <Radio value="inactive">Inactive</Radio>
+            <Radio value="active">Đang hoạt động</Radio>
+            <Radio value="inactive">Ngừng hoạt động</Radio>
           </Radio.Group>
         </Form.Item>
       </Form>
@@ -298,9 +298,9 @@ export default function CouponsPage() {
     mutationFn: (id: string) => couponsApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
-      toast.success('Coupon deleted');
+      toast.success('Đã xoá mã giảm giá');
     },
-    onError: () => toast.error('Failed to delete coupon'),
+    onError: () => toast.error('Xoá mã giảm giá thất bại'),
   });
 
   const handleSearchChange = useCallback((value: string) => {
@@ -324,7 +324,7 @@ export default function CouponsPage() {
 
   const columns: TableProps<Coupon>['columns'] = [
     {
-      title: 'Code',
+      title: 'Mã',
       dataIndex: 'couponCode',
       key: 'code',
       width: 150,
@@ -339,55 +339,57 @@ export default function CouponsPage() {
       ),
     },
     {
-      title: 'Title',
+      title: 'Tiêu đề',
       dataIndex: 'title',
       key: 'title',
       render: (title: string) => <Text strong>{title}</Text>,
     },
     {
-      title: 'Discount',
+      title: 'Giảm giá',
       dataIndex: 'discountPercentage',
       key: 'discount',
       width: 100,
       render: (v: number) => <Tag color="volcano">{v}%</Tag>,
     },
     {
-      title: 'Min Amount',
+      title: 'Đơn tối thiểu',
       dataIndex: 'minimumAmount',
       key: 'minAmount',
       width: 130,
       render: (v: number) => formatCurrency(v),
     },
     {
-      title: 'Product Type',
+      title: 'Loại sản phẩm',
       dataIndex: 'productType',
       key: 'productType',
       width: 130,
-      render: (v: string) => <Tag>{v}</Tag>,
+      render: (v: string) => (
+        <Tag>{PRODUCT_TYPE_OPTIONS.find((o) => o.value === v)?.label ?? v}</Tag>
+      ),
     },
     {
-      title: 'Start',
+      title: 'Bắt đầu',
       dataIndex: 'startTime',
       key: 'start',
       width: 140,
-      render: (v: string) => dayjs(v).format('MMM D, YYYY'),
+      render: (v: string) => dayjs(v).format('DD/MM/YYYY'),
     },
     {
-      title: 'End',
+      title: 'Kết thúc',
       dataIndex: 'endTime',
       key: 'end',
       width: 140,
-      render: (v: string) => dayjs(v).format('MMM D, YYYY'),
+      render: (v: string) => dayjs(v).format('DD/MM/YYYY'),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       width: 100,
       render: (status: string) => <StatusBadge status={status} />,
     },
     {
-      title: 'Usage',
+      title: 'Lượt dùng',
       key: 'usage',
       width: 90,
       render: (_: unknown, record: Coupon) =>
@@ -396,7 +398,7 @@ export default function CouponsPage() {
           : `${record.usageCount ?? 0}`,
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       width: 110,
       fixed: 'right' as const,
@@ -404,10 +406,11 @@ export default function CouponsPage() {
         <Button.Group size="small">
           <Button icon={<EditOutlined />} onClick={() => handleOpenEdit(record)} />
           <Popconfirm
-            title="Delete coupon?"
-            description="This action cannot be undone."
+            title="Xoá mã giảm giá?"
+            description="Thao tác này không thể hoàn tác."
             onConfirm={() => deleteMutation.mutate(record._id)}
-            okText="Delete"
+            okText="Xoá"
+            cancelText="Huỷ"
             okButtonProps={{ danger: true }}
           >
             <Button icon={<DeleteOutlined />} danger loading={deleteMutation.isPending} />
@@ -423,10 +426,10 @@ export default function CouponsPage() {
   return (
     <div>
       <PageHeader
-        title="Coupons"
+        title="Mã giảm giá"
         extra={
           <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenCreate}>
-            Create Coupon
+            Tạo mã giảm giá
           </Button>
         }
       />
@@ -434,7 +437,7 @@ export default function CouponsPage() {
       <Card style={{ marginBottom: 16 }} size="small">
         <Space wrap>
           <Input
-            placeholder="Search coupons..."
+            placeholder="Tìm kiếm mã giảm giá..."
             prefix={<SearchOutlined style={{ color: '#bbb' }} />}
             value={filters.search}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -442,7 +445,7 @@ export default function CouponsPage() {
             style={{ width: 220 }}
           />
           <Select
-            placeholder="All Types"
+            placeholder="Tất cả loại"
             value={filters.productType || undefined}
             onChange={(val) => {
               setFilters((prev) => ({ ...prev, productType: val ?? '' }));
@@ -453,7 +456,7 @@ export default function CouponsPage() {
             style={{ width: 160 }}
           />
           <Select
-            placeholder="All Statuses"
+            placeholder="Tất cả trạng thái"
             value={filters.status || undefined}
             onChange={(val) => {
               setFilters((prev) => ({ ...prev, status: val ?? '' }));
@@ -461,8 +464,8 @@ export default function CouponsPage() {
             }}
             allowClear
             options={[
-              { value: 'active', label: 'Active' },
-              { value: 'inactive', label: 'Inactive' },
+              { value: 'active', label: 'Đang hoạt động' },
+              { value: 'inactive', label: 'Ngừng hoạt động' },
             ]}
             style={{ width: 140 }}
           />
@@ -475,7 +478,7 @@ export default function CouponsPage() {
                 setPage(1);
               }}
             >
-              Clear
+              Xoá bộ lọc
             </Button>
           )}
         </Space>
@@ -488,13 +491,13 @@ export default function CouponsPage() {
         loading={isLoading || isFetching}
         scroll={{ x: 1100 }}
         expandable={{ childrenColumnName: '__children' }}
-        locale={{ emptyText: <Empty description="No coupons found" /> }}
+        locale={{ emptyText: <Empty description="Không tìm thấy mã giảm giá" /> }}
         pagination={{
           current: page,
           pageSize: PAGE_SIZE,
           total: data?.pagination?.totalItems ?? 0,
           showSizeChanger: false,
-          showTotal: (total, range) => `${range[0]}–${range[1]} of ${total} coupons`,
+          showTotal: (total, range) => `${range[0]}–${range[1]} trên ${total} mã giảm giá`,
           onChange: (p) => setPage(p),
         }}
       />

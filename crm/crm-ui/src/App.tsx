@@ -1,6 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ConfigProvider, Spin } from 'antd';
+import viVN from 'antd/locale/vi_VN';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
 import MainLayout from '@/components/commons/MainLayout';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
@@ -14,6 +17,12 @@ const UsersPage = lazy(() => import('@/features/users/UsersPage'));
 
 // Phase 4: Vendors
 const VendorsPage = lazy(() => import('@/features/vendors/VendorsPage'));
+
+// Vendor self-service portal (role 'vendor')
+const VendorDashboardPage = lazy(() => import('@/features/vendor-portal/VendorDashboardPage'));
+const VendorProductsPage = lazy(() => import('@/features/vendor-portal/VendorProductsPage'));
+const VendorOrdersPage = lazy(() => import('@/features/vendor-portal/VendorOrdersPage'));
+const VendorProfilePage = lazy(() => import('@/features/vendor-portal/VendorProfilePage'));
 
 // Phase 4: Activity Log
 const ActivityLogPage = lazy(() => import('@/features/activity-log/ActivityLogPage'));
@@ -63,12 +72,44 @@ function SuspenseRoute({ children }: { children: React.ReactNode }) {
   );
 }
 
+dayjs.locale('vi');
+
 export default function App() {
   return (
     <ConfigProvider
+      locale={viVN}
       theme={{
         token: {
           colorPrimary: '#a42c48',
+          colorBgLayout: '#f6f3f4',
+          colorBorderSecondary: '#ece6e8',
+          borderRadius: 10,
+          fontFamily:
+            "'Inter', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        },
+        components: {
+          Layout: {
+            siderBg: '#ffffff',
+            headerBg: '#ffffff',
+            bodyBg: '#f6f3f4',
+            triggerBg: '#faf5f7',
+            triggerColor: '#6b6270',
+          },
+          Menu: {
+            itemBg: '#ffffff',
+            itemColor: '#4b4350',
+            itemHoverBg: '#faf2f5',
+            itemHoverColor: '#a42c48',
+            itemSelectedBg: '#f8e7ec',
+            itemSelectedColor: '#a42c48',
+            subMenuItemBg: '#ffffff',
+            itemBorderRadius: 8,
+          },
+          Card: {
+            borderRadiusLG: 12,
+            boxShadowTertiary: '0 1px 2px rgba(31,26,36,0.04), 0 4px 14px rgba(31,26,36,0.04)',
+          },
+          Table: { headerBg: '#faf7f8', headerColor: '#4b4350', rowHoverBg: '#fbf6f8' },
         },
       }}
     >
@@ -139,6 +180,40 @@ export default function App() {
             element={
               <SuspenseRoute>
                 <VendorsPage />
+              </SuspenseRoute>
+            }
+          />
+
+          {/* Vendor Portal */}
+          <Route
+            path="/vendor"
+            element={
+              <SuspenseRoute>
+                <VendorDashboardPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/vendor/products"
+            element={
+              <SuspenseRoute>
+                <VendorProductsPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/vendor/orders"
+            element={
+              <SuspenseRoute>
+                <VendorOrdersPage />
+              </SuspenseRoute>
+            }
+          />
+          <Route
+            path="/vendor/profile"
+            element={
+              <SuspenseRoute>
+                <VendorProfilePage />
               </SuspenseRoute>
             }
           />

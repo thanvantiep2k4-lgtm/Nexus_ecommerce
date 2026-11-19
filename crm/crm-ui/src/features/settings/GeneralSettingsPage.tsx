@@ -38,8 +38,8 @@ const PLATFORM_OPTIONS = [
 ];
 
 const LANGUAGE_OPTIONS = [
-  { value: 'en', label: 'English' },
-  { value: 'vi', label: 'Vietnamese' },
+  { value: 'en', label: 'Tiếng Anh' },
+  { value: 'vi', label: 'Tiếng Việt' },
 ];
 
 export default function GeneralSettingsPage() {
@@ -111,9 +111,9 @@ export default function GeneralSettingsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['site-settings'] });
       queryClient.invalidateQueries({ queryKey: ['site-settings', 'public'] });
-      toast.success('General settings saved');
+      toast.success('Đã lưu cài đặt chung');
     },
-    onError: () => toast.error('Failed to save settings'),
+    onError: () => toast.error('Lưu cài đặt thất bại'),
   });
 
   const addSocialLink = () =>
@@ -138,7 +138,7 @@ export default function GeneralSettingsPage() {
   return (
     <div>
       <PageHeader
-        title="General Settings"
+        title="Cài đặt chung"
         extra={
           <Button
             type="primary"
@@ -146,7 +146,7 @@ export default function GeneralSettingsPage() {
             loading={saveMutation.isPending}
             onClick={() => saveMutation.mutate()}
           >
-            Save Changes
+            Lưu thay đổi
           </Button>
         }
       />
@@ -156,7 +156,7 @@ export default function GeneralSettingsPage() {
         <Card
           title={
             <Title level={5} style={{ margin: 0 }}>
-              Site Information
+              Thông tin cửa hàng
             </Title>
           }
           size="small"
@@ -166,15 +166,15 @@ export default function GeneralSettingsPage() {
             <Col xs={24} sm={12}>
               <Form.Item
                 name="siteName"
-                label="Site Name"
-                rules={[{ required: true, message: 'Site name is required' }]}
+                label="Tên cửa hàng"
+                rules={[{ required: true, message: 'Vui lòng nhập tên cửa hàng' }]}
               >
                 <Input placeholder="Shofy" />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
-              <Form.Item name="siteDescription" label="Site Description">
-                <Input placeholder="Your one-stop e-commerce destination" />
+              <Form.Item name="siteDescription" label="Mô tả cửa hàng">
+                <Input placeholder="Điểm mua sắm trực tuyến trọn gói của bạn" />
               </Form.Item>
             </Col>
           </Row>
@@ -184,7 +184,7 @@ export default function GeneralSettingsPage() {
         <Card
           title={
             <Title level={5} style={{ margin: 0 }}>
-              Contact Information
+              Thông tin liên hệ
             </Title>
           }
           size="small"
@@ -192,7 +192,7 @@ export default function GeneralSettingsPage() {
         >
           <Row gutter={16}>
             <Col xs={24} sm={8}>
-              <Form.Item name="contactPhone" label="Phone">
+              <Form.Item name="contactPhone" label="Số điện thoại">
                 <Input placeholder="+84 000 000 000" />
               </Form.Item>
             </Col>
@@ -202,8 +202,8 @@ export default function GeneralSettingsPage() {
               </Form.Item>
             </Col>
             <Col xs={24} sm={8}>
-              <Form.Item name="contactAddress" label="Address">
-                <Input placeholder="123 Main Street, Ho Chi Minh City" />
+              <Form.Item name="contactAddress" label="Địa chỉ">
+                <Input placeholder="123 Đường ABC, TP. Hồ Chí Minh" />
               </Form.Item>
             </Col>
           </Row>
@@ -213,19 +213,19 @@ export default function GeneralSettingsPage() {
         <Card
           title={
             <Title level={5} style={{ margin: 0 }}>
-              Social Media
+              Mạng xã hội
             </Title>
           }
           size="small"
           style={{ marginBottom: 16 }}
           extra={
             <Button size="small" icon={<PlusOutlined />} onClick={addSocialLink}>
-              Add
+              Thêm
             </Button>
           }
         >
           {socialLinks.length === 0 && (
-            <Typography.Text type="secondary">No social links added yet.</Typography.Text>
+            <Typography.Text type="secondary">Chưa có liên kết mạng xã hội nào.</Typography.Text>
           )}
           <Space direction="vertical" style={{ width: '100%' }}>
             {socialLinks.map((link, index) => (
@@ -265,7 +265,7 @@ export default function GeneralSettingsPage() {
         <Card
           title={
             <Title level={5} style={{ margin: 0 }}>
-              Maintenance Mode
+              Chế độ bảo trì
             </Title>
           }
           size="small"
@@ -274,14 +274,14 @@ export default function GeneralSettingsPage() {
           <Space style={{ marginBottom: 12 }}>
             <Switch checked={maintenanceEnabled} onChange={setMaintenanceEnabled} />
             <Typography.Text>
-              {maintenanceEnabled ? 'Maintenance mode is ON' : 'Maintenance mode is OFF'}
+              {maintenanceEnabled ? 'Đang bật chế độ bảo trì' : 'Đang tắt chế độ bảo trì'}
             </Typography.Text>
           </Space>
           {maintenanceEnabled && (
-            <Form.Item name="maintenanceMessage" label="Maintenance Message">
+            <Form.Item name="maintenanceMessage" label="Thông báo bảo trì">
               <Input.TextArea
                 rows={3}
-                placeholder="We are performing scheduled maintenance. We'll be back soon!"
+                placeholder="Chúng tôi đang bảo trì hệ thống theo lịch. Sẽ sớm quay lại!"
               />
             </Form.Item>
           )}
@@ -301,13 +301,13 @@ export default function GeneralSettingsPage() {
             <Switch checked={chatbotEnabled} onChange={setChatbotEnabled} />
             <Typography.Text>
               {chatbotEnabled
-                ? 'Chatbot widget is visible on storefront'
-                : 'Chatbot widget is hidden on storefront'}
+                ? 'Chatbot đang hiển thị trên cửa hàng'
+                : 'Chatbot đang ẩn trên cửa hàng'}
             </Typography.Text>
           </Space>
           <Row gutter={16}>
             <Col xs={24} sm={12}>
-              <Form.Item name="chatbotWelcomeEn" label="Welcome message (EN)">
+              <Form.Item name="chatbotWelcomeEn" label="Lời chào (EN)">
                 <Input.TextArea
                   rows={2}
                   maxLength={300}
@@ -317,7 +317,7 @@ export default function GeneralSettingsPage() {
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
-              <Form.Item name="chatbotWelcomeVi" label="Welcome message (VI)">
+              <Form.Item name="chatbotWelcomeVi" label="Lời chào (VI)">
                 <Input.TextArea
                   rows={2}
                   maxLength={300}
@@ -333,7 +333,7 @@ export default function GeneralSettingsPage() {
         <Card
           title={
             <Title level={5} style={{ margin: 0 }}>
-              Localization
+              Ngôn ngữ
             </Title>
           }
           size="small"
@@ -341,16 +341,16 @@ export default function GeneralSettingsPage() {
           <Divider />
           <Row gutter={16}>
             <Col xs={24} sm={12}>
-              <Form.Item name="defaultLanguage" label="Default Language">
+              <Form.Item name="defaultLanguage" label="Ngôn ngữ mặc định">
                 <Select options={LANGUAGE_OPTIONS} />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
-              <Form.Item name="supportedLanguages" label="Supported Languages">
+              <Form.Item name="supportedLanguages" label="Ngôn ngữ hỗ trợ">
                 <Select
                   mode="multiple"
                   options={LANGUAGE_OPTIONS}
-                  placeholder="Select supported languages"
+                  placeholder="Chọn ngôn ngữ hỗ trợ"
                 />
               </Form.Item>
             </Col>

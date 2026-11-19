@@ -113,18 +113,18 @@ const PIE_COLORS: Record<string, string> = {
 };
 
 const MONTH_NAMES = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
+  'T1',
+  'T2',
+  'T3',
+  'T4',
+  'T5',
+  'T6',
+  'T7',
+  'T8',
+  'T9',
+  'T10',
+  'T11',
+  'T12',
 ];
 
 // ---------------------------------------------------------------------------
@@ -147,27 +147,27 @@ function monthLabel(stat: MonthlyStats): string {
 
 const lowStockColumns: ColumnsType<Product> = [
   {
-    title: 'Product',
+    title: 'Sản phẩm',
     dataIndex: 'title',
     key: 'title',
     ellipsis: true,
   },
   {
-    title: 'Qty',
+    title: 'SL',
     dataIndex: 'quantity',
     key: 'quantity',
     width: 70,
     align: 'center',
   },
   {
-    title: 'Status',
+    title: 'Trạng thái',
     key: 'stockStatus',
     width: 110,
     render: (_: unknown, record: Product) => {
       if (record.quantity === 0) {
-        return <Tag color="error">Out of Stock</Tag>;
+        return <Tag color="error">Hết hàng</Tag>;
       }
-      return <Tag color="warning">Low Stock</Tag>;
+      return <Tag color="warning">Sắp hết</Tag>;
     },
   },
 ];
@@ -184,9 +184,9 @@ interface PeriodConfig {
 }
 
 const PERIOD_CONFIG: Record<RevenuePeriod, PeriodConfig> = {
-  '7d': { label: '7 Days', groupBy: 'day' },
-  '30d': { label: '30 Days', groupBy: 'day' },
-  '12m': { label: '12 Months', groupBy: 'month' },
+  '7d': { label: '7 ngày', groupBy: 'day' },
+  '30d': { label: '30 ngày', groupBy: 'day' },
+  '12m': { label: '12 tháng', groupBy: 'month' },
 };
 
 // Pick a sensible bucket size for a custom date range so the chart stays readable.
@@ -210,33 +210,33 @@ export default function Dashboard() {
   const recentOrderColumns = useMemo<ColumnsType<Order>>(
     () => [
       {
-        title: 'Order #',
+        title: 'Mã đơn',
         key: 'orderNumber',
         width: 90,
         render: (_: unknown, record: Order) =>
           record.invoice != null ? `#${record.invoice}` : (record.orderNumber ?? '—'),
       },
       {
-        title: 'Customer',
+        title: 'Khách hàng',
         key: 'customer',
         render: (_: unknown, record: Order) => record.user?.name ?? record.name ?? '—',
         ellipsis: true,
       },
       {
-        title: 'Amount',
+        title: 'Số tiền',
         key: 'amount',
         render: (_: unknown, record: Order) =>
           formatCurrency(record.finalAmount ?? record.totalAmount ?? record.subTotal ?? 0),
       },
       {
-        title: 'Status',
+        title: 'Trạng thái',
         key: 'status',
         render: (_: unknown, record: Order) => (
           <StatusBadge status={record.orderStatus ?? record.status ?? 'pending'} type="order" />
         ),
       },
       {
-        title: 'Date',
+        title: 'Ngày',
         key: 'date',
         render: (_: unknown, record: Order) => formatDate(record.createdAt),
         ellipsis: true,
@@ -358,28 +358,28 @@ export default function Dashboard() {
   // Pie chart data — prefer the analytics endpoint (status breakdown), fall back to legacy orderStats
   const pieData = [
     {
-      name: 'Pending',
+      name: 'Chờ xử lý',
       value: analytics?.pendingOrders ?? orderStats?.pendingOrders ?? 0,
       color: PIE_COLORS.pending,
     },
-    { name: 'Confirmed', value: analytics?.confirmedOrders ?? 0, color: PIE_COLORS.confirmed },
+    { name: 'Đã xác nhận', value: analytics?.confirmedOrders ?? 0, color: PIE_COLORS.confirmed },
     {
-      name: 'Processing',
+      name: 'Đang xử lý',
       value: analytics?.processingOrders ?? orderStats?.processingOrders ?? 0,
       color: PIE_COLORS.processing,
     },
     {
-      name: 'Shipped',
+      name: 'Đang giao',
       value: analytics?.shippedOrders ?? orderStats?.shippedOrders ?? 0,
       color: PIE_COLORS.shipped,
     },
     {
-      name: 'Delivered',
+      name: 'Đã giao',
       value: analytics?.deliveredOrders ?? orderStats?.deliveredOrders ?? 0,
       color: PIE_COLORS.delivered,
     },
     {
-      name: 'Cancelled',
+      name: 'Đã huỷ',
       value: analytics?.cancelledOrders ?? orderStats?.cancelledOrders ?? 0,
       color: PIE_COLORS.cancelled,
     },
@@ -398,7 +398,7 @@ export default function Dashboard() {
   return (
     <div style={{ padding: '0 4px' }}>
       <Title level={3} style={{ marginBottom: 24 }}>
-        Dashboard
+        Tổng quan
       </Title>
 
       {/* ------------------------------------------------------------------ */}
@@ -409,7 +409,7 @@ export default function Dashboard() {
         <Col xs={24} sm={12} lg={8} xxl={4}>
           <StatCard
             loading={loadingAnalytics}
-            title="Total Products"
+            title="Tổng sản phẩm"
             value={analytics?.totalProducts ?? 0}
             icon={<ShoppingOutlined />}
             color="#a42c48"
@@ -420,7 +420,7 @@ export default function Dashboard() {
         <Col xs={24} sm={12} lg={8} xxl={4}>
           <StatCard
             loading={loadingAnalytics}
-            title="Total Orders"
+            title="Tổng đơn hàng"
             value={analytics?.totalOrders ?? orderStats?.totalOrders ?? 0}
             icon={<ShoppingCartOutlined />}
             color="#007bff"
@@ -431,7 +431,7 @@ export default function Dashboard() {
         <Col xs={24} sm={12} lg={8} xxl={4}>
           <StatCard
             loading={loadingAnalytics}
-            title="Monthly Revenue"
+            title="Doanh thu tháng"
             value={formatCurrency(analytics?.monthRevenue ?? 0)}
             icon={<DollarOutlined />}
             color="#28a745"
@@ -448,7 +448,7 @@ export default function Dashboard() {
         <Col xs={24} sm={12} lg={8} xxl={4}>
           <StatCard
             loading={loadingAnalytics}
-            title="Total Users"
+            title="Tổng khách hàng"
             value={analytics?.totalUsers ?? 0}
             icon={<TeamOutlined />}
             color="#722ed1"
@@ -459,7 +459,7 @@ export default function Dashboard() {
         <Col xs={24} sm={12} lg={8} xxl={4}>
           <StatCard
             loading={loadingAnalytics}
-            title="Pending Orders"
+            title="Đơn chờ xử lý"
             value={analytics?.pendingOrders ?? orderStats?.pendingOrders ?? 0}
             icon={<ClockCircleOutlined />}
             color="#fa8c16"
@@ -471,7 +471,7 @@ export default function Dashboard() {
         <Col xs={24} sm={12} lg={8} xxl={4}>
           <StatCard
             loading={loadingAnalytics}
-            title="Out of Stock"
+            title="Hết hàng"
             value={analytics?.outOfStockCount ?? 0}
             icon={<WarningOutlined />}
             color="#dc3545"
@@ -486,7 +486,7 @@ export default function Dashboard() {
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24}>
           <Card
-            title="Revenue Overview"
+            title="Tổng quan doanh thu"
             loading={loadingRevenue}
             extra={
               <Space size={8} wrap>
@@ -509,6 +509,7 @@ export default function Dashboard() {
                   size="small"
                   value={customRange}
                   format="DD/MM/YYYY"
+                  placeholder={['Từ ngày', 'Đến ngày']}
                   allowClear
                   disabledDate={(current) => current && current > dayjs().endOf('day')}
                   onChange={(dates) =>
@@ -527,7 +528,7 @@ export default function Dashboard() {
                   justifyContent: 'center',
                 }}
               >
-                <Text type="secondary">No revenue data available</Text>
+                <Text type="secondary">Chưa có dữ liệu doanh thu</Text>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={280}>
@@ -553,12 +554,18 @@ export default function Dashboard() {
                   />
                   <Tooltip
                     formatter={(value, name) => {
-                      if (name === 'revenue') return [formatCurrency(Number(value)), 'Revenue'];
-                      return [Number(value), 'Orders'];
+                      if (name === 'revenue') return [formatCurrency(Number(value)), 'Doanh thu'];
+                      return [Number(value), 'Đơn hàng'];
                     }}
                     labelStyle={{ fontWeight: 600 }}
                   />
-                  <Legend formatter={(v) => <span style={{ fontSize: 12 }}>{v}</span>} />
+                  <Legend
+                    formatter={(v) => (
+                      <span style={{ fontSize: 12 }}>
+                        {v === 'revenue' ? 'Doanh thu' : v === 'orders' ? 'Đơn hàng' : v}
+                      </span>
+                    )}
+                  />
                   <Line
                     yAxisId="revenue"
                     type="monotone"
@@ -593,7 +600,7 @@ export default function Dashboard() {
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         {/* Order Status Pie Chart */}
         <Col xs={24} lg={12}>
-          <Card title="Order Status Distribution" loading={loadingAnalytics}>
+          <Card title="Phân bố trạng thái đơn hàng" loading={loadingAnalytics}>
             {pieData.length === 0 ? (
               <div
                 style={{
@@ -603,7 +610,7 @@ export default function Dashboard() {
                   justifyContent: 'center',
                 }}
               >
-                <Text type="secondary">No order data available</Text>
+                <Text type="secondary">Chưa có dữ liệu đơn hàng</Text>
               </div>
             ) : (
               <div style={{ position: 'relative' }}>
@@ -663,7 +670,7 @@ export default function Dashboard() {
                     {totalStatusOrders}
                   </div>
                   <Text type="secondary" style={{ fontSize: 12 }}>
-                    Total Orders
+                    Tổng đơn hàng
                   </Text>
                 </div>
               </div>
@@ -673,7 +680,7 @@ export default function Dashboard() {
 
         {/* Top Selling Products */}
         <Col xs={24} lg={12}>
-          <Card title="Top Selling Products (30 Days)">
+          <Card title="Sản phẩm bán chạy (30 ngày)">
             {topProducts.length === 0 ? (
               <div
                 style={{
@@ -683,7 +690,7 @@ export default function Dashboard() {
                   justifyContent: 'center',
                 }}
               >
-                <Text type="secondary">No product data available</Text>
+                <Text type="secondary">Chưa có dữ liệu sản phẩm</Text>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={300}>
@@ -713,8 +720,8 @@ export default function Dashboard() {
                   />
                   <Tooltip
                     formatter={(value, name) => {
-                      if (name === 'revenue') return [formatCurrency(Number(value)), 'Revenue'];
-                      return [Number(value), 'Units Sold'];
+                      if (name === 'revenue') return [formatCurrency(Number(value)), 'Doanh thu'];
+                      return [Number(value), 'Đã bán'];
                     }}
                   />
                   <Bar dataKey="revenue" fill="#a42c48" radius={[0, 4, 4, 0]} name="revenue" />
@@ -732,10 +739,10 @@ export default function Dashboard() {
         {/* Recent Orders */}
         <Col xs={24} lg={12}>
           <Card
-            title="Recent Orders"
+            title="Đơn hàng gần đây"
             extra={
               <Text type="secondary" style={{ fontSize: 12 }}>
-                Last 10 orders
+                10 đơn mới nhất
               </Text>
             }
           >
@@ -754,7 +761,7 @@ export default function Dashboard() {
 
         {/* Customer Growth */}
         <Col xs={24} lg={12}>
-          <Card title="Customer Growth (6 Months)">
+          <Card title="Tăng trưởng khách hàng (6 tháng)">
             {customerGrowth.length === 0 ? (
               <div
                 style={{
@@ -764,7 +771,7 @@ export default function Dashboard() {
                   justifyContent: 'center',
                 }}
               >
-                <Text type="secondary">No customer data available</Text>
+                <Text type="secondary">Chưa có dữ liệu khách hàng</Text>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={300}>
@@ -781,7 +788,7 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} tickLine={false} />
                   <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={40} />
-                  <Tooltip formatter={(v) => [Number(v), 'New Users']} />
+                  <Tooltip formatter={(v) => [Number(v), 'Khách hàng mới']} />
                   <Area
                     type="monotone"
                     dataKey="count"
@@ -805,10 +812,10 @@ export default function Dashboard() {
       <Row gutter={[16, 16]}>
         <Col xs={24}>
           <Card
-            title="Low Stock Products"
+            title="Sản phẩm sắp hết hàng"
             extra={
               <Text type="secondary" style={{ fontSize: 12 }}>
-                Qty &le; 10
+                SL &le; 10
               </Text>
             }
           >

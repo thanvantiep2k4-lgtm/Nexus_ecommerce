@@ -72,6 +72,8 @@ const createProduct = Joi.object({
   quantity: Joi.number().integer().min(0).required(),
   status: Joi.string().valid('in-stock', 'out-of-stock', 'discontinued').optional(),
   productType: Joi.string().required(),
+  parent: Joi.string().allow('', null).optional(),
+  children: Joi.string().allow('', null).optional(),
   unit: Joi.string().allow('', null).optional(),
   img: Joi.string().uri().required(),
   category: categoryRefSchema.optional(),

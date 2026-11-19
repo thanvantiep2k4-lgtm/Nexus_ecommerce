@@ -192,7 +192,12 @@ async function assignRealmRole(keycloakUserId, roleName) {
   await authenticateAdmin();
   const client = await getOrCreateAdminClient();
   try {
-    const roles = await client.roles.findOneByName({ name: roleName });
+    let roles = await client.roles.findOneByName({ name: roleName });
+    if (!roles) {
+      // Realm imported from an older export may lack this role — create it on demand
+      await client.roles.create({ name: roleName, description: `${roleName} role` });
+      roles = await client.roles.findOneByName({ name: roleName });
+    }
     if (!roles) throw new Error(`Role '${roleName}' not found`);
     await client.users.addRealmRoleMappings({
       id: keycloakUserId,

@@ -1092,3 +1092,123 @@
   svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.35; }
   p { font-size: 14px; margin: 0; }
 }
+
+// ── Become a seller (profile ?tab=vendor) ───────────────────────────
+.cl-vendor-benefits {
+  list-style: none;
+  padding: 16px 20px;
+  margin: 0 0 24px;
+  background: #fff7f1;
+  border: 1px solid #ffe2cc;
+  border-radius: 8px;
+
+  li {
+    position: relative;
+    padding-left: 24px;
+    font-size: 14px;
+    color: #253d4e;
+    line-height: 1.9;
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--cl-primary);
+      font-weight: 700;
+    }
+  }
+}
+
+.cl-vendor-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #253d4e;
+  margin: 8px 0 12px;
+  padding-top: 16px;
+  border-top: 1px dashed #e9e9e9;
+}
+
+.cl-vendor-textarea {
+  width: 100%;
+  border: 1px solid #e9e9e9;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #253d4e;
+  font-family: var(--cl-ff-body);
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.18s;
+
+  &:focus {
+    border-color: var(--cl-primary);
+  }
+}
+
+.cl-vendor-error {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #ee5858;
+}
+
+.cl-vendor-status {
+  padding: 28px;
+  border-radius: 8px;
+  border: 1px solid #e9e9e9;
+  background: #fafafa;
+
+  &__badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    background: #e9e9e9;
+    color: #475156;
+  }
+
+  &__title {
+    margin: 14px 0 6px;
+    font-size: 20px;
+    color: #253d4e;
+  }
+
+  &__desc {
+    margin-bottom: 12px;
+    color: #687188;
+    font-size: 14px;
+  }
+
+  &__reason {
+    color: #ee5858;
+    font-size: 14px;
+  }
+
+  &--pending &__badge {
+    background: #fff4e5;
+    color: #d97706;
+  }
+
+  &--approved {
+    background: #f1fbf4;
+    border-color: #c6ecd1;
+  }
+
+  &--approved &__badge {
+    background: #2db224;
+    color: #fff;
+  }
+
+  &--rejected &__badge,
+  &--suspended &__badge {
+    background: #fdecec;
+    color: #ee5858;
+  }
+
+  a.cl-setting-save-btn:hover {
+    color: #fff;
+  }
+}

@@ -25,11 +25,11 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <Result
           status="500"
-          title="Something went wrong"
-          subTitle="An unexpected error occurred. Please refresh the page."
+          title="Đã có lỗi xảy ra"
+          subTitle="Đã xảy ra lỗi không mong muốn. Vui lòng tải lại trang."
           extra={
             <Button type="primary" onClick={() => window.location.reload()}>
-              Refresh Page
+              Tải lại trang
             </Button>
           }
         />

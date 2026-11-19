@@ -62,13 +62,13 @@ function UrlPasteTab({
           disabled={!isValidFormat}
           onClick={() => {
             if (!isValidFormat) {
-              toast.error('Invalid URL format');
+              toast.error('URL không hợp lệ');
               return;
             }
             onConfirm(urlInput);
           }}
         >
-          Use
+          Dùng
         </Button>
       </Space.Compact>
 
@@ -90,9 +90,9 @@ function UrlPasteTab({
         >
           {previewError ? (
             <div style={{ color: '#ff4d4f', fontSize: 12, textAlign: 'center', padding: 12 }}>
-              Image failed to load
+              Không tải được ảnh
               <br />
-              <span style={{ color: '#8c8c8c' }}>The URL may be unreachable</span>
+              <span style={{ color: '#8c8c8c' }}>URL có thể không truy cập được</span>
             </div>
           ) : (
             <img
@@ -126,15 +126,15 @@ function UploadTab({
       showUploadList={false}
       beforeUpload={(file) => {
         if (!ALLOWED_MIME.includes(file.type)) {
-          toast.error(`Unsupported type: ${file.type || 'unknown'}. Use JPG/PNG/WebP.`);
+          toast.error(`Định dạng không hỗ trợ: ${file.type || 'không rõ'}. Hãy dùng JPG/PNG/WebP.`);
           return false;
         }
         if (file.size > MAX_BYTES) {
-          toast.error(`File too large (${formatMB(file.size)}). Max 5MB.`);
+          toast.error(`Tệp quá lớn (${formatMB(file.size)}). Tối đa 5MB.`);
           return false;
         }
         if (file.size > WARN_BYTES) {
-          toast(`Large file (${formatMB(file.size)}) — upload may be slow`, { icon: '⚠️' });
+          toast(`Tệp lớn (${formatMB(file.size)}) — tải lên có thể chậm`, { icon: '⚠️' });
         }
         handleUpload(file);
         return false;
@@ -165,7 +165,7 @@ function UploadTab({
             <PictureOutlined style={{ fontSize: 28, color: '#bfbfbf' }} />
             <div style={{ marginTop: 8, color: '#8c8c8c', fontSize: 13, textAlign: 'center' }}>
               {placeholder}
-              <div style={{ fontSize: 11, marginTop: 4 }}>JPG / PNG / WebP, max 5MB</div>
+              <div style={{ fontSize: 11, marginTop: 4 }}>JPG / PNG / WebP, tối đa 5MB</div>
             </div>
           </>
         )}
@@ -182,7 +182,7 @@ function UploadTab({
 const ImageUpload: React.FC<ImageUploadProps> = ({
   value,
   onChange,
-  placeholder = 'Upload Image',
+  placeholder = 'Tải ảnh lên',
   width = 200,
   height = 140,
 }) => {
@@ -200,12 +200,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const url = res.data?.data?.url;
       if (url) {
         onChange?.(url);
-        toast.success('Image uploaded');
+        toast.success('Đã tải ảnh lên');
       } else {
         throw new Error('No URL returned');
       }
     } catch {
-      toast.error('Upload failed');
+      toast.error('Tải lên thất bại');
     } finally {
       setLoading(false);
     }
@@ -242,15 +242,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             showUploadList={false}
             beforeUpload={(file) => {
               if (!ALLOWED_MIME.includes(file.type)) {
-                toast.error(`Unsupported type: ${file.type || 'unknown'}. Use JPG/PNG/WebP.`);
+                toast.error(`Định dạng không hỗ trợ: ${file.type || 'không rõ'}. Hãy dùng JPG/PNG/WebP.`);
                 return false;
               }
               if (file.size > MAX_BYTES) {
-                toast.error(`File too large (${formatMB(file.size)}). Max 5MB.`);
+                toast.error(`Tệp quá lớn (${formatMB(file.size)}). Tối đa 5MB.`);
                 return false;
               }
               if (file.size > WARN_BYTES) {
-                toast(`Large file (${formatMB(file.size)}) — upload may be slow`, { icon: '⚠️' });
+                toast(`Tệp lớn (${formatMB(file.size)}) — tải lên có thể chậm`, { icon: '⚠️' });
               }
               handleUpload(file);
               return false;
@@ -258,11 +258,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             accept="image/jpeg,image/png,image/webp"
           >
             <Button size="small" icon={<UploadOutlined />} loading={loading}>
-              Replace
+              Thay ảnh
             </Button>
           </Upload>
           <Button size="small" icon={<DeleteOutlined />} danger onClick={handleRemove}>
-            Remove
+            Xoá ảnh
           </Button>
         </Space>
       </div>
@@ -277,7 +277,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           key: 'upload',
           label: (
             <span>
-              <UploadOutlined /> Upload
+              <UploadOutlined /> Tải lên
             </span>
           ),
           children: (
@@ -294,7 +294,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           key: 'url',
           label: (
             <span>
-              <LinkOutlined /> Paste URL
+              <LinkOutlined /> Dán URL
             </span>
           ),
           children: (

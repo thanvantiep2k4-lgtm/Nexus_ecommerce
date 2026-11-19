@@ -51,7 +51,15 @@ export const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    // submit a "become a seller" application — admin approves it in the CRM
+    applyVendor: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/user/vendor/apply`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetUserProfileQuery, useUpdateProfileMutation } = authApi;
+export const { useGetUserProfileQuery, useUpdateProfileMutation, useApplyVendorMutation } = authApi;

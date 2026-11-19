@@ -45,7 +45,7 @@ const ACTIVITY_I18N_KEYS = {
 };
 
 const TrackOrderPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { formatPrice } = useCurrency();
   const [orderId, setOrderId] = useState('');
   const [email, setEmail] = useState('');
@@ -172,7 +172,9 @@ const TrackOrderPage = () => {
                       </>
                     )}
                     {t('trackOrder.orderPlacedIn')}{' '}
-                    {dayjs(orderData.createdAt).format('DD MMM, YYYY [at] h:mm A')}
+                    {dayjs(orderData.createdAt).format(
+                      i18n.language?.startsWith('en') ? 'DD MMM YYYY, h:mm A' : 'HH:mm DD/MM/YYYY'
+                    )}
                   </p>
                 </div>
                 <span className="cl-track-detail__price">{formatPrice(orderData.totalAmount)}</span>
@@ -184,15 +186,31 @@ const TrackOrderPage = () => {
                   {orderData.deliveredAt ? (
                     <>
                       {t('trackOrder.deliveredOn')}{' '}
-                      <strong>{dayjs(orderData.deliveredAt).format('DD MMM, YYYY')}</strong>
+                      <strong>
+                        {dayjs(orderData.deliveredAt).format(
+                          i18n.language?.startsWith('en') ? 'DD MMM YYYY' : 'DD/MM/YYYY'
+                        )}
+                      </strong>
                     </>
                   ) : (
                     <>
                       {t('trackOrder.expectedArrival')}{' '}
-                      <strong>{dayjs(orderData.estimatedDelivery).format('DD MMM, YYYY')}</strong>
+                      <strong>
+                        {dayjs(orderData.estimatedDelivery).format(
+                          i18n.language?.startsWith('en') ? 'DD MMM YYYY' : 'DD/MM/YYYY'
+                        )}
+                      </strong>
                     </>
                   )}
                 </p>
+              )}
+
+              {/* Cancelled orders: clear status banner instead of the progress bar */}
+              {['cancelled', 'cancel'].includes(orderData.status?.toLowerCase()) && (
+                <div className="cl-track-detail__cancelled">
+                  <i className="fa-solid fa-circle-xmark" aria-hidden="true" />
+                  {t('trackOrder.cancelledBanner')}
+                </div>
               )}
 
               {/* Horizontal progress bar */}
@@ -262,7 +280,11 @@ const TrackOrderPage = () => {
                           <div className="cl-track-detail__activity-content">
                             <p className="cl-track-detail__activity-text">{msg}</p>
                             <span className="cl-track-detail__activity-time">
-                              {dayjs(time).format('DD MMM, YYYY [at] h:mm A')}
+                              {dayjs(time).format(
+                                i18n.language?.startsWith('en')
+                                  ? 'DD MMM YYYY, h:mm A'
+                                  : 'HH:mm DD/MM/YYYY'
+                              )}
                             </span>
                           </div>
                         </div>

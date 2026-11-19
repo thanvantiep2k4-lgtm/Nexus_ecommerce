@@ -123,11 +123,6 @@ const OffCanvas = ({ isOffCanvasOpen, setIsCanvasOpen }) => {
               )}
             </ul>
 
-            <div className="offcanvas__btn">
-              <Link href="/contact" onClick={closeCanvas} className="tp-btn-2 tp-btn-border-2">
-                {t('nav.contact')}
-              </Link>
-            </div>
           </div>
           <div className="offcanvas__bottom">
             <div className="offcanvas__footer d-flex align-items-center justify-content-end">

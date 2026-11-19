@@ -61,30 +61,51 @@ const ROLE_TAG_COLORS: Record<string, string> = {
   user: 'default',
 };
 
+const ROLE_LABELS: Record<string, string> = {
+  admin: 'Quản trị viên',
+  manager: 'Quản lý',
+  staff: 'Nhân viên',
+  shipper: 'Giao hàng',
+  vendor: 'Nhà bán',
+  user: 'Khách hàng',
+};
+
+const GENDER_LABELS: Record<string, string> = {
+  male: 'Nam',
+  female: 'Nữ',
+  other: 'Khác',
+};
+
+const STATUS_TOAST_LABELS: Record<string, string> = {
+  active: 'Đã kích hoạt người dùng',
+  inactive: 'Đã vô hiệu hoá người dùng',
+  blocked: 'Đã khoá người dùng',
+};
+
 const ROLE_OPTIONS = [
-  { label: 'All Roles', value: '' },
-  { label: 'User', value: 'user' },
-  { label: 'Admin', value: 'admin' },
-  { label: 'Staff', value: 'staff' },
+  { label: 'Tất cả vai trò', value: '' },
+  { label: 'Khách hàng', value: 'user' },
+  { label: 'Quản trị viên', value: 'admin' },
+  { label: 'Nhân viên', value: 'staff' },
 ];
 
 const STATUS_OPTIONS = [
-  { label: 'All Statuses', value: '' },
-  { label: 'Active', value: 'active' },
-  { label: 'Inactive', value: 'inactive' },
-  { label: 'Blocked', value: 'blocked' },
+  { label: 'Tất cả trạng thái', value: '' },
+  { label: 'Hoạt động', value: 'active' },
+  { label: 'Không hoạt động', value: 'inactive' },
+  { label: 'Bị khoá', value: 'blocked' },
 ];
 
 const VERIFIED_OPTIONS = [
-  { label: 'All', value: '' },
-  { label: 'Verified', value: 'true' },
-  { label: 'Not Verified', value: 'false' },
+  { label: 'Tất cả xác thực', value: '' },
+  { label: 'Đã xác thực', value: 'true' },
+  { label: 'Chưa xác thực', value: 'false' },
 ];
 
 const GENDER_OPTIONS = [
-  { label: 'Male', value: 'male' },
-  { label: 'Female', value: 'female' },
-  { label: 'Other', value: 'other' },
+  { label: 'Nam', value: 'male' },
+  { label: 'Nữ', value: 'female' },
+  { label: 'Khác', value: 'other' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -158,13 +179,13 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
   const createMutation = useMutation({
     mutationFn: (data: Partial<User> & { password?: string }) => usersApi.create(data),
     onSuccess: () => {
-      toast.success('User created successfully');
+      toast.success('Đã tạo người dùng');
       queryClient.invalidateQueries({ queryKey: ['users'] });
       onClose();
       form.resetFields();
     },
     onError: (err: Error) => {
-      toast.error(err.message ?? 'Failed to create user');
+      toast.error(err.message ?? 'Tạo người dùng thất bại');
     },
   });
 
@@ -172,13 +193,13 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
     mutationFn: ({ id, data }: { id: string; data: Partial<User> & { password?: string } }) =>
       usersApi.update(id, data),
     onSuccess: () => {
-      toast.success('User updated successfully');
+      toast.success('Đã cập nhật người dùng');
       queryClient.invalidateQueries({ queryKey: ['users'] });
       onClose();
       form.resetFields();
     },
     onError: (err: Error) => {
-      toast.error(err.message ?? 'Failed to update user');
+      toast.error(err.message ?? 'Cập nhật người dùng thất bại');
     },
   });
 
@@ -232,7 +253,7 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
 
   return (
     <Modal
-      title={isEditing ? 'Edit User' : 'Add User'}
+      title={isEditing ? 'Sửa người dùng' : 'Thêm người dùng'}
       open={open}
       onCancel={() => {
         onClose();
@@ -240,7 +261,8 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
       }}
       afterOpenChange={handleAfterOpenChange}
       onOk={() => form.submit()}
-      okText={isEditing ? 'Save Changes' : 'Create User'}
+      okText={isEditing ? 'Lưu thay đổi' : 'Tạo người dùng'}
+      cancelText="Huỷ"
       okButtonProps={{
         loading: isPending,
         style: { backgroundColor: PRIMARY_COLOR, borderColor: PRIMARY_COLOR },
@@ -259,10 +281,10 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
           <Col span={12}>
             <Form.Item
               name="name"
-              label="Full Name"
-              rules={[{ required: true, message: 'Name is required' }]}
+              label="Họ và tên"
+              rules={[{ required: true, message: 'Vui lòng nhập họ tên' }]}
             >
-              <Input placeholder="Enter full name" />
+              <Input placeholder="Nhập họ và tên" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -270,11 +292,11 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
               name="email"
               label="Email"
               rules={[
-                { required: true, message: 'Email is required' },
-                { type: 'email', message: 'Enter a valid email' },
+                { required: true, message: 'Vui lòng nhập email' },
+                { type: 'email', message: 'Email không hợp lệ' },
               ]}
             >
-              <Input placeholder="Enter email" />
+              <Input placeholder="Nhập email" />
             </Form.Item>
           </Col>
         </Row>
@@ -283,78 +305,78 @@ function UserFormModal({ open, editingUser, onClose }: UserFormModalProps) {
           <Col span={12}>
             <Form.Item
               name="password"
-              label="Password"
-              rules={isEditing ? [] : [{ required: true, message: 'Password is required' }]}
+              label="Mật khẩu"
+              rules={isEditing ? [] : [{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
             >
               <Input.Password
-                placeholder={isEditing ? 'Leave blank to keep current' : 'Enter password'}
+                placeholder={isEditing ? 'Để trống nếu giữ nguyên' : 'Nhập mật khẩu'}
               />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="phone" label="Phone">
-              <Input placeholder="Enter phone number" />
+            <Form.Item name="phone" label="Số điện thoại">
+              <Input placeholder="Nhập số điện thoại" />
             </Form.Item>
           </Col>
         </Row>
 
         <Row gutter={16}>
           <Col span={8}>
-            <Form.Item name="role" label="Role">
+            <Form.Item name="role" label="Vai trò">
               <Select
                 options={[
-                  { label: 'User', value: 'user' },
-                  { label: 'Admin', value: 'admin' },
-                  { label: 'Staff', value: 'staff' },
+                  { label: 'Khách hàng', value: 'user' },
+                  { label: 'Quản trị viên', value: 'admin' },
+                  { label: 'Nhân viên', value: 'staff' },
                 ]}
               />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name="status" label="Status">
+            <Form.Item name="status" label="Trạng thái">
               <Select
                 options={[
-                  { label: 'Active', value: 'active' },
-                  { label: 'Inactive', value: 'inactive' },
-                  { label: 'Blocked', value: 'blocked' },
+                  { label: 'Hoạt động', value: 'active' },
+                  { label: 'Không hoạt động', value: 'inactive' },
+                  { label: 'Bị khoá', value: 'blocked' },
                 ]}
               />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name="gender" label="Gender">
-              <Select placeholder="Select gender" allowClear options={GENDER_OPTIONS} />
+            <Form.Item name="gender" label="Giới tính">
+              <Select placeholder="Chọn giới tính" allowClear options={GENDER_OPTIONS} />
             </Form.Item>
           </Col>
         </Row>
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item name="imageURL" label="Avatar URL">
+            <Form.Item name="imageURL" label="URL ảnh đại diện">
               <Input placeholder="https://example.com/avatar.jpg" />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="dateOfBirth" label="Date of Birth">
+            <Form.Item name="dateOfBirth" label="Ngày sinh">
               <DatePicker style={{ width: '100%' }} />
             </Form.Item>
           </Col>
         </Row>
 
-        <Form.Item name="emailVerified" label="Email Verified" valuePropName="checked">
+        <Form.Item name="emailVerified" label="Đã xác thực email" valuePropName="checked">
           <Switch />
         </Form.Item>
 
         <Divider plain style={{ marginBottom: 16 }}>
-          Address
+          Địa chỉ
         </Divider>
 
         <Row gutter={16}>
           <Col span={24}>
-            <Form.Item name="address" label="Address">
+            <Form.Item name="address" label="Địa chỉ">
               <Input.TextArea
                 autoSize={{ minRows: 2, maxRows: 4 }}
-                placeholder="Full address (street, city, state, zip, country)"
+                placeholder="Địa chỉ đầy đủ (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành)"
               />
             </Form.Item>
           </Col>
@@ -386,7 +408,7 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
 
   const orderColumns: ColumnsType<Order> = [
     {
-      title: 'Order #',
+      title: 'Mã đơn',
       key: 'invoice',
       render: (_: unknown, record: Order) => (
         <Text style={{ fontFamily: 'monospace' }}>
@@ -395,19 +417,19 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
       ),
     },
     {
-      title: 'Date',
+      title: 'Ngày đặt',
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (val: string) => formatDate(val),
     },
     {
-      title: 'Amount',
+      title: 'Số tiền',
       key: 'amount',
       render: (_: unknown, record: Order) =>
         formatCurrency(record.finalAmount ?? record.totalAmount ?? record.subTotal ?? 0),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       key: 'status',
       render: (_: unknown, record: Order) => (
         <StatusBadge status={record.orderStatus ?? record.status ?? 'pending'} type="order" />
@@ -419,10 +441,10 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
 
   return (
     <Modal
-      title="User Details"
+      title="Chi tiết người dùng"
       open={open}
       onCancel={onClose}
-      footer={<Button onClick={onClose}>Close</Button>}
+      footer={<Button onClick={onClose}>Đóng</Button>}
       width={800}
       destroyOnHidden
     >
@@ -448,7 +470,7 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
           <Space size={6}>
             <StatusBadge status={user.status} />
             <Tag color={ROLE_TAG_COLORS[user.role] ?? 'default'} style={{ margin: 0 }}>
-              {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              {ROLE_LABELS[user.role] ?? user.role}
             </Tag>
           </Space>
         </Col>
@@ -457,22 +479,22 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
         <Col span={16}>
           <Descriptions column={1} size="small" bordered>
             <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
-            <Descriptions.Item label="Phone">{user.phone ?? '—'}</Descriptions.Item>
-            <Descriptions.Item label="Gender">
-              {user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : '—'}
+            <Descriptions.Item label="Số điện thoại">{user.phone ?? '—'}</Descriptions.Item>
+            <Descriptions.Item label="Giới tính">
+              {user.gender ? (GENDER_LABELS[user.gender] ?? user.gender) : '—'}
             </Descriptions.Item>
-            <Descriptions.Item label="Date of Birth">
+            <Descriptions.Item label="Ngày sinh">
               {user.dateOfBirth ? dayjs(user.dateOfBirth).format('MMM D, YYYY') : '—'}
             </Descriptions.Item>
-            <Descriptions.Item label="Email Verified">
+            <Descriptions.Item label="Xác thực email">
               {user.emailVerified ? (
                 <CheckCircleFilled style={{ color: '#52c41a' }} />
               ) : (
                 <CloseCircleFilled style={{ color: '#ff4d4f' }} />
               )}
             </Descriptions.Item>
-            <Descriptions.Item label="Joined">{formatDate(user.createdAt)}</Descriptions.Item>
-            <Descriptions.Item label="Last Login">
+            <Descriptions.Item label="Ngày tham gia">{formatDate(user.createdAt)}</Descriptions.Item>
+            <Descriptions.Item label="Đăng nhập gần nhất">
               {user.lastLogin ? formatDate(user.lastLogin) : '—'}
             </Descriptions.Item>
           </Descriptions>
@@ -480,10 +502,10 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
           {hasAddress && (
             <>
               <Divider plain style={{ margin: '12px 0' }}>
-                Address
+                Địa chỉ
               </Divider>
               <Descriptions column={1} size="small" bordered>
-                <Descriptions.Item label="Address">{user.address}</Descriptions.Item>
+                <Descriptions.Item label="Địa chỉ">{user.address}</Descriptions.Item>
               </Descriptions>
             </>
           )}
@@ -491,7 +513,7 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
       </Row>
 
       {/* Order history */}
-      <Divider plain>Recent Orders</Divider>
+      <Divider plain>Đơn hàng gần đây</Divider>
       <Table<Order>
         dataSource={ordersQuery.data?.data ?? []}
         columns={orderColumns}
@@ -500,7 +522,7 @@ function UserDetailModal({ user, open, onClose }: UserDetailModalProps) {
         expandable={{ childrenColumnName: '__children' }}
         pagination={false}
         size="small"
-        locale={{ emptyText: 'No orders found' }}
+        locale={{ emptyText: 'Không có đơn hàng' }}
       />
     </Modal>
   );
@@ -565,12 +587,11 @@ export default function UsersPage() {
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       usersApi.updateStatus(id, status),
     onSuccess: (_data, variables) => {
-      const label = variables.status.charAt(0).toUpperCase() + variables.status.slice(1);
-      toast.success(`User ${label.toLowerCase()}d successfully`);
+      toast.success(STATUS_TOAST_LABELS[variables.status] ?? 'Đã cập nhật trạng thái');
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
     onError: (err: Error) => {
-      toast.error(err.message ?? 'Failed to update status');
+      toast.error(err.message ?? 'Cập nhật trạng thái thất bại');
     },
   });
 
@@ -581,13 +602,13 @@ export default function UsersPage() {
       return usersApi.delete(id);
     },
     onSuccess: () => {
-      toast.success('User deleted successfully');
+      toast.success('Đã xoá người dùng');
       deletingIdRef.current = null;
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
     onError: (err: Error) => {
       deletingIdRef.current = null;
-      toast.error(err.message ?? 'Failed to delete user');
+      toast.error(err.message ?? 'Xoá người dùng thất bại');
     },
   });
 
@@ -620,9 +641,9 @@ export default function UsersPage() {
   function buildStatusMenuItems(user: User): MenuProps['items'] {
     return (
       [
-        { label: 'Activate', value: 'active' },
-        { label: 'Deactivate', value: 'inactive' },
-        { label: 'Block', value: 'blocked' },
+        { label: 'Kích hoạt', value: 'active' },
+        { label: 'Vô hiệu hoá', value: 'inactive' },
+        { label: 'Khoá', value: 'blocked' },
       ] as const
     )
       .filter((a) => a.value !== user.status)
@@ -635,13 +656,13 @@ export default function UsersPage() {
 
   const columns: ColumnsType<User> = [
     {
-      title: 'Avatar',
+      title: 'Ảnh',
       key: 'avatar',
       width: 60,
       render: (_: unknown, record: User) => <UserAvatar user={record} />,
     },
     {
-      title: 'Name',
+      title: 'Họ tên',
       key: 'name',
       render: (_: unknown, record: User) => (
         <div>
@@ -664,25 +685,25 @@ export default function UsersPage() {
           <Text style={{ display: 'block' }}>{record.email}</Text>
           {record.lastLogin && (
             <Text type="secondary" style={{ fontSize: 12 }}>
-              Last login: {formatDate(record.lastLogin)}
+              Đăng nhập gần nhất: {formatDate(record.lastLogin)}
             </Text>
           )}
         </div>
       ),
     },
     {
-      title: 'Role',
+      title: 'Vai trò',
       dataIndex: 'role',
       key: 'role',
       width: 90,
       render: (role: string) => (
         <Tag color={ROLE_TAG_COLORS[role] ?? 'default'}>
-          {role.charAt(0).toUpperCase() + role.slice(1)}
+          {ROLE_LABELS[role] ?? role}
         </Tag>
       ),
     },
     {
-      title: 'Orders',
+      title: 'Đơn hàng',
       key: 'orders',
       width: 80,
       align: 'center' as const,
@@ -697,61 +718,61 @@ export default function UsersPage() {
       ),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       width: 100,
       render: (status: string) => <StatusBadge status={status} />,
     },
     {
-      title: 'Verified',
+      title: 'Xác thực',
       dataIndex: 'emailVerified',
       key: 'emailVerified',
       width: 80,
       align: 'center' as const,
       render: (verified: boolean) =>
         verified ? (
-          <Tooltip title="Email verified">
+          <Tooltip title="Đã xác thực email">
             <CheckCircleFilled style={{ color: '#52c41a', fontSize: 18 }} />
           </Tooltip>
         ) : (
-          <Tooltip title="Email not verified">
+          <Tooltip title="Chưa xác thực email">
             <CloseCircleFilled style={{ color: '#ff4d4f', fontSize: 18 }} />
           </Tooltip>
         ),
     },
     {
-      title: 'Joined',
+      title: 'Ngày tham gia',
       dataIndex: 'createdAt',
       key: 'createdAt',
       width: 130,
       render: (val: string) => formatDate(val),
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       width: 190,
       fixed: 'right' as const,
       render: (_: unknown, record: User) => (
         <Space size={4}>
-          <Tooltip title="Edit">
+          <Tooltip title="Sửa">
             <Button icon={<EditOutlined />} size="small" onClick={() => handleOpenEdit(record)} />
           </Tooltip>
-          <Tooltip title="View">
+          <Tooltip title="Xem">
             <Button icon={<EyeOutlined />} size="small" onClick={() => handleOpenView(record)} />
           </Tooltip>
           <Dropdown menu={{ items: buildStatusMenuItems(record) }} trigger={['click']}>
             <Button size="small" icon={<DownOutlined />}>
-              Status
+              Trạng thái
             </Button>
           </Dropdown>
-          <Tooltip title="Delete">
+          <Tooltip title="Xoá">
             <Popconfirm
-              title="Delete User"
-              description="Are you sure you want to delete this user? This action cannot be undone."
+              title="Xoá người dùng"
+              description="Bạn có chắc muốn xoá người dùng này? Thao tác này không thể hoàn tác."
               onConfirm={() => deleteMutation.mutate(record._id)}
-              okText="Delete"
-              cancelText="Cancel"
+              okText="Xoá"
+              cancelText="Huỷ"
               okButtonProps={{ danger: true }}
             >
               <Button
@@ -780,7 +801,7 @@ export default function UsersPage() {
     <>
       {/* Header */}
       <PageHeader
-        title="User Management"
+        title="Quản lý người dùng"
         extra={
           <Button
             type="primary"
@@ -791,7 +812,7 @@ export default function UsersPage() {
               borderColor: PRIMARY_COLOR,
             }}
           >
-            Add User
+            Thêm người dùng
           </Button>
         }
       />
@@ -801,7 +822,7 @@ export default function UsersPage() {
         <Row gutter={[12, 12]} align="middle">
           <Col xs={24} sm={12} md={7} lg={6}>
             <Input
-              placeholder="Search by name, email..."
+              placeholder="Tìm theo tên, email..."
               prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
               value={rawSearch}
               onChange={(e) => {
@@ -842,7 +863,7 @@ export default function UsersPage() {
               disabled={!hasActiveFilters}
               style={{ width: '100%' }}
             >
-              Clear
+              Xoá lọc
             </Button>
           </Col>
         </Row>
@@ -862,7 +883,7 @@ export default function UsersPage() {
             pageSize: PAGE_SIZE,
             total: pagination?.totalItems ?? 0,
             showSizeChanger: false,
-            showTotal: (total, range) => `${range[0]}–${range[1]} of ${total} users`,
+            showTotal: (total, range) => `${range[0]}–${range[1]} / ${total} người dùng`,
             onChange: (newPage) => setPage(newPage),
           }}
           locale={{
@@ -876,7 +897,7 @@ export default function UsersPage() {
                     marginBottom: 8,
                   }}
                 />
-                <Text type="secondary">No users found</Text>
+                <Text type="secondary">Không tìm thấy người dùng</Text>
               </div>
             ),
           }}

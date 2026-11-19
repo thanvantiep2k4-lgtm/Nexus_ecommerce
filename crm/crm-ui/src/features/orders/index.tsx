@@ -49,27 +49,36 @@ const { Text } = Typography;
 const PAGE_LIMIT = 10;
 
 const ORDER_STATUS_OPTIONS = [
-  { value: '', label: 'All Statuses' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'confirmed', label: 'Confirmed' },
-  { value: 'processing', label: 'Processing' },
-  { value: 'shipped', label: 'Shipped' },
-  { value: 'delivered', label: 'Delivered' },
-  { value: 'cancelled', label: 'Cancelled' },
+  { value: '', label: 'Tất cả trạng thái' },
+  { value: 'pending', label: 'Chờ xử lý' },
+  { value: 'confirmed', label: 'Đã xác nhận' },
+  { value: 'processing', label: 'Đang xử lý' },
+  { value: 'shipped', label: 'Đang giao' },
+  { value: 'delivered', label: 'Đã giao' },
+  { value: 'cancelled', label: 'Đã huỷ' },
 ];
 
+const ORDER_STATUS_LABELS: Record<string, string> = {
+  pending: 'Chờ xử lý',
+  confirmed: 'Đã xác nhận',
+  processing: 'Đang xử lý',
+  shipped: 'Đang giao',
+  delivered: 'Đã giao',
+  cancelled: 'Đã huỷ',
+};
+
 const PAYMENT_STATUS_OPTIONS = [
-  { value: '', label: 'All Payment Statuses' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'paid', label: 'Paid' },
-  { value: 'failed', label: 'Failed' },
-  { value: 'refunded', label: 'Refunded' },
+  { value: '', label: 'Tất cả TT thanh toán' },
+  { value: 'pending', label: 'Chờ thanh toán' },
+  { value: 'paid', label: 'Đã thanh toán' },
+  { value: 'failed', label: 'Thất bại' },
+  { value: 'refunded', label: 'Đã hoàn tiền' },
 ];
 
 const PAYMENT_METHOD_OPTIONS = [
-  { value: '', label: 'All Methods' },
+  { value: '', label: 'Tất cả phương thức' },
   { value: 'COD', label: 'COD' },
-  { value: 'Card', label: 'Card' },
+  { value: 'Card', label: 'Thẻ' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -107,7 +116,7 @@ function formatVnpayPayDate(raw?: string): string {
   if (!m) return raw;
   const [, y, mo, d, h, mi, s] = m;
   const parsed = dayjs(`${y}-${mo}-${d}T${h}:${mi}:${s}`);
-  return parsed.isValid() ? parsed.format('HH:mm DD MMM, YYYY') : raw;
+  return parsed.isValid() ? parsed.format('HH:mm DD/MM/YYYY') : raw;
 }
 
 // ---------------------------------------------------------------------------
@@ -163,22 +172,22 @@ function OrderDetailModal({
   const total = order.totalAmount ?? order.finalAmount ?? 0;
 
   const statusMenuItems: MenuProps['items'] = [
-    { key: 'pending', label: 'Pending' },
-    { key: 'confirmed', label: 'Confirmed' },
-    { key: 'processing', label: 'Processing' },
-    { key: 'shipped', label: 'Shipped' },
-    { key: 'delivered', label: 'Delivered' },
+    { key: 'pending', label: 'Chờ xử lý' },
+    { key: 'confirmed', label: 'Đã xác nhận' },
+    { key: 'processing', label: 'Đang xử lý' },
+    { key: 'shipped', label: 'Đang giao' },
+    { key: 'delivered', label: 'Đã giao' },
     { type: 'divider' },
     {
       key: 'cancelled',
-      label: <span style={{ color: '#ff4d4f' }}>Cancel</span>,
+      label: <span style={{ color: '#ff4d4f' }}>Huỷ đơn</span>,
       danger: true,
     },
   ];
 
   const itemColumns: ColumnsType<OrderItem> = [
     {
-      title: 'Product',
+      title: 'Sản phẩm',
       key: 'product',
       render: (_, item) => (
         <Space>
@@ -203,19 +212,19 @@ function OrderDetailModal({
       ),
     },
     {
-      title: 'Qty',
+      title: 'SL',
       key: 'qty',
       width: 60,
       render: (_, item) => item.orderQuantity ?? item.quantity ?? 1,
     },
     {
-      title: 'Price',
+      title: 'Đơn giá',
       key: 'price',
       width: 100,
       render: (_, item) => formatCurrency(item.price),
     },
     {
-      title: 'Total',
+      title: 'Thành tiền',
       key: 'total',
       width: 100,
       render: (_, item) => formatCurrency(item.price * (item.orderQuantity ?? item.quantity ?? 1)),
@@ -226,7 +235,7 @@ function OrderDetailModal({
     <Modal
       open={open}
       onCancel={onClose}
-      title={`Order ${getOrderNumber(order)}`}
+      title={`Đơn hàng ${getOrderNumber(order)}`}
       width={860}
       footer={
         <Space>
@@ -240,7 +249,7 @@ function OrderDetailModal({
                 loading={isTaking}
                 style={{ background: '#52c41a', borderColor: '#52c41a' }}
               >
-                Take Order to Ship
+                Nhận đơn đi giao
               </Button>
             )}
           {!isShipper && (
@@ -252,11 +261,11 @@ function OrderDetailModal({
               disabled={isUpdating}
             >
               <Button type="primary" loading={isUpdating}>
-                Update Status <DownOutlined />
+                Cập nhật trạng thái <DownOutlined />
               </Button>
             </Dropdown>
           )}
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={onClose}>Đóng</Button>
         </Space>
       }
     >
@@ -264,51 +273,51 @@ function OrderDetailModal({
         {/* Left: Order Info */}
         <Col xs={24} md={12}>
           <Typography.Title level={5} style={{ marginTop: 0, marginBottom: 12 }}>
-            Order Information
+            Thông tin đơn hàng
           </Typography.Title>
           <Descriptions column={1} size="small" bordered>
-            <Descriptions.Item label="Order Number">{getOrderNumber(order)}</Descriptions.Item>
-            <Descriptions.Item label="Order Status">
+            <Descriptions.Item label="Mã đơn hàng">{getOrderNumber(order)}</Descriptions.Item>
+            <Descriptions.Item label="Trạng thái đơn">
               <StatusBadge status={effectiveStatus} type="order" />
             </Descriptions.Item>
-            <Descriptions.Item label="Payment Status">
+            <Descriptions.Item label="Trạng thái thanh toán">
               <StatusBadge status={order.paymentStatus ?? 'pending'} type="payment" />
             </Descriptions.Item>
-            <Descriptions.Item label="Payment Method">{order.paymentMethod}</Descriptions.Item>
+            <Descriptions.Item label="Phương thức thanh toán">{order.paymentMethod}</Descriptions.Item>
             {order.paymentGateway && order.paymentGateway !== order.paymentMethod && (
-              <Descriptions.Item label="Payment Gateway">{order.paymentGateway}</Descriptions.Item>
+              <Descriptions.Item label="Cổng thanh toán">{order.paymentGateway}</Descriptions.Item>
             )}
             {(order.vnpayTransactionNo || order.transactionId) && (
-              <Descriptions.Item label="Transaction No.">
+              <Descriptions.Item label="Mã giao dịch">
                 <Text copyable>{order.vnpayTransactionNo ?? order.transactionId}</Text>
               </Descriptions.Item>
             )}
             {order.vnpayBankCode && (
-              <Descriptions.Item label="Bank">{order.vnpayBankCode}</Descriptions.Item>
+              <Descriptions.Item label="Ngân hàng">{order.vnpayBankCode}</Descriptions.Item>
             )}
             {(order.paidAt || order.vnpayPayDate) && (
-              <Descriptions.Item label="Paid At">
+              <Descriptions.Item label="Thanh toán lúc">
                 {order.paidAt ? formatDate(order.paidAt) : formatVnpayPayDate(order.vnpayPayDate)}
               </Descriptions.Item>
             )}
             {order.refundAmount != null && order.refundAmount > 0 && (
-              <Descriptions.Item label="Refunded">
+              <Descriptions.Item label="Đã hoàn tiền">
                 {formatCurrency(order.refundAmount)}
                 {order.refundedAt ? ` (${formatDate(order.refundedAt)})` : ''}
               </Descriptions.Item>
             )}
-            <Descriptions.Item label="Order Date">{formatDate(order.createdAt)}</Descriptions.Item>
+            <Descriptions.Item label="Ngày đặt">{formatDate(order.createdAt)}</Descriptions.Item>
             {order.trackingNumber && (
-              <Descriptions.Item label="Tracking">{order.trackingNumber}</Descriptions.Item>
+              <Descriptions.Item label="Mã vận đơn">{order.trackingNumber}</Descriptions.Item>
             )}
             {order.shipper && (
-              <Descriptions.Item label="Shipper">
+              <Descriptions.Item label="Người giao hàng">
                 <Tag color="blue">{order.shipper.name}</Tag>
               </Descriptions.Item>
             )}
             {order.shippedAt && (
-              <Descriptions.Item label="Taken At">
-                {new Date(order.shippedAt).toLocaleString('en-US', {
+              <Descriptions.Item label="Nhận đơn lúc">
+                {new Date(order.shippedAt).toLocaleString('vi-VN', {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
@@ -318,8 +327,8 @@ function OrderDetailModal({
               </Descriptions.Item>
             )}
             {order.estimatedDelivery && (
-              <Descriptions.Item label="Est. Delivery">
-                {new Date(order.estimatedDelivery).toLocaleDateString('en-US', {
+              <Descriptions.Item label="Dự kiến giao">
+                {new Date(order.estimatedDelivery).toLocaleDateString('vi-VN', {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
@@ -332,24 +341,24 @@ function OrderDetailModal({
         {/* Right: Customer + Shipping */}
         <Col xs={24} md={12}>
           <Typography.Title level={5} style={{ marginTop: 0, marginBottom: 12 }}>
-            Customer Information
+            Thông tin khách hàng
           </Typography.Title>
           <Descriptions column={1} size="small" bordered style={{ marginBottom: 16 }}>
-            <Descriptions.Item label="Name">{customerName}</Descriptions.Item>
+            <Descriptions.Item label="Họ tên">{customerName}</Descriptions.Item>
             <Descriptions.Item label="Email">{customerEmail}</Descriptions.Item>
-            <Descriptions.Item label="Phone">
+            <Descriptions.Item label="Số điện thoại">
               {order.contact ?? order.user?.email ?? 'N/A'}
             </Descriptions.Item>
           </Descriptions>
 
           <Typography.Title level={5} style={{ marginTop: 16, marginBottom: 12 }}>
-            Shipping Address
+            Địa chỉ giao hàng
           </Typography.Title>
           <Descriptions column={1} size="small" bordered>
-            <Descriptions.Item label="Address">{order.address ?? 'N/A'}</Descriptions.Item>
-            <Descriptions.Item label="City">{order.city ?? 'N/A'}</Descriptions.Item>
-            <Descriptions.Item label="ZIP">{order.zipCode ?? 'N/A'}</Descriptions.Item>
-            <Descriptions.Item label="Country">{order.country ?? 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="Địa chỉ">{order.address ?? 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="Tỉnh/Thành phố">{order.city ?? 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="Mã bưu chính">{order.zipCode ?? 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="Quốc gia">{order.country ?? 'N/A'}</Descriptions.Item>
           </Descriptions>
         </Col>
       </Row>
@@ -359,7 +368,7 @@ function OrderDetailModal({
         <>
           <Divider style={{ marginTop: 0 }} />
           <Typography.Title level={5} style={{ marginBottom: 12 }}>
-            Shipping &amp; Tracking
+            Vận chuyển &amp; theo dõi
           </Typography.Title>
           <Form
             form={trackingForm}
@@ -384,22 +393,22 @@ function OrderDetailModal({
           >
             <Row gutter={16}>
               <Col xs={24} md={12}>
-                <Form.Item label="Carrier" name="carrier">
-                  <Select placeholder="Select carrier" options={CARRIER_OPTIONS} allowClear />
+                <Form.Item label="Đơn vị vận chuyển" name="carrier">
+                  <Select placeholder="Chọn đơn vị vận chuyển" options={CARRIER_OPTIONS} allowClear />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
-                <Form.Item label="Tracking Number" name="trackingNumber">
-                  <Input placeholder="e.g. 1Z999AA10123456784" />
+                <Form.Item label="Mã vận đơn" name="trackingNumber">
+                  <Input placeholder="VD: 1Z999AA10123456784" />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
-                <Form.Item label="Tracking URL (optional)" name="trackingUrl">
-                  <Input placeholder="Auto-generated if left blank" />
+                <Form.Item label="Link theo dõi (không bắt buộc)" name="trackingUrl">
+                  <Input placeholder="Tự động tạo nếu để trống" />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
-                <Form.Item label="Estimated Delivery" name="estimatedDelivery">
+                <Form.Item label="Ngày giao dự kiến" name="estimatedDelivery">
                   <DatePicker style={{ width: '100%' }} />
                 </Form.Item>
               </Col>
@@ -411,7 +420,7 @@ function OrderDetailModal({
               loading={isUpdatingTracking}
               style={{ marginBottom: 8 }}
             >
-              Save Tracking Info
+              Lưu thông tin vận chuyển
             </Button>
           </Form>
         </>
@@ -421,7 +430,7 @@ function OrderDetailModal({
 
       {/* Order Items */}
       <Typography.Title level={5} style={{ marginBottom: 12 }}>
-        Order Items
+        Sản phẩm trong đơn
       </Typography.Title>
       <Table<OrderItem>
         columns={itemColumns}
@@ -439,37 +448,37 @@ function OrderDetailModal({
           <Card size="small" style={{ background: '#fafafa' }}>
             <Space direction="vertical" style={{ width: '100%' }}>
               <Row justify="space-between">
-                <Text>Subtotal:</Text>
+                <Text>Tạm tính:</Text>
                 <Text>{formatCurrency(subtotal)}</Text>
               </Row>
               {(order.discount ?? 0) > 0 && (
                 <Row justify="space-between">
-                  <Text>Discount:</Text>
+                  <Text>Giảm giá:</Text>
                   <Text type="success">-{formatCurrency(order.discount!)}</Text>
                 </Row>
               )}
               {(order.shippingCost ?? 0) > 0 && (
                 <Row justify="space-between">
-                  <Text>Shipping:</Text>
+                  <Text>Phí vận chuyển:</Text>
                   <Text>{formatCurrency(order.shippingCost!)}</Text>
                 </Row>
               )}
               {(order.tax ?? 0) > 0 && (
                 <Row justify="space-between">
-                  <Text>Tax:</Text>
+                  <Text>Thuế:</Text>
                   <Text>{formatCurrency(order.tax!)}</Text>
                 </Row>
               )}
               <Divider style={{ margin: '4px 0' }} />
               <Row justify="space-between">
-                <Text strong>Total:</Text>
+                <Text strong>Tổng cộng:</Text>
                 <Text strong>{formatCurrency(total)}</Text>
               </Row>
               {order.displayCurrency &&
                 order.displayCurrency !== 'VND' &&
                 (order.exchangeRate ?? 0) > 0 && (
                   <Typography.Text type="secondary" style={{ display: 'block', marginTop: 4 }}>
-                    Customer paid:{' '}
+                    Khách đã trả:{' '}
                     {new Intl.NumberFormat(
                       order.displayCurrency === 'USD'
                         ? 'en-US'
@@ -495,7 +504,7 @@ function OrderDetailModal({
         <>
           <Divider />
           <Typography.Title level={5} style={{ marginBottom: 8 }}>
-            Notes
+            Ghi chú
           </Typography.Title>
           <Text type="secondary">{order.notes}</Text>
         </>
@@ -600,12 +609,14 @@ export default function OrdersPage() {
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       ordersApi.updateStatus(id, status),
     onSuccess: (_, variables) => {
-      toast.success(`Order status updated to ${variables.status}`);
+      toast.success(
+        `Đã cập nhật trạng thái đơn hàng: ${ORDER_STATUS_LABELS[variables.status] ?? variables.status}`
+      );
       void queryClient.invalidateQueries({ queryKey: ['orders'] });
       void queryClient.invalidateQueries({ queryKey: ['order', variables.id] });
     },
     onError: () => {
-      toast.error('Failed to update order status');
+      toast.error('Cập nhật trạng thái đơn hàng thất bại');
     },
   });
 
@@ -620,11 +631,11 @@ export default function OrdersPage() {
   const takeOrderMutation = useMutation({
     mutationFn: (id: string) => ordersApi.takeOrder(id),
     onSuccess: () => {
-      toast.success('Order taken successfully! You are now the shipper.');
+      toast.success('Nhận đơn thành công! Bạn là người giao đơn này.');
       void queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || 'Failed to take order');
+      toast.error(err?.response?.data?.message || 'Nhận đơn thất bại');
     },
   });
 
@@ -640,12 +651,12 @@ export default function OrdersPage() {
     mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
       ordersApi.updateTracking(id, data as Parameters<typeof ordersApi.updateTracking>[1]),
     onSuccess: (_, variables) => {
-      toast.success('Tracking info updated');
+      toast.success('Đã cập nhật thông tin vận chuyển');
       void queryClient.invalidateQueries({ queryKey: ['orders'] });
       void queryClient.invalidateQueries({ queryKey: ['order', variables.id] });
     },
     onError: () => {
-      toast.error('Failed to update tracking info');
+      toast.error('Cập nhật thông tin vận chuyển thất bại');
     },
   });
 
@@ -676,7 +687,7 @@ export default function OrdersPage() {
 
   const columns: ColumnsType<Order> = [
     {
-      title: 'Order #',
+      title: 'Mã đơn',
       key: 'orderNumber',
       width: 160,
       render: (_, order) => (
@@ -685,7 +696,7 @@ export default function OrdersPage() {
           {order.trackingNumber && (
             <div>
               <Text type="secondary" style={{ fontSize: 12 }}>
-                Tracking: {order.trackingNumber}
+                Vận đơn: {order.trackingNumber}
               </Text>
             </div>
           )}
@@ -693,7 +704,7 @@ export default function OrdersPage() {
       ),
     },
     {
-      title: 'Customer',
+      title: 'Khách hàng',
       key: 'customer',
       width: 180,
       render: (_, order) => (
@@ -706,7 +717,7 @@ export default function OrdersPage() {
       ),
     },
     {
-      title: 'Items',
+      title: 'Sản phẩm',
       key: 'items',
       width: 200,
       render: (_, order) => {
@@ -716,7 +727,7 @@ export default function OrdersPage() {
         return (
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>
-              {items.length} item{items.length !== 1 ? 's' : ''}
+              {items.length} sản phẩm
             </Text>
             {preview.map((item, idx) => (
               <div
@@ -734,7 +745,7 @@ export default function OrdersPage() {
             ))}
             {extra > 0 && (
               <Text type="secondary" style={{ fontSize: 12 }}>
-                +{extra} more
+                +{extra} sản phẩm khác
               </Text>
             )}
           </div>
@@ -742,7 +753,7 @@ export default function OrdersPage() {
       },
     },
     {
-      title: 'Amount',
+      title: 'Số tiền',
       key: 'amount',
       width: 130,
       render: (_, order) => (
@@ -751,7 +762,7 @@ export default function OrdersPage() {
           {(order.shippingCost ?? 0) > 0 && (
             <div>
               <Text type="secondary" style={{ fontSize: 12 }}>
-                +{formatCurrency(order.shippingCost!)} shipping
+                +{formatCurrency(order.shippingCost!)} phí ship
               </Text>
             </div>
           )}
@@ -759,7 +770,7 @@ export default function OrdersPage() {
       ),
     },
     {
-      title: 'Payment',
+      title: 'Thanh toán',
       key: 'payment',
       width: 130,
       render: (_, order) => (
@@ -774,7 +785,7 @@ export default function OrdersPage() {
       ),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       key: 'status',
       width: 160,
       render: (_, order) => (
@@ -788,7 +799,7 @@ export default function OrdersPage() {
           )}
           {order.shippedAt && (
             <Text type="secondary" style={{ fontSize: 10 }}>
-              {new Date(order.shippedAt).toLocaleString('en-US', {
+              {new Date(order.shippedAt).toLocaleString('vi-VN', {
                 month: 'short',
                 day: 'numeric',
                 hour: '2-digit',
@@ -800,7 +811,7 @@ export default function OrdersPage() {
       ),
     },
     {
-      title: 'Date',
+      title: 'Ngày',
       key: 'date',
       width: 160,
       render: (_, order) => (
@@ -808,8 +819,8 @@ export default function OrdersPage() {
           <div style={{ fontSize: 12 }}>{formatDate(order.createdAt)}</div>
           {order.estimatedDelivery && (
             <Text type="secondary" style={{ fontSize: 12 }}>
-              Est:{' '}
-              {new Date(order.estimatedDelivery).toLocaleDateString('en-US', {
+              Dự kiến:{' '}
+              {new Date(order.estimatedDelivery).toLocaleDateString('vi-VN', {
                 month: 'short',
                 day: 'numeric',
                 year: 'numeric',
@@ -820,7 +831,7 @@ export default function OrdersPage() {
       ),
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       width: 180,
       fixed: 'right',
@@ -830,15 +841,15 @@ export default function OrdersPage() {
           isShipper && ['pending', 'processing'].includes(effectiveStatus) && !order.shipper;
 
         const statusMenuItems: MenuProps['items'] = [
-          { key: 'pending', label: 'Pending' },
-          { key: 'confirmed', label: 'Confirmed' },
-          { key: 'processing', label: 'Processing' },
-          { key: 'shipped', label: 'Shipped' },
-          { key: 'delivered', label: 'Delivered' },
+          { key: 'pending', label: 'Chờ xử lý' },
+          { key: 'confirmed', label: 'Đã xác nhận' },
+          { key: 'processing', label: 'Đang xử lý' },
+          { key: 'shipped', label: 'Đang giao' },
+          { key: 'delivered', label: 'Đã giao' },
           { type: 'divider' },
           {
             key: 'cancelled',
-            label: <span style={{ color: '#ff4d4f' }}>Cancel</span>,
+            label: <span style={{ color: '#ff4d4f' }}>Huỷ đơn</span>,
             danger: true,
           },
         ];
@@ -846,7 +857,7 @@ export default function OrdersPage() {
         return (
           <Space size="small">
             <Button size="small" icon={<EyeOutlined />} onClick={() => handleViewOrder(order)}>
-              View
+              Xem
             </Button>
             {canTake ? (
               <Button
@@ -857,7 +868,7 @@ export default function OrdersPage() {
                 loading={takeOrderMutation.isPending}
                 style={{ background: '#52c41a', borderColor: '#52c41a' }}
               >
-                Take
+                Nhận đơn
               </Button>
             ) : !isShipper ? (
               <Dropdown
@@ -868,7 +879,7 @@ export default function OrdersPage() {
                 disabled={updateStatusMutation.isPending}
               >
                 <Button size="small">
-                  Status <DownOutlined />
+                  Trạng thái <DownOutlined />
                 </Button>
               </Dropdown>
             ) : null}
@@ -887,7 +898,7 @@ export default function OrdersPage() {
     pageSize: PAGE_LIMIT,
     total: data?.pagination?.totalItems ?? 0,
     showSizeChanger: false,
-    showTotal: (total) => `${total} orders`,
+    showTotal: (total) => `${total} đơn hàng`,
     onChange: (p) => setPage(p),
   };
 
@@ -903,13 +914,13 @@ export default function OrdersPage() {
 
   return (
     <div>
-      <PageHeader title="Order Management" />
+      <PageHeader title="Quản lý đơn hàng" />
 
       {/* Filters */}
       <Card style={{ marginBottom: 16 }} size="small">
         <Space wrap style={{ width: '100%' }}>
           <Input
-            placeholder="Search orders..."
+            placeholder="Tìm kiếm đơn hàng..."
             prefix={<SearchOutlined />}
             value={pendingSearch}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -936,7 +947,7 @@ export default function OrdersPage() {
           />
           {hasActiveFilters && (
             <Button icon={<ClearOutlined />} onClick={handleClearFilters}>
-              Clear Filters
+              Xoá bộ lọc
             </Button>
           )}
         </Space>
@@ -953,7 +964,7 @@ export default function OrdersPage() {
           pagination={pagination}
           scroll={{ x: 1100 }}
           size="small"
-          locale={{ emptyText: <Empty description="No orders found" /> }}
+          locale={{ emptyText: <Empty description="Không tìm thấy đơn hàng" /> }}
         />
       </Card>
 

@@ -116,6 +116,18 @@ function getProductTypeColor(type: string): string {
   return PRODUCT_TYPE_COLORS[type?.toLowerCase()] ?? 'default';
 }
 
+const PRODUCT_TYPE_LABELS: Record<string, string> = {
+  fashion: 'Thời trang',
+  electronics: 'Điện tử',
+  beauty: 'Làm đẹp',
+  jewelry: 'Trang sức',
+  other: 'Khác',
+};
+
+function getProductTypeLabel(type: string): string {
+  return PRODUCT_TYPE_LABELS[type?.toLowerCase()] ?? type;
+}
+
 // ---------------------------------------------------------------------------
 // Sub-component: Category thumbnail
 // ---------------------------------------------------------------------------
@@ -185,7 +197,7 @@ function buildTreeData(
                 color={getProductTypeColor(cat.productType)}
                 style={{ fontSize: 11, marginRight: 4 }}
               >
-                {cat.productType}
+                {getProductTypeLabel(cat.productType)}
               </Tag>
               <Badge
                 count={productCount}
@@ -200,10 +212,10 @@ function buildTreeData(
           <StatusBadge status={cat.status} type="general" />
           {cat.featured && (
             <Tag color="gold" style={{ fontSize: 11 }}>
-              Featured
+              Nổi bật
             </Tag>
           )}
-          <Tooltip title="View">
+          <Tooltip title="Xem">
             <Button
               size="small"
               type="text"
@@ -214,7 +226,7 @@ function buildTreeData(
               }}
             />
           </Tooltip>
-          <Tooltip title="Edit">
+          <Tooltip title="Sửa">
             <Button
               size="small"
               type="text"
@@ -226,10 +238,11 @@ function buildTreeData(
             />
           </Tooltip>
           <Popconfirm
-            title="Delete this category?"
-            description="This action cannot be undone."
+            title="Xoá danh mục này?"
+            description="Thao tác này không thể hoàn tác."
             onConfirm={() => onDelete(cat._id)}
-            okText="Delete"
+            okText="Xoá"
+            cancelText="Huỷ"
             okButtonProps={{ danger: true }}
           >
             <Button
@@ -294,7 +307,7 @@ function StatsCards({
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Total Categories
+                Tổng danh mục
               </Text>
             }
             value={totalCategories}
@@ -308,7 +321,7 @@ function StatsCards({
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Visible
+                Đang hiển thị
               </Text>
             }
             value={visibleCount}
@@ -338,7 +351,7 @@ function StatsCards({
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Hidden
+                Đang ẩn
               </Text>
             }
             value={hiddenCount}
@@ -352,7 +365,7 @@ function StatsCards({
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Featured
+                Nổi bật
               </Text>
             }
             value={featuredCount}
@@ -367,7 +380,7 @@ function StatsCards({
                   color={getProductTypeColor(pt._id)}
                   style={{ fontSize: 11, marginBottom: 2 }}
                 >
-                  {pt._id}: {pt.count}
+                  {getProductTypeLabel(pt._id)}: {pt.count}
                 </Tag>
               ))}
             </div>
@@ -396,9 +409,11 @@ function CategoryDetail({ category }: { category: Category }) {
             {category.parent}
           </Title>
           <Flex gap={6} style={{ marginTop: 6 }}>
-            <Tag color={getProductTypeColor(category.productType)}>{category.productType}</Tag>
+            <Tag color={getProductTypeColor(category.productType)}>
+              {getProductTypeLabel(category.productType)}
+            </Tag>
             <StatusBadge status={category.status} type="general" />
-            {category.featured && <Tag color="gold">Featured</Tag>}
+            {category.featured && <Tag color="gold">Nổi bật</Tag>}
           </Flex>
         </div>
       </Flex>
@@ -409,13 +424,13 @@ function CategoryDetail({ category }: { category: Category }) {
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col span={8}>
           <Card size="small" style={{ textAlign: 'center', borderRadius: 8 }}>
-            <Statistic title="Products" value={productCount} valueStyle={{ fontSize: 20 }} />
+            <Statistic title="Sản phẩm" value={productCount} valueStyle={{ fontSize: 20 }} />
           </Card>
         </Col>
         <Col span={8}>
           <Card size="small" style={{ textAlign: 'center', borderRadius: 8 }}>
             <Statistic
-              title="Sub-categories"
+              title="Danh mục con"
               value={category.children?.length ?? 0}
               valueStyle={{ fontSize: 20 }}
             />
@@ -424,7 +439,7 @@ function CategoryDetail({ category }: { category: Category }) {
         <Col span={8}>
           <Card size="small" style={{ textAlign: 'center', borderRadius: 8 }}>
             <Statistic
-              title="Sort Order"
+              title="Thứ tự"
               value={category.sortOrder ?? 0}
               valueStyle={{ fontSize: 20 }}
             />
@@ -439,7 +454,7 @@ function CategoryDetail({ category }: { category: Category }) {
             type="secondary"
             style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}
           >
-            Description
+            Mô tả
           </Text>
           <p style={{ marginTop: 4, color: '#595959' }}>{category.description}</p>
         </div>
@@ -452,7 +467,7 @@ function CategoryDetail({ category }: { category: Category }) {
             type="secondary"
             style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}
           >
-            Sub-categories
+            Danh mục con
           </Text>
           <div style={{ marginTop: 8 }}>
             {category.children.map((child) => (
@@ -475,13 +490,13 @@ function CategoryDetail({ category }: { category: Category }) {
         <Flex align="center" gap={8}>
           <CalendarOutlined style={{ color: '#bfbfbf' }} />
           <Text type="secondary" style={{ fontSize: 13 }}>
-            Created: {formatDate(category.createdAt)}
+            Ngày tạo: {formatDate(category.createdAt)}
           </Text>
         </Flex>
         <Flex align="center" gap={8}>
           <CalendarOutlined style={{ color: '#bfbfbf' }} />
           <Text type="secondary" style={{ fontSize: 13 }}>
-            Updated: {formatDate(category.updatedAt)}
+            Cập nhật: {formatDate(category.updatedAt)}
           </Text>
         </Flex>
       </Flex>
@@ -554,13 +569,13 @@ export default function CategoriesPage() {
   const createMutation = useMutation({
     mutationFn: (data: Partial<Category>) => categoriesApi.create(data),
     onSuccess: () => {
-      toast.success('Category created successfully');
+      toast.success('Đã tạo danh mục');
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       setDrawerOpen(false);
       form.resetFields();
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create category');
+      toast.error(error.message || 'Tạo danh mục thất bại');
     },
   });
 
@@ -568,27 +583,27 @@ export default function CategoriesPage() {
     mutationFn: ({ id, data }: { id: string; data: Partial<Category> }) =>
       categoriesApi.update(id, data),
     onSuccess: () => {
-      toast.success('Category updated successfully');
+      toast.success('Đã cập nhật danh mục');
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       setDrawerOpen(false);
       setEditingCategory(null);
       form.resetFields();
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update category');
+      toast.error(error.message || 'Cập nhật danh mục thất bại');
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => categoriesApi.delete(id),
     onSuccess: () => {
-      toast.success('Category deleted successfully');
+      toast.success('Đã xoá danh mục');
       setDeletingId(null);
       queryClient.invalidateQueries({ queryKey: ['categories'] });
     },
     onError: (error: Error) => {
       setDeletingId(null);
-      toast.error(error.message || 'Failed to delete category');
+      toast.error(error.message || 'Xoá danh mục thất bại');
     },
   });
 
@@ -706,7 +721,7 @@ export default function CategoriesPage() {
 
   const columns: TableProps<Category>['columns'] = [
     {
-      title: 'Category',
+      title: 'Danh mục',
       key: 'category',
       render: (_: unknown, record: Category) => (
         <Flex align="center" gap={12}>
@@ -727,7 +742,7 @@ export default function CategoriesPage() {
                 ))}
                 {record.children.length > 3 && (
                   <Tag style={{ fontSize: 11, marginBottom: 2, borderRadius: 4 }}>
-                    +{record.children.length - 3} more
+                    +{record.children.length - 3} khác
                   </Tag>
                 )}
               </div>
@@ -737,18 +752,18 @@ export default function CategoriesPage() {
       ),
     },
     {
-      title: 'Type',
+      title: 'Loại',
       dataIndex: 'productType',
       key: 'productType',
       width: 120,
       render: (value: string) => (
         <Tag color={getProductTypeColor(value)} style={{ borderRadius: 4 }}>
-          {value}
+          {getProductTypeLabel(value)}
         </Tag>
       ),
     },
     {
-      title: 'Products',
+      title: 'Sản phẩm',
       key: 'products',
       width: 90,
       align: 'center',
@@ -770,12 +785,12 @@ export default function CategoriesPage() {
       },
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       key: 'status',
       width: 90,
       filters: [
-        { text: 'Show', value: 'Show' },
-        { text: 'Hide', value: 'Hide' },
+        { text: 'Hiển thị', value: 'Show' },
+        { text: 'Ẩn', value: 'Hide' },
       ],
       onFilter: (value, record) => record.status === value,
       render: (_: unknown, record: Category) => (
@@ -783,7 +798,7 @@ export default function CategoriesPage() {
       ),
     },
     {
-      title: 'Sort',
+      title: 'Thứ tự',
       key: 'sortOrder',
       width: 70,
       align: 'center',
@@ -795,11 +810,11 @@ export default function CategoriesPage() {
       ),
     },
     {
-      title: 'Updated',
+      title: 'Cập nhật',
       key: 'updatedAt',
       width: 140,
       render: (_: unknown, record: Category) => (
-        <Tooltip title={`Created: ${formatDate(record.createdAt)}`}>
+        <Tooltip title={`Ngày tạo: ${formatDate(record.createdAt)}`}>
           <Text style={{ fontSize: 12 }} type="secondary">
             {formatDate(record.updatedAt)}
           </Text>
@@ -813,7 +828,7 @@ export default function CategoriesPage() {
       fixed: 'right',
       render: (_: unknown, record: Category) => (
         <Space size={0}>
-          <Tooltip title="View details">
+          <Tooltip title="Xem chi tiết">
             <Button
               type="text"
               size="small"
@@ -821,7 +836,7 @@ export default function CategoriesPage() {
               onClick={() => handleViewCategory(record)}
             />
           </Tooltip>
-          <Tooltip title="Edit">
+          <Tooltip title="Sửa">
             <Button
               type="text"
               size="small"
@@ -830,10 +845,11 @@ export default function CategoriesPage() {
             />
           </Tooltip>
           <Popconfirm
-            title="Delete Category"
-            description="This action cannot be undone."
+            title="Xoá danh mục"
+            description="Thao tác này không thể hoàn tác."
             onConfirm={() => handleDeleteCategory(record._id)}
-            okText="Delete"
+            okText="Xoá"
+            cancelText="Huỷ"
             okButtonProps={{ danger: true }}
           >
             <Button
@@ -856,19 +872,19 @@ export default function CategoriesPage() {
   return (
     <div>
       <PageHeader
-        title="Category Management"
+        title="Quản lý danh mục"
         extra={
           <Space>
             <Segmented
               value={viewMode}
               onChange={(val) => setViewMode(val as 'table' | 'tree')}
               options={[
-                { value: 'table', icon: <TableOutlined />, label: 'Table' },
-                { value: 'tree', icon: <ApartmentOutlined />, label: 'Tree' },
+                { value: 'table', icon: <TableOutlined />, label: 'Bảng' },
+                { value: 'tree', icon: <ApartmentOutlined />, label: 'Cây' },
               ]}
             />
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddCategory}>
-              Add Category
+              Thêm danh mục
             </Button>
           </Space>
         }
@@ -892,9 +908,9 @@ export default function CategoriesPage() {
           styles={{ body: { padding: treeData.length === 0 ? 48 : 16 } }}
         >
           {treeData.length === 0 ? (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No categories found">
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không tìm thấy danh mục">
               <Button type="primary" icon={<PlusOutlined />} onClick={handleAddCategory}>
-                Create First Category
+                Tạo danh mục đầu tiên
               </Button>
             </Empty>
           ) : (
@@ -917,7 +933,7 @@ export default function CategoriesPage() {
           >
             <Flex gap={12} wrap="wrap" align="center">
               <Input
-                placeholder="Search categories..."
+                placeholder="Tìm kiếm danh mục..."
                 prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
                 value={searchInput}
                 onChange={(e) => {
@@ -930,7 +946,7 @@ export default function CategoriesPage() {
 
               <Select
                 style={{ width: 140 }}
-                placeholder="Status"
+                placeholder="Trạng thái"
                 value={statusFilter || undefined}
                 onChange={(val?: string) => {
                   setStatusFilter(val ?? '');
@@ -938,14 +954,14 @@ export default function CategoriesPage() {
                 }}
                 allowClear
                 options={[
-                  { label: 'Visible', value: 'Show' },
-                  { label: 'Hidden', value: 'Hide' },
+                  { label: 'Hiển thị', value: 'Show' },
+                  { label: 'Ẩn', value: 'Hide' },
                 ]}
               />
 
               <Select
                 style={{ width: 200 }}
-                placeholder="Product Type"
+                placeholder="Loại sản phẩm"
                 value={productTypeFilter || undefined}
                 onChange={(val?: string) => {
                   setProductTypeFilter(val ?? '');
@@ -954,21 +970,21 @@ export default function CategoriesPage() {
                 allowClear
                 loading={statsQuery.isLoading}
                 options={productTypeStats.map((pt) => ({
-                  label: `${pt._id} (${pt.count})`,
+                  label: `${getProductTypeLabel(pt._id)} (${pt.count})`,
                   value: pt._id,
                 }))}
               />
 
               {hasActiveFilters && (
                 <Button type="link" onClick={handleClearFilters} style={{ padding: 0 }}>
-                  Clear filters
+                  Xoá bộ lọc
                 </Button>
               )}
 
               <div style={{ flex: 1 }} />
 
               <Text type="secondary" style={{ fontSize: 13 }}>
-                {pagination?.totalItems ?? 0} categories
+                {pagination?.totalItems ?? 0} danh mục
               </Text>
             </Flex>
           </Card>
@@ -988,7 +1004,7 @@ export default function CategoriesPage() {
                 showSizeChanger: false,
                 showTotal: (total, range) => (
                   <Text type="secondary" style={{ fontSize: 13 }}>
-                    {range[0]}-{range[1]} of {total}
+                    {range[0]}-{range[1]} / {total}
                   </Text>
                 ),
                 onChange: (p) => setPage(p),
@@ -1001,12 +1017,12 @@ export default function CategoriesPage() {
                   <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                     description={
-                      hasActiveFilters ? 'No categories match your filters' : 'No categories yet'
+                      hasActiveFilters ? 'Không có danh mục phù hợp bộ lọc' : 'Chưa có danh mục nào'
                     }
                   >
                     {!hasActiveFilters && (
                       <Button type="primary" icon={<PlusOutlined />} onClick={handleAddCategory}>
-                        Create First Category
+                        Tạo danh mục đầu tiên
                       </Button>
                     )}
                   </Empty>
@@ -1022,7 +1038,7 @@ export default function CategoriesPage() {
         title={
           <Flex align="center" gap={8}>
             {editingCategory ? <EditOutlined /> : <PlusOutlined />}
-            <span>{editingCategory ? 'Edit Category' : 'New Category'}</span>
+            <span>{editingCategory ? 'Sửa danh mục' : 'Thêm danh mục'}</span>
           </Flex>
         }
         open={drawerOpen}
@@ -1031,9 +1047,9 @@ export default function CategoriesPage() {
         destroyOnClose
         extra={
           <Space>
-            <Button onClick={handleDrawerClose}>Cancel</Button>
+            <Button onClick={handleDrawerClose}>Huỷ</Button>
             <Button type="primary" onClick={handleDrawerSubmit} loading={isSubmitting}>
-              {editingCategory ? 'Update' : 'Create'}
+              {editingCategory ? 'Cập nhật' : 'Tạo mới'}
             </Button>
           </Space>
         }
@@ -1047,7 +1063,7 @@ export default function CategoriesPage() {
           {/* Image upload at top */}
           <div style={{ marginBottom: 24, textAlign: 'center' }}>
             <Form.Item name="img" noStyle>
-              <ImageUpload placeholder="Upload Category Image" />
+              <ImageUpload placeholder="Tải ảnh danh mục" />
             </Form.Item>
           </div>
 
@@ -1057,15 +1073,15 @@ export default function CategoriesPage() {
             <Col span={12}>
               <Form.Item
                 name="parent"
-                label="Category Name"
-                rules={[{ required: true, message: 'Required' }]}
+                label="Tên danh mục"
+                rules={[{ required: true, message: 'Bắt buộc' }]}
               >
-                <Input placeholder="e.g. Electronics" />
+                <Input placeholder="VD: Điện tử" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="slug" label="Slug" tooltip="Auto-generated if blank">
-                <Input placeholder="e.g. electronics" style={{ fontFamily: 'monospace' }} />
+              <Form.Item name="slug" label="Slug" tooltip="Tự động tạo nếu để trống">
+                <Input placeholder="VD: dien-tu" style={{ fontFamily: 'monospace' }} />
               </Form.Item>
             </Col>
           </Row>
@@ -1074,31 +1090,31 @@ export default function CategoriesPage() {
             <Col span={12}>
               <Form.Item
                 name="productType"
-                label="Product Type"
-                rules={[{ required: true, message: 'Required' }]}
+                label="Loại sản phẩm"
+                rules={[{ required: true, message: 'Bắt buộc' }]}
               >
                 <Select
                   options={[
-                    { value: 'fashion', label: 'Fashion' },
-                    { value: 'electronics', label: 'Electronics' },
-                    { value: 'beauty', label: 'Beauty' },
-                    { value: 'jewelry', label: 'Jewelry' },
-                    { value: 'other', label: 'Other' },
+                    { value: 'fashion', label: 'Thời trang' },
+                    { value: 'electronics', label: 'Điện tử' },
+                    { value: 'beauty', label: 'Làm đẹp' },
+                    { value: 'jewelry', label: 'Trang sức' },
+                    { value: 'other', label: 'Khác' },
                   ]}
-                  placeholder="Select type"
+                  placeholder="Chọn loại"
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="parentCategory"
-                label="Parent Category"
-                tooltip="Makes this a child of another category"
+                label="Danh mục cha"
+                tooltip="Đặt làm danh mục con của danh mục khác"
               >
                 <Select
                   allowClear
                   showSearch={{ optionFilterProp: 'label' }}
-                  placeholder="None (top-level)"
+                  placeholder="Không có (cấp cao nhất)"
                   options={categories
                     .filter((c) => !editingCategory || c._id !== editingCategory._id)
                     .map((c) => ({ value: c._id, label: c.parent }))}
@@ -1107,12 +1123,12 @@ export default function CategoriesPage() {
             </Col>
           </Row>
 
-          <Form.Item name="icon" label="Icon Name" tooltip="Icon class or emoji">
-            <Input placeholder="e.g. laptop, shirt" />
+          <Form.Item name="icon" label="Biểu tượng" tooltip="Class icon hoặc emoji">
+            <Input placeholder="VD: laptop, shirt" />
           </Form.Item>
 
-          <Form.Item name="description" label="Description">
-            <TextArea rows={3} placeholder="Brief description" showCount maxLength={500} />
+          <Form.Item name="description" label="Mô tả">
+            <TextArea rows={3} placeholder="Mô tả ngắn" showCount maxLength={500} />
           </Form.Item>
 
           <Divider style={{ margin: '8px 0 16px' }} />
@@ -1124,10 +1140,10 @@ export default function CategoriesPage() {
                 <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
                   <Text strong style={{ fontSize: 14 }}>
                     <FolderOutlined style={{ marginRight: 6 }} />
-                    Sub-categories
+                    Danh mục con
                   </Text>
                   <Button type="dashed" size="small" icon={<PlusOutlined />} onClick={() => add()}>
-                    Add
+                    Thêm
                   </Button>
                 </Flex>
                 {fields.length === 0 && (
@@ -1142,7 +1158,7 @@ export default function CategoriesPage() {
                     }}
                   >
                     <Text type="secondary" style={{ fontSize: 13 }}>
-                      No sub-categories yet
+                      Chưa có danh mục con
                     </Text>
                   </div>
                 )}
@@ -1150,10 +1166,10 @@ export default function CategoriesPage() {
                   <Flex key={field.key} gap={8} style={{ marginBottom: 8 }} align="start">
                     <Form.Item
                       {...field}
-                      rules={[{ required: true, message: 'Name required' }]}
+                      rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
                       style={{ margin: 0, flex: 1 }}
                     >
-                      <Input placeholder="Sub-category name" />
+                      <Input placeholder="Tên danh mục con" />
                     </Form.Item>
                     <Button
                       type="text"
@@ -1173,23 +1189,23 @@ export default function CategoriesPage() {
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item name="status" label="Status">
+              <Form.Item name="status" label="Trạng thái">
                 <Select
                   options={[
-                    { label: 'Visible', value: 'Show' },
-                    { label: 'Hidden', value: 'Hide' },
+                    { label: 'Hiển thị', value: 'Show' },
+                    { label: 'Ẩn', value: 'Hide' },
                   ]}
                 />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="sortOrder" label="Sort Order">
+              <Form.Item name="sortOrder" label="Thứ tự">
                 <InputNumber style={{ width: '100%' }} min={0} placeholder="0" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="featured" label="Featured" valuePropName="checked">
-                <Switch checkedChildren="Yes" unCheckedChildren="No" />
+              <Form.Item name="featured" label="Nổi bật" valuePropName="checked">
+                <Switch checkedChildren="Có" unCheckedChildren="Không" />
               </Form.Item>
             </Col>
           </Row>
@@ -1201,7 +1217,7 @@ export default function CategoriesPage() {
         title={
           <Flex align="center" gap={8}>
             <InfoCircleOutlined />
-            <span>Category Details</span>
+            <span>Chi tiết danh mục</span>
           </Flex>
         }
         open={detailDrawerOpen}
@@ -1221,7 +1237,7 @@ export default function CategoriesPage() {
                 handleEditCategory(viewingCategory);
               }}
             >
-              Edit
+              Sửa
             </Button>
           )
         }

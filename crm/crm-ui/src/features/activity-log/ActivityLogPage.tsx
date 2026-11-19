@@ -32,31 +32,52 @@ const PAGE_SIZE = 20;
 // ---------------------------------------------------------------------------
 
 const ACTION_OPTIONS = [
-  { value: 'create', label: 'Create' },
-  { value: 'update', label: 'Update' },
-  { value: 'delete', label: 'Delete' },
-  { value: 'status-change', label: 'Status Change' },
-  { value: 'login', label: 'Login' },
-  { value: 'logout', label: 'Logout' },
-  { value: 'approve', label: 'Approve' },
-  { value: 'reject', label: 'Reject' },
-  { value: 'export', label: 'Export' },
+  { value: 'create', label: 'Tạo mới' },
+  { value: 'update', label: 'Cập nhật' },
+  { value: 'delete', label: 'Xoá' },
+  { value: 'status-change', label: 'Đổi trạng thái' },
+  { value: 'login', label: 'Đăng nhập' },
+  { value: 'logout', label: 'Đăng xuất' },
+  { value: 'approve', label: 'Duyệt' },
+  { value: 'reject', label: 'Từ chối' },
+  { value: 'export', label: 'Xuất dữ liệu' },
 ];
 
 const RESOURCE_TYPE_OPTIONS = [
-  { value: 'product', label: 'Product' },
-  { value: 'order', label: 'Order' },
-  { value: 'user', label: 'User' },
-  { value: 'category', label: 'Category' },
-  { value: 'review', label: 'Review' },
-  { value: 'coupon', label: 'Coupon' },
-  { value: 'vendor', label: 'Vendor' },
-  { value: 'blog', label: 'Blog' },
+  { value: 'product', label: 'Sản phẩm' },
+  { value: 'order', label: 'Đơn hàng' },
+  { value: 'user', label: 'Người dùng' },
+  { value: 'category', label: 'Danh mục' },
+  { value: 'review', label: 'Đánh giá' },
+  { value: 'coupon', label: 'Mã giảm giá' },
+  { value: 'vendor', label: 'Nhà bán' },
+  { value: 'blog', label: 'Bài viết' },
   { value: 'banner', label: 'Banner' },
-  { value: 'page', label: 'Page' },
-  { value: 'settings', label: 'Settings' },
-  { value: 'email-template', label: 'Email Template' },
+  { value: 'page', label: 'Trang' },
+  { value: 'settings', label: 'Cài đặt' },
+  { value: 'email-template', label: 'Mẫu email' },
 ];
+
+const ROLE_LABELS: Record<string, string> = {
+  admin: 'Quản trị viên',
+  manager: 'Quản lý',
+  staff: 'Nhân viên',
+  shipper: 'Giao hàng',
+  vendor: 'Nhà bán',
+  user: 'Khách hàng',
+};
+
+function actionLabel(action: string): string {
+  return ACTION_OPTIONS.find((o) => o.value === action)?.label ?? action;
+}
+
+function resourceLabel(type: string): string {
+  return RESOURCE_TYPE_OPTIONS.find((o) => o.value === type)?.label ?? type;
+}
+
+function roleLabel(role: string): string {
+  return ROLE_LABELS[role] ?? role;
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -105,7 +126,7 @@ function resourceColor(type: string): string {
 }
 
 function formatTimestamp(ts: string): string {
-  return dayjs(ts).format('MMM D, YYYY HH:mm:ss');
+  return dayjs(ts).format('DD/MM/YYYY HH:mm:ss');
 }
 
 // ---------------------------------------------------------------------------
@@ -126,7 +147,7 @@ function DetailDrawer({ entry, open, onClose }: DetailDrawerProps) {
       title={
         <Space>
           <HistoryOutlined />
-          <span>Activity Log Detail</span>
+          <span>Chi tiết nhật ký hoạt động</span>
         </Space>
       }
       open={open}
@@ -135,19 +156,19 @@ function DetailDrawer({ entry, open, onClose }: DetailDrawerProps) {
       destroyOnHidden
     >
       <Descriptions column={1} bordered size="small" style={{ marginBottom: 16 }}>
-        <Descriptions.Item label="Timestamp">{formatTimestamp(entry.timestamp)}</Descriptions.Item>
-        <Descriptions.Item label="Action">
+        <Descriptions.Item label="Thời gian">{formatTimestamp(entry.timestamp)}</Descriptions.Item>
+        <Descriptions.Item label="Hành động">
           <Tag color={actionColor(entry.action)} style={{ textTransform: 'capitalize' }}>
-            {entry.action}
+            {actionLabel(entry.action)}
           </Tag>
         </Descriptions.Item>
-        <Descriptions.Item label="Actor Name">{entry.actor.name}</Descriptions.Item>
-        <Descriptions.Item label="Actor Role">
-          <Tag style={{ textTransform: 'capitalize' }}>{entry.actor.role}</Tag>
+        <Descriptions.Item label="Người thực hiện">{entry.actor.name}</Descriptions.Item>
+        <Descriptions.Item label="Vai trò">
+          <Tag style={{ textTransform: 'capitalize' }}>{roleLabel(entry.actor.role)}</Tag>
         </Descriptions.Item>
-        <Descriptions.Item label="Actor Type">{entry.actor.type}</Descriptions.Item>
-        <Descriptions.Item label="IP Address">{entry.ipAddress ?? '—'}</Descriptions.Item>
-        <Descriptions.Item label="User Agent">
+        <Descriptions.Item label="Loại tác nhân">{entry.actor.type}</Descriptions.Item>
+        <Descriptions.Item label="Địa chỉ IP">{entry.ipAddress ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="Trình duyệt (User Agent)">
           <Paragraph ellipsis={{ rows: 2, expandable: true }} style={{ margin: 0, fontSize: 12 }}>
             {entry.userAgent ?? '—'}
           </Paragraph>
@@ -155,27 +176,27 @@ function DetailDrawer({ entry, open, onClose }: DetailDrawerProps) {
       </Descriptions>
 
       <Descriptions column={1} bordered size="small" style={{ marginBottom: 16 }}>
-        <Descriptions.Item label="Resource Type">
+        <Descriptions.Item label="Loại đối tượng">
           <Tag color={resourceColor(entry.resource.type)} style={{ textTransform: 'capitalize' }}>
-            {entry.resource.type}
+            {resourceLabel(entry.resource.type)}
           </Tag>
         </Descriptions.Item>
         {entry.resource.id && (
-          <Descriptions.Item label="Resource ID">
+          <Descriptions.Item label="ID đối tượng">
             <Text code style={{ fontSize: 12 }}>
               {entry.resource.id}
             </Text>
           </Descriptions.Item>
         )}
         {entry.resource.name && (
-          <Descriptions.Item label="Resource Name">{entry.resource.name}</Descriptions.Item>
+          <Descriptions.Item label="Tên đối tượng">{entry.resource.name}</Descriptions.Item>
         )}
       </Descriptions>
 
       {entry.details && Object.keys(entry.details).length > 0 && (
         <div>
           <Text strong style={{ display: 'block', marginBottom: 8 }}>
-            Details
+            Chi tiết
           </Text>
           <div
             style={{
@@ -298,7 +319,7 @@ export default function ActivityLogPage() {
 
   const columns: TableProps<ActivityLogEntry>['columns'] = [
     {
-      title: 'Timestamp',
+      title: 'Thời gian',
       key: 'timestamp',
       width: 175,
       render: (_: unknown, record: ActivityLogEntry) => (
@@ -307,30 +328,30 @@ export default function ActivityLogPage() {
       sorter: false,
     },
     {
-      title: 'Actor',
+      title: 'Người thực hiện',
       key: 'actor',
       width: 180,
       render: (_: unknown, record: ActivityLogEntry) => (
         <div>
           <Text style={{ fontSize: 13 }}>{record.actor.name}</Text>
           <div>
-            <Tag style={{ fontSize: 10, textTransform: 'capitalize' }}>{record.actor.role}</Tag>
+            <Tag style={{ fontSize: 10, textTransform: 'capitalize' }}>{roleLabel(record.actor.role)}</Tag>
           </div>
         </div>
       ),
     },
     {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
       width: 130,
       render: (_: unknown, record: ActivityLogEntry) => (
         <Tag color={actionColor(record.action)} style={{ textTransform: 'capitalize' }}>
-          {record.action}
+          {actionLabel(record.action)}
         </Tag>
       ),
     },
     {
-      title: 'Resource',
+      title: 'Đối tượng',
       key: 'resource',
       width: 200,
       render: (_: unknown, record: ActivityLogEntry) => (
@@ -339,7 +360,7 @@ export default function ActivityLogPage() {
             color={resourceColor(record.resource.type)}
             style={{ textTransform: 'capitalize', fontSize: 11 }}
           >
-            {record.resource.type}
+            {resourceLabel(record.resource.type)}
           </Tag>
           {record.resource.name && (
             <Text
@@ -353,7 +374,7 @@ export default function ActivityLogPage() {
       ),
     },
     {
-      title: 'IP Address',
+      title: 'Địa chỉ IP',
       key: 'ip',
       width: 130,
       render: (_: unknown, record: ActivityLogEntry) => (
@@ -367,11 +388,11 @@ export default function ActivityLogPage() {
   return (
     <div>
       <PageHeader
-        title="Activity Log"
+        title="Nhật ký hoạt động"
         extra={
-          <Tooltip title="Export current filters to CSV">
+          <Tooltip title="Xuất dữ liệu theo bộ lọc hiện tại ra CSV">
             <Button icon={<DownloadOutlined />} loading={exporting} onClick={handleExport}>
-              Export CSV
+              Xuất CSV
             </Button>
           </Tooltip>
         }
@@ -381,7 +402,7 @@ export default function ActivityLogPage() {
       <Card size="small" style={{ marginBottom: 16 }}>
         <Space wrap>
           <Select
-            placeholder="All Actions"
+            placeholder="Tất cả hành động"
             value={filters.action || undefined}
             onChange={(val) => {
               setFilters((prev) => ({ ...prev, action: val ?? '' }));
@@ -392,7 +413,7 @@ export default function ActivityLogPage() {
             options={ACTION_OPTIONS}
           />
           <Select
-            placeholder="All Resource Types"
+            placeholder="Tất cả loại đối tượng"
             value={filters.resourceType || undefined}
             onChange={(val) => {
               setFilters((prev) => ({ ...prev, resourceType: val ?? '' }));
@@ -405,7 +426,7 @@ export default function ActivityLogPage() {
           <RangePicker
             style={{ width: 260 }}
             onChange={handleDateChange}
-            placeholder={['Start Date', 'End Date']}
+            placeholder={['Từ ngày', 'Đến ngày']}
           />
           {(filters.action || filters.resourceType || filters.startDate) && (
             <Button
@@ -414,7 +435,7 @@ export default function ActivityLogPage() {
                 setPage(1);
               }}
             >
-              Clear Filters
+              Xoá bộ lọc
             </Button>
           )}
         </Space>
@@ -428,7 +449,7 @@ export default function ActivityLogPage() {
         loading={isLoading || isFetching}
         scroll={{ x: 900 }}
         expandable={{ childrenColumnName: '__children' }}
-        locale={{ emptyText: <Empty description="No activity log entries found" /> }}
+        locale={{ emptyText: <Empty description="Không có nhật ký hoạt động" /> }}
         onRow={(record) => ({
           onClick: () => {
             setDetailEntry(record);
@@ -441,7 +462,7 @@ export default function ActivityLogPage() {
           pageSize: PAGE_SIZE,
           total: data?.pagination?.totalItems ?? 0,
           showSizeChanger: false,
-          showTotal: (total, range) => `${range[0]}–${range[1]} of ${total} entries`,
+          showTotal: (total, range) => `${range[0]}–${range[1]} trên ${total} bản ghi`,
           onChange: (p) => setPage(p),
         }}
       />

@@ -28,9 +28,13 @@ exports.addAllProductService = async (data) => {
   return products;
 };
 
+// Storefront listings hide products the vendor/admin discontinued.
+// Out-of-stock products stay visible (shown as "hết hàng").
+const VISIBLE = { status: { $ne: 'discontinued' } };
+
 // get product data
 exports.getAllProductsService = async () => {
-  const products = await Product.find({}).populate('reviews');
+  const products = await Product.find(VISIBLE).populate('reviews');
   return products;
 };
 
@@ -39,7 +43,7 @@ exports.getProductTypeService = async (req) => {
   const type = req.params.type;
   const query = req.query;
   // type = "all" → không lọc theo nhóm (trang chủ trộn nhiều ngành hàng)
-  const filter = type === 'all' ? {} : { productType: type };
+  const filter = type === 'all' ? { ...VISIBLE } : { ...VISIBLE, productType: type };
   const limit = Math.min(parseInt(query.limit, 10) || 0, 100);
   let q;
   if (query.new === 'true') {
@@ -62,7 +66,7 @@ exports.getProductTypeService = async (req) => {
 
 // get offer product service
 exports.getOfferTimerProductService = async (query) => {
-  const filter = { 'offerDate.endDate': { $gt: new Date() } };
+  const filter = { ...VISIBLE, 'offerDate.endDate': { $gt: new Date() } };
   if (query && query !== 'all') filter.productType = query;
   const products = await Product.find(filter).populate('reviews');
   return products;
@@ -70,7 +74,7 @@ exports.getOfferTimerProductService = async (query) => {
 
 // get popular product service by type
 exports.getPopularProductServiceByType = async (type) => {
-  const products = await Product.find(type === 'all' ? {} : { productType: type })
+  const products = await Product.find(type === 'all' ? VISIBLE : { ...VISIBLE, productType: type })
     .sort({ 'reviews.length': -1, sellCount: -1 })
     .limit(8)
     .populate('reviews');
@@ -79,6 +83,7 @@ exports.getPopularProductServiceByType = async (type) => {
 
 exports.getTopRatedProductService = async () => {
   const products = await Product.find({
+    ...VISIBLE,
     reviews: { $exists: true, $ne: [] },
   }).populate('reviews');
 
@@ -96,7 +101,7 @@ exports.getTopRatedProductService = async () => {
 
   // Chưa có đánh giá nào → dùng sản phẩm bán chạy để khu vực này không trống
   if (!topRatedProducts.length) {
-    return Product.find({}).sort({ sellCount: -1 }).limit(8).lean();
+    return Product.find(VISIBLE).sort({ sellCount: -1 }).limit(8).lean();
   }
   return topRatedProducts;
 };
@@ -139,6 +144,7 @@ exports.getRelatedProductService = async (productId) => {
   const currentProduct = await Product.findById(productId);
 
   const relatedProducts = await Product.find({
+    ...VISIBLE,
     'category.name': currentProduct.category.name,
     _id: { $ne: productId }, // Exclude the current product ID
   });

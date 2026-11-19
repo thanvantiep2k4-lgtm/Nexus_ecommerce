@@ -92,9 +92,6 @@ const FooterClicon = () => {
                   <li>
                     <Link href="/track-order">{t('footer.trackOrder', 'Tra cứu đơn hàng')}</Link>
                   </li>
-                  <li>
-                    <Link href="/contact">{t('footer.help', 'Trung tâm trợ giúp')}</Link>
-                  </li>
                 </ul>
               </div>
             </div>

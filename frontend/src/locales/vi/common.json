@@ -243,7 +243,19 @@
     "haveCoupon": "Có mã giảm giá?",
     "clickHereToEnterCode": "Nhấn để nhập mã",
     "addressDefault": "Mặc định",
-    "useDifferentAddress": "+ Dùng địa chỉ khác"
+    "useDifferentAddress": "+ Dùng địa chỉ khác",
+    "required": {
+      "firstName": "Vui lòng nhập họ tên",
+      "address": "Vui lòng nhập địa chỉ",
+      "country": "Vui lòng nhập quốc gia",
+      "city": "Vui lòng nhập tỉnh/thành phố",
+      "zipCode": "Vui lòng nhập mã bưu điện",
+      "email": "Vui lòng nhập email",
+      "contactNo": "Vui lòng nhập số điện thoại"
+    },
+    "freeShipHint": "Mua thêm {{amount}} để được miễn phí vận chuyển",
+    "couponApplied": "Đã áp dụng mã {{code}}!",
+    "couponMinimum": "Đơn hàng chưa đạt giá trị tối thiểu để dùng mã này"
   },
   "auth": {
     "login": "Đăng nhập",
@@ -541,7 +553,8 @@
     "payStatusPaid": "Đã thanh toán",
     "payStatusUnpaid": "Chưa thanh toán",
     "payStatusPending": "Đang xử lý",
-    "payStatusFailed": "Thất bại"
+    "payStatusFailed": "Thất bại",
+    "cancelledBanner": "Đơn hàng này đã bị huỷ"
   },
   "breadcrumb": {
     "home": "Trang chủ",
@@ -689,7 +702,8 @@
     "browsingDisabled": "Lịch sử xem đã tắt. Hãy bật để theo dõi sản phẩm đã xem.",
     "noBrowsingHistory": "Chưa có lịch sử xem. Hãy xem một số sản phẩm!",
     "noSearchResults": "Không có kết quả phù hợp.",
-    "clearAllHistory": "Xóa tất cả lịch sử"
+    "clearAllHistory": "Xóa tất cả lịch sử",
+    "becomeSeller": "Trở thành nhà bán"
   },
   "badge": {
     "hot": "HOT",
@@ -817,12 +831,56 @@
     "memory": "Bộ nhớ RAM",
     "selectMemory": "Chọn RAM",
     "storage": "Dung lượng",
-    "selectStorage": "Chọn dung lượng"
+    "selectStorage": "Chọn dung lượng",
+    "discontinued": "Ngừng kinh doanh"
   },
   "announcement": {
     "highlight": "Siêu Sale 11.11",
     "deal": "Giảm đến 50% · Freeship toàn quốc",
     "cta": "Mua ngay",
     "close": "Đóng thông báo"
+  },
+  "vendorApply": {
+    "title": "Bán hàng cùng NexusMart",
+    "benefit1": "Tiếp cận hàng nghìn khách hàng trên sàn",
+    "benefit2": "Quản lý sản phẩm, đơn hàng và doanh thu trong Kênh người bán",
+    "benefit3": "Rút tiền nhanh về tài khoản ngân hàng",
+    "storeName": "Tên cửa hàng",
+    "storeNamePlaceholder": "VD: Góc Công Nghệ",
+    "storeNameRequired": "Tên cửa hàng phải từ 2–100 ký tự",
+    "storeDescription": "Mô tả cửa hàng",
+    "storeDescriptionPlaceholder": "Bạn bán gì? Cửa hàng của bạn có gì đặc biệt?",
+    "bankInfo": "Tài khoản nhận thanh toán",
+    "bankName": "Ngân hàng",
+    "branch": "Chi nhánh",
+    "accountNumber": "Số tài khoản",
+    "accountName": "Chủ tài khoản",
+    "submit": "Gửi đăng ký",
+    "submitted": "Đã gửi đăng ký! Chúng tôi sẽ xét duyệt sớm.",
+    "failed": "Không gửi được đơn đăng ký.",
+    "reason": "Lý do",
+    "reapply": "Đăng ký lại",
+    "openSellerCenter": "Mở Kênh người bán",
+    "status": {
+      "pending": "Đang chờ duyệt",
+      "approved": "Đã duyệt",
+      "rejected": "Bị từ chối",
+      "suspended": "Tạm khoá"
+    },
+    "statusDesc": {
+      "pending": "Đơn đăng ký đang được đội ngũ xét duyệt. Bạn sẽ nhận email khi được duyệt.",
+      "approved": "Cửa hàng đã hoạt động! Hãy đăng xuất rồi đăng nhập lại, sau đó mở Kênh người bán để đăng sản phẩm.",
+      "rejected": "Rất tiếc đơn đăng ký chưa được duyệt. Bạn có thể cập nhật thông tin và đăng ký lại.",
+      "suspended": "Cửa hàng đang tạm khoá. Vui lòng liên hệ hỗ trợ để biết chi tiết."
+    }
+  },
+  "vendorStore": {
+    "fallbackName": "Cửa hàng",
+    "products": "sản phẩm",
+    "memberSince": "Tham gia từ {{date}}",
+    "outOfStock": "Hết hàng",
+    "productsBy": "Sản phẩm của {{store}}",
+    "empty": "Cửa hàng chưa có sản phẩm nào.",
+    "browseAll": "Xem tất cả sản phẩm"
   }
 }

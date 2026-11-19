@@ -17,16 +17,20 @@ async function runTurn({
   let iterations = 0;
   let finalText = '';
   let usage = { promptTokenCount: 0, candidatesTokenCount: 0 };
-  let workingHistory = [...history];
-  let workingMessage = `<user_message>${userMessage}</user_message>`;
+  // Full conversation sent to the model each iteration: prior history, the new
+  // user message, then (per tool round) the model's tool-call content followed
+  // by a user turn carrying the functionResponse parts.
+  const contents = [
+    ...history,
+    { role: 'user', parts: [{ text: `<user_message>${userMessage}</user_message>` }] },
+  ];
   let cappedOut = false;
 
   while (iterations < maxIters) {
     iterations += 1;
     const res = await llm.streamChat({
       systemInstruction,
-      history: workingHistory,
-      userMessage: workingMessage,
+      contents,
       tools: tools.getDeclarations(),
       onToken,
     });
@@ -56,20 +60,27 @@ async function runTurn({
       toolResults.push({ name: call.name, response: payload });
     }
 
-    // Append the user message that prompted this iteration BEFORE the model
-    // response — Gemini requires conversation history to alternate user/model
-    // and to start with role 'user'. On the first iteration of a brand-new
-    // session, skipping this step left history = [model, function] for the
-    // next iteration and tripped "First content should be with role 'user'".
-    if (workingMessage) {
-      workingHistory.push({ role: 'user', parts: [{ text: workingMessage }] });
-    }
-    workingHistory.push({ role: 'model', parts: [{ functionCall: res.toolCalls[0] }] });
-    workingHistory.push({
-      role: 'function',
-      parts: toolResults.map((r) => ({ functionResponse: { name: r.name, response: r.response } })),
+    // Echo the model's tool-call turn back verbatim (keeps every functionCall
+    // and any thoughtSignature), then answer ALL calls in one user turn.
+    // Gemini only accepts roles 'user' and 'model'.
+    contents.push(
+      res.modelContent || {
+        role: 'model',
+        parts: res.toolCalls.map((c) => ({ functionCall: { name: c.name, args: c.args || {} } })),
+      }
+    );
+    contents.push({
+      role: 'user',
+      parts: toolResults.map((r) => ({
+        functionResponse: {
+          name: r.name,
+          response:
+            r.response && typeof r.response === 'object' && !Array.isArray(r.response)
+              ? r.response
+              : { result: r.response === undefined ? null : r.response },
+        },
+      })),
     });
-    workingMessage = '';
   }
 
   if (iterations >= maxIters && !finalText) cappedOut = true;

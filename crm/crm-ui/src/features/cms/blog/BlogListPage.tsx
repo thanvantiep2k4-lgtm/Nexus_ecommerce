@@ -33,6 +33,12 @@ const { Text } = Typography;
 const PAGE_SIZE = 15;
 const DEBOUNCE_MS = 300;
 
+const STATUS_LABEL: Record<string, string> = {
+  published: 'Đã xuất bản',
+  draft: 'Bản nháp',
+  archived: 'Đã lưu trữ',
+};
+
 const STATUS_COLOR: Record<string, string> = {
   published: 'success',
   draft: 'processing',
@@ -66,9 +72,9 @@ export default function BlogListPage() {
     mutationFn: (id: string) => blogApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
-      toast.success('Post deleted');
+      toast.success('Đã xoá bài viết');
     },
-    onError: () => toast.error('Failed to delete post'),
+    onError: () => toast.error('Xoá bài viết thất bại'),
   });
 
   const publishMutation = useMutation({
@@ -76,9 +82,9 @@ export default function BlogListPage() {
       action === 'publish' ? blogApi.publish(id) : blogApi.unpublish(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
-      toast.success('Post status updated');
+      toast.success('Đã cập nhật trạng thái bài viết');
     },
-    onError: () => toast.error('Failed to update status'),
+    onError: () => toast.error('Cập nhật trạng thái thất bại'),
   });
 
   const handleSearchChange = useCallback((value: string) => {
@@ -92,14 +98,14 @@ export default function BlogListPage() {
 
   const columns: TableProps<BlogPost>['columns'] = [
     {
-      title: 'Title',
+      title: 'Tiêu đề',
       key: 'title',
       render: (_: unknown, record: BlogPost) => (
         <div>
           <Text strong>{record.title}</Text>
           {record.featured && (
             <Tag color="gold" style={{ marginLeft: 6, fontSize: 11 }}>
-              Featured
+              Nổi bật
             </Tag>
           )}
           <div>
@@ -126,14 +132,14 @@ export default function BlogListPage() {
       ),
     },
     {
-      title: 'Category',
+      title: 'Danh mục',
       dataIndex: 'category',
       key: 'category',
       width: 130,
       render: (cat: string) => (cat ? <Tag>{cat}</Tag> : <Text type="secondary">—</Text>),
     },
     {
-      title: 'Tags',
+      title: 'Thẻ',
       dataIndex: 'tags',
       key: 'tags',
       width: 160,
@@ -153,40 +159,40 @@ export default function BlogListPage() {
       ),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       width: 110,
       render: (s: string) => (
-        <Badge status={STATUS_COLOR[s] as 'success' | 'processing' | 'default'} text={s} />
+        <Badge status={STATUS_COLOR[s] as 'success' | 'processing' | 'default'} text={STATUS_LABEL[s] ?? s} />
       ),
     },
     {
-      title: 'Author',
+      title: 'Tác giả',
       key: 'author',
       width: 130,
       render: (_: unknown, record: BlogPost) => <Text>{record.author?.name ?? '—'}</Text>,
     },
     {
-      title: 'Published',
+      title: 'Ngày xuất bản',
       key: 'publishedAt',
       width: 130,
       render: (_: unknown, record: BlogPost) =>
         record.publishedAt ? (
-          dayjs(record.publishedAt).format('MMM D, YYYY')
+          dayjs(record.publishedAt).format('DD/MM/YYYY')
         ) : (
           <Text type="secondary">—</Text>
         ),
     },
     {
-      title: 'Views',
+      title: 'Lượt xem',
       dataIndex: 'views',
       key: 'views',
       width: 80,
       render: (v: number) => v ?? 0,
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       width: 150,
       fixed: 'right' as const,
@@ -201,12 +207,13 @@ export default function BlogListPage() {
                 action: record.status === 'published' ? 'unpublish' : 'publish',
               })
             }
-            title={record.status === 'published' ? 'Unpublish' : 'Publish'}
+            title={record.status === 'published' ? 'Huỷ xuất bản' : 'Xuất bản'}
           />
           <Popconfirm
-            title="Delete post?"
+            title="Xoá bài viết này?"
             onConfirm={() => deleteMutation.mutate(record._id)}
-            okText="Delete"
+            okText="Xoá"
+            cancelText="Huỷ"
             okButtonProps={{ danger: true }}
           >
             <Button icon={<DeleteOutlined />} danger />
@@ -219,10 +226,10 @@ export default function BlogListPage() {
   return (
     <div>
       <PageHeader
-        title="Blog Posts"
+        title="Bài viết Blog"
         extra={
           <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/cms/blog/new')}>
-            New Post
+            Thêm bài viết
           </Button>
         }
       />
@@ -230,7 +237,7 @@ export default function BlogListPage() {
       <Card size="small" style={{ marginBottom: 16 }}>
         <Space wrap>
           <Input
-            placeholder="Search posts..."
+            placeholder="Tìm kiếm bài viết..."
             prefix={<SearchOutlined style={{ color: '#bbb' }} />}
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -238,7 +245,7 @@ export default function BlogListPage() {
             style={{ width: 240 }}
           />
           <Select
-            placeholder="All Statuses"
+            placeholder="Tất cả trạng thái"
             value={status || undefined}
             onChange={(v) => {
               setStatus(v ?? '');
@@ -246,14 +253,14 @@ export default function BlogListPage() {
             }}
             allowClear
             options={[
-              { value: 'draft', label: 'Draft' },
-              { value: 'published', label: 'Published' },
-              { value: 'archived', label: 'Archived' },
+              { value: 'draft', label: 'Bản nháp' },
+              { value: 'published', label: 'Đã xuất bản' },
+              { value: 'archived', label: 'Đã lưu trữ' },
             ]}
             style={{ width: 150 }}
           />
           <Input
-            placeholder="Filter by category"
+            placeholder="Lọc theo danh mục"
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
@@ -277,7 +284,7 @@ export default function BlogListPage() {
           pageSize: PAGE_SIZE,
           total: data?.pagination?.totalItems ?? 0,
           showSizeChanger: false,
-          showTotal: (total) => `${total} posts`,
+          showTotal: (total) => `${total} bài viết`,
           onChange: (p) => setPage(p),
         }}
       />

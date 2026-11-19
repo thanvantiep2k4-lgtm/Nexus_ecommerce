@@ -20,7 +20,7 @@ async function searchProductsByVector(queryText, { limit = 10, filters = {} } = 
         limit: limit * 2,
       },
     },
-    { $match: { status: { $ne: 'out-of-stock' }, ...buildFilterMatch(filters) } },
+    { $match: { status: { $nin: ['out-of-stock', 'discontinued'] }, ...buildFilterMatch(filters) } },
     {
       $project: {
         title: 1,
@@ -59,7 +59,7 @@ async function textSearchProductsFallback(queryText, { limit = 10, filters = {} 
     .filter((t) => t.length >= 2)
     .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 
-  const q = { status: { $ne: 'out-of-stock' }, ...buildFilterMatch(filters) };
+  const q = { status: { $nin: ['out-of-stock', 'discontinued'] }, ...buildFilterMatch(filters) };
   if (tokens.length > 0) {
     q.$or = tokens.flatMap((t) => [
       { title: { $regex: t, $options: 'i' } },
@@ -78,7 +78,7 @@ async function textSearchProductsFallback(queryText, { limit = 10, filters = {} 
   if (results.length === 0) {
     // Soft fallback: return popular in-stock products so the assistant has
     // something useful to suggest instead of saying "nothing found".
-    results = await Product.find({ status: { $ne: 'out-of-stock' }, ...buildFilterMatch(filters) })
+    results = await Product.find({ status: { $nin: ['out-of-stock', 'discontinued'] }, ...buildFilterMatch(filters) })
       .sort({ sellCount: -1, createdAt: -1 })
       .limit(limit)
       .select('title slug price quantity imageURLs sellCount productType')

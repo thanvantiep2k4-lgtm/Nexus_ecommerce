@@ -127,10 +127,10 @@ function joinArray(arr: string[] | undefined): string {
 }
 
 function getStockStatus(qty: number): { color: string; text: string; bg: string } {
-  if (qty === 0) return { color: '#ff4d4f', text: 'Out of stock', bg: '#fff2f0' };
-  if (qty <= 5) return { color: '#fa8c16', text: 'Critical', bg: '#fff7e6' };
-  if (qty <= 10) return { color: '#faad14', text: 'Low stock', bg: '#fffbe6' };
-  return { color: '#52c41a', text: 'In stock', bg: '#f6ffed' };
+  if (qty === 0) return { color: '#ff4d4f', text: 'Hết hàng', bg: '#fff2f0' };
+  if (qty <= 5) return { color: '#fa8c16', text: 'Sắp hết', bg: '#fff7e6' };
+  if (qty <= 10) return { color: '#faad14', text: 'Tồn kho thấp', bg: '#fffbe6' };
+  return { color: '#52c41a', text: 'Còn hàng', bg: '#f6ffed' };
 }
 
 // ---------------------------------------------------------------------------
@@ -183,7 +183,7 @@ function StatsCards({ stats, loading }: { stats: ProductStats | null; loading: b
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Total Products
+                Tổng sản phẩm
               </Text>
             }
             value={total}
@@ -197,7 +197,7 @@ function StatsCards({ stats, loading }: { stats: ProductStats | null; loading: b
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Active
+                Đang hiển thị
               </Text>
             }
             value={active}
@@ -220,7 +220,7 @@ function StatsCards({ stats, loading }: { stats: ProductStats | null; loading: b
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Low Stock
+                Sắp hết hàng
               </Text>
             }
             value={lowStock}
@@ -234,7 +234,7 @@ function StatsCards({ stats, loading }: { stats: ProductStats | null; loading: b
           <Statistic
             title={
               <Text type="secondary" style={{ fontSize: 13 }}>
-                Out of Stock
+                Hết hàng
               </Text>
             }
             value={outOfStock}
@@ -267,7 +267,7 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
       const values = await variantForm.validateFields();
       const isDuplicate = variants.some((v, i) => v.sku === values.sku && i !== editingIndex);
       if (isDuplicate) {
-        toast.error('SKU must be unique within this product');
+        toast.error('SKU phải là duy nhất trong sản phẩm này');
         return;
       }
       const newVariant: ProductVariant = {
@@ -321,7 +321,7 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
       ),
     },
     {
-      title: 'Color',
+      title: 'Màu',
       key: 'color',
       width: 120,
       render: (_: unknown, record: ProductVariant) => (
@@ -341,16 +341,16 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
         </Flex>
       ),
     },
-    { title: 'Size', dataIndex: 'size', key: 'size', width: 70 },
+    { title: 'Kích cỡ', dataIndex: 'size', key: 'size', width: 70 },
     {
-      title: 'Price',
+      title: 'Giá',
       dataIndex: 'price',
       key: 'price',
       width: 90,
       render: (v: number) => formatCurrency(v),
     },
     {
-      title: 'Stock',
+      title: 'Tồn kho',
       dataIndex: 'stock',
       key: 'stock',
       width: 70,
@@ -372,9 +372,9 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
             onClick={() => handleEditVariant(index)}
           />
           <Popconfirm
-            title="Remove this variant?"
+            title="Xoá biến thể này?"
             onConfirm={() => handleDeleteVariant(index)}
-            okText="Remove"
+            okText="Xoá"
             okButtonProps={{ danger: true }}
           >
             <Button size="small" type="text" danger icon={<DeleteOutlined />} />
@@ -398,7 +398,7 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
           emptyText: (
             <div style={{ padding: '16px 0' }}>
               <InboxOutlined style={{ fontSize: 28, color: '#d9d9d9' }} />
-              <div style={{ color: '#8c8c8c', marginTop: 4, fontSize: 13 }}>No variants yet</div>
+              <div style={{ color: '#8c8c8c', marginTop: 4, fontSize: 13 }}>Chưa có biến thể</div>
             </div>
           ),
         }}
@@ -407,29 +407,29 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
       {addingVariant ? (
         <Card size="small" style={{ borderRadius: 8, background: '#fafafa' }}>
           <Text strong style={{ display: 'block', marginBottom: 12, fontSize: 13 }}>
-            {editingIndex !== null ? 'Edit Variant' : 'New Variant'}
+            {editingIndex !== null ? 'Sửa biến thể' : 'Biến thể mới'}
           </Text>
           <Form form={variantForm} layout="vertical" size="small">
             <Row gutter={12}>
               <Col span={6}>
-                <Form.Item name="sku" label="SKU" rules={[{ required: true, message: 'Required' }]}>
+                <Form.Item name="sku" label="SKU" rules={[{ required: true, message: 'Bắt buộc' }]}>
                   <Input placeholder="SKU-001" style={{ fontFamily: 'monospace' }} />
                 </Form.Item>
               </Col>
               <Col span={5}>
                 <Form.Item
                   name="colorName"
-                  label="Color"
-                  rules={[{ required: true, message: 'Required' }]}
+                  label="Màu"
+                  rules={[{ required: true, message: 'Bắt buộc' }]}
                 >
-                  <Input placeholder="Red" />
+                  <Input placeholder="Đỏ" />
                 </Form.Item>
               </Col>
               <Col span={4}>
                 <Form.Item
                   name="colorHex"
-                  label="Hex"
-                  rules={[{ required: true, message: 'Required' }]}
+                  label="Mã màu"
+                  rules={[{ required: true, message: 'Bắt buộc' }]}
                 >
                   <Input placeholder="#FF0000" />
                 </Form.Item>
@@ -437,8 +437,8 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
               <Col span={3}>
                 <Form.Item
                   name="size"
-                  label="Size"
-                  rules={[{ required: true, message: 'Required' }]}
+                  label="Kích cỡ"
+                  rules={[{ required: true, message: 'Bắt buộc' }]}
                 >
                   <Input placeholder="M" />
                 </Form.Item>
@@ -446,8 +446,8 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
               <Col span={3}>
                 <Form.Item
                   name="price"
-                  label="Price"
-                  rules={[{ required: true, message: 'Required' }]}
+                  label="Giá"
+                  rules={[{ required: true, message: 'Bắt buộc' }]}
                 >
                   <InputNumber min={0} precision={2} style={{ width: '100%' }} />
                 </Form.Item>
@@ -455,8 +455,8 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
               <Col span={3}>
                 <Form.Item
                   name="stock"
-                  label="Stock"
-                  rules={[{ required: true, message: 'Required' }]}
+                  label="Tồn kho"
+                  rules={[{ required: true, message: 'Bắt buộc' }]}
                 >
                   <InputNumber min={0} style={{ width: '100%' }} />
                 </Form.Item>
@@ -464,7 +464,7 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
             </Row>
             <Space>
               <Button type="primary" size="small" onClick={handleAddOrUpdate}>
-                {editingIndex !== null ? 'Update' : 'Add'}
+                {editingIndex !== null ? 'Cập nhật' : 'Thêm'}
               </Button>
               <Button
                 size="small"
@@ -474,7 +474,7 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
                   variantForm.resetFields();
                 }}
               >
-                Cancel
+                Huỷ
               </Button>
             </Space>
           </Form>
@@ -490,7 +490,7 @@ function VariantsTab({ variants, onChange }: VariantsTabProps) {
           }}
           block
         >
-          Add Variant
+          Thêm biến thể
         </Button>
       )}
     </div>
@@ -525,7 +525,7 @@ function ProductDetail({ product }: { product: Product }) {
           )}
           <Flex gap={6} style={{ marginTop: 8 }} wrap="wrap">
             <StatusBadge status={product.status} />
-            {product.featured && <Tag color="gold">Featured</Tag>}
+            {product.featured && <Tag color="gold">Nổi bật</Tag>}
             {product.productType && <Tag color="blue">{product.productType}</Tag>}
           </Flex>
         </div>
@@ -540,7 +540,7 @@ function ProductDetail({ product }: { product: Product }) {
         <Flex justify="space-between" align="center">
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>
-              Price
+              Giá
             </Text>
             <div>
               <Text strong style={{ fontSize: 22 }}>
@@ -560,7 +560,7 @@ function ProductDetail({ product }: { product: Product }) {
           </div>
           <div style={{ textAlign: 'right' }}>
             <Text type="secondary" style={{ fontSize: 12 }}>
-              Stock
+              Tồn kho
             </Text>
             <div>
               <Tag
@@ -573,7 +573,7 @@ function ProductDetail({ product }: { product: Product }) {
                 }
                 style={{ fontSize: 14, padding: '2px 10px', borderRadius: 4 }}
               >
-                {product.quantity ?? 0} units
+                {product.quantity ?? 0} sản phẩm
               </Tag>
             </div>
           </div>
@@ -587,7 +587,7 @@ function ProductDetail({ product }: { product: Product }) {
             <Statistic
               title={
                 <Text type="secondary" style={{ fontSize: 11 }}>
-                  Sold
+                  Đã bán
                 </Text>
               }
               value={product.sellCount ?? 0}
@@ -600,7 +600,7 @@ function ProductDetail({ product }: { product: Product }) {
             <Statistic
               title={
                 <Text type="secondary" style={{ fontSize: 11 }}>
-                  Reviews
+                  Đánh giá
                 </Text>
               }
               value={product.reviews?.length ?? 0}
@@ -613,7 +613,7 @@ function ProductDetail({ product }: { product: Product }) {
             <Statistic
               title={
                 <Text type="secondary" style={{ fontSize: 11 }}>
-                  Variants
+                  Biến thể
                 </Text>
               }
               value={product.variants?.length ?? 0}
@@ -630,7 +630,7 @@ function ProductDetail({ product }: { product: Product }) {
             type="secondary"
             style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}
           >
-            Description
+            Mô tả
           </Text>
           <Paragraph style={{ marginTop: 4, marginBottom: 0, color: '#595959' }}>
             {product.description}
@@ -644,7 +644,7 @@ function ProductDetail({ product }: { product: Product }) {
           type="secondary"
           style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}
         >
-          Classification
+          Phân loại
         </Text>
         <Flex gap={8} style={{ marginTop: 6 }} wrap="wrap">
           {(product as any).parent && (
@@ -672,7 +672,7 @@ function ProductDetail({ product }: { product: Product }) {
                 type="secondary"
                 style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}
               >
-                Colors
+                Màu sắc
               </Text>
               <div style={{ marginTop: 4 }}>
                 {product.colors.map((c) => (
@@ -689,7 +689,7 @@ function ProductDetail({ product }: { product: Product }) {
                 type="secondary"
                 style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}
               >
-                Sizes
+                Kích cỡ
               </Text>
               <div style={{ marginTop: 4 }}>
                 {product.sizes.map((s) => (
@@ -706,7 +706,7 @@ function ProductDetail({ product }: { product: Product }) {
                 type="secondary"
                 style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}
               >
-                Tags
+                Thẻ
               </Text>
               <div style={{ marginTop: 4 }}>
                 {product.tags.map((t) => (
@@ -727,7 +727,7 @@ function ProductDetail({ product }: { product: Product }) {
             type="secondary"
             style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}
           >
-            Variants ({product.variants.length})
+            Biến thể ({product.variants.length})
           </Text>
           <div style={{ marginTop: 8 }}>
             {product.variants.map((v, idx) => (
@@ -762,7 +762,7 @@ function ProductDetail({ product }: { product: Product }) {
                       {formatCurrency(v.price)}
                     </Text>
                     <Text type={v.stock <= 5 ? 'danger' : 'secondary'} style={{ fontSize: 13 }}>
-                      {v.stock} pcs
+                      {v.stock} cái
                     </Text>
                   </Flex>
                 </Flex>
@@ -779,7 +779,7 @@ function ProductDetail({ product }: { product: Product }) {
             type="secondary"
             style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}
           >
-            Physical Properties
+            Thuộc tính vật lý
           </Text>
           <Flex gap={16} style={{ marginTop: 6 }} wrap="wrap">
             {product.weight && (
@@ -814,13 +814,13 @@ function ProductDetail({ product }: { product: Product }) {
         <Flex align="center" gap={6}>
           <CalendarOutlined style={{ color: '#bfbfbf', fontSize: 12 }} />
           <Text type="secondary" style={{ fontSize: 12 }}>
-            Created: {formatDate(product.createdAt)}
+            Ngày tạo: {formatDate(product.createdAt)}
           </Text>
         </Flex>
         <Flex align="center" gap={6}>
           <CalendarOutlined style={{ color: '#bfbfbf', fontSize: 12 }} />
           <Text type="secondary" style={{ fontSize: 12 }}>
-            Updated: {formatDate(product.updatedAt)}
+            Cập nhật: {formatDate(product.updatedAt)}
           </Text>
         </Flex>
       </Flex>
@@ -906,11 +906,11 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
     mutationFn: (data: Partial<Product>) => productsApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      toast.success('Product created');
+      toast.success('Đã tạo sản phẩm');
       onClose();
     },
     onError: (err: Error) => {
-      toast.error(extractApiError(err, 'Failed to create product'));
+      toast.error(extractApiError(err, 'Tạo sản phẩm thất bại'));
     },
   });
 
@@ -919,11 +919,11 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
       productsApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      toast.success('Product updated');
+      toast.success('Đã cập nhật sản phẩm');
       onClose();
     },
     onError: (err: Error) => {
-      toast.error(extractApiError(err, 'Failed to update product'));
+      toast.error(extractApiError(err, 'Cập nhật sản phẩm thất bại'));
     },
   });
 
@@ -988,37 +988,37 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
   const tabItems = [
     {
       key: 'general',
-      label: 'General',
+      label: 'Thông tin chung',
       children: (
         <>
           {/* Image upload */}
           <Form.Item
             name="img"
-            label="Product Image"
+            label="Ảnh sản phẩm"
             rules={[
-              { required: true, message: 'A product image is required' },
-              { type: 'url', message: 'Must be a valid URL (upload an image to generate one)' },
+              { required: true, message: 'Vui lòng tải ảnh sản phẩm' },
+              { type: 'url', message: 'URL không hợp lệ (tải ảnh lên để tạo URL)' },
             ]}
           >
-            <ImageUpload placeholder="Upload Product Image" />
+            <ImageUpload placeholder="Tải ảnh sản phẩm" />
           </Form.Item>
 
           <Form.Item
             name="title"
-            label="Title"
+            label="Tên sản phẩm"
             rules={[
-              { required: true, message: 'Product title is required' },
-              { min: 3, message: 'Title must be at least 3 characters' },
-              { max: 200, message: 'Title must be at most 200 characters' },
+              { required: true, message: 'Vui lòng nhập tên sản phẩm' },
+              { min: 3, message: 'Tên phải có ít nhất 3 ký tự' },
+              { max: 200, message: 'Tên tối đa 200 ký tự' },
             ]}
           >
-            <Input placeholder="Enter product title" />
+            <Input placeholder="Nhập tên sản phẩm" />
           </Form.Item>
 
-          <Form.Item name="description" label="Description">
+          <Form.Item name="description" label="Mô tả">
             <Input.TextArea
               rows={3}
-              placeholder="Enter product description"
+              placeholder="Nhập mô tả sản phẩm"
               showCount
               maxLength={2000}
             />
@@ -1028,11 +1028,11 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
             <Col span={8}>
               <Form.Item
                 name="price"
-                label="Price (VND, base currency)"
-                tooltip="All prices stored as VND. CRM/storefront will display in user's chosen currency via live exchange rate."
+                label="Giá (VND, tiền tệ gốc)"
+                tooltip="Mọi giá đều lưu bằng VND. CRM/cửa hàng sẽ hiển thị theo tiền tệ người dùng chọn dựa trên tỷ giá thực tế."
                 rules={[
-                  { required: true, message: 'Price is required' },
-                  { type: 'number', min: 1, message: 'Price must be ≥ 1' },
+                  { required: true, message: 'Vui lòng nhập giá' },
+                  { type: 'number', min: 1, message: 'Giá phải ≥ 1' },
                 ]}
               >
                 <InputNumber
@@ -1047,8 +1047,8 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
             <Col span={8}>
               <Form.Item
                 name="discount"
-                label="Discount (%)"
-                rules={[{ type: 'number', min: 0, max: 100, message: '0–100 only' }]}
+                label="Giảm giá (%)"
+                rules={[{ type: 'number', min: 0, max: 100, message: 'Chỉ từ 0–100' }]}
               >
                 <InputNumber min={0} max={100} style={{ width: '100%' }} placeholder="0" />
               </Form.Item>
@@ -1056,10 +1056,10 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
             <Col span={8}>
               <Form.Item
                 name="quantity"
-                label="Quantity"
+                label="Số lượng"
                 rules={[
-                  { required: true, message: 'Quantity is required' },
-                  { type: 'number', min: 0, message: 'Cannot be negative' },
+                  { required: true, message: 'Vui lòng nhập số lượng' },
+                  { type: 'number', min: 0, message: 'Không được âm' },
                 ]}
               >
                 <InputNumber min={0} style={{ width: '100%' }} placeholder="0" />
@@ -1071,19 +1071,19 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
             <Col span={12}>
               <Form.Item
                 name="category"
-                label="Category"
+                label="Danh mục"
                 rules={[
                   {
                     required: true,
                     validator: (_, value) =>
                       Array.isArray(value) && value.length > 0
                         ? Promise.resolve()
-                        : Promise.reject(new Error('Category is required')),
+                        : Promise.reject(new Error('Vui lòng chọn danh mục')),
                   },
                 ]}
               >
                 <Cascader
-                  placeholder="Select category"
+                  placeholder="Chọn danh mục"
                   allowClear
                   showSearch
                   options={Object.entries(
@@ -1109,24 +1109,24 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name="status" label="Status">
+              <Form.Item name="status" label="Trạng thái">
                 <Select
                   options={[
-                    { value: 'Show', label: 'Visible' },
-                    { value: 'Hide', label: 'Hidden' },
+                    { value: 'Show', label: 'Hiển thị' },
+                    { value: 'Hide', label: 'Ẩn' },
                   ]}
                 />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name="shipping" label="Shipping ($)">
+              <Form.Item name="shipping" label="Phí vận chuyển ($)">
                 <InputNumber min={0} precision={2} style={{ width: '100%' }} placeholder="0" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Form.Item name="featured" label="Featured" valuePropName="checked">
-            <Switch checkedChildren="Yes" unCheckedChildren="No" />
+          <Form.Item name="featured" label="Nổi bật" valuePropName="checked">
+            <Switch checkedChildren="Có" unCheckedChildren="Không" />
           </Form.Item>
 
           <Divider
@@ -1134,23 +1134,23 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
             styles={{ content: { margin: 0 } }}
             style={{ fontSize: 13, color: '#8c8c8c' }}
           >
-            Attributes
+            Thuộc tính
           </Divider>
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item name="colors" label="Colors" tooltip="Comma-separated">
-                <Input placeholder="red, blue" />
+              <Form.Item name="colors" label="Màu sắc" tooltip="Phân tách bằng dấu phẩy">
+                <Input placeholder="đỏ, xanh" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="sizes" label="Sizes" tooltip="Comma-separated">
+              <Form.Item name="sizes" label="Kích cỡ" tooltip="Phân tách bằng dấu phẩy">
                 <Input placeholder="S, M, L, XL" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="tags" label="Tags" tooltip="Comma-separated">
-                <Input placeholder="sale, new" />
+              <Form.Item name="tags" label="Thẻ" tooltip="Phân tách bằng dấu phẩy">
+                <Input placeholder="giảm giá, mới" />
               </Form.Item>
             </Col>
           </Row>
@@ -1160,40 +1160,40 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
             styles={{ content: { margin: 0 } }}
             style={{ fontSize: 13, color: '#8c8c8c' }}
           >
-            Shipping & Physical
+            Vận chuyển & kích thước
           </Divider>
 
           <Row gutter={12}>
             <Col span={6}>
-              <Form.Item name="weight" label="Weight (g)">
+              <Form.Item name="weight" label="Khối lượng (g)">
                 <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name="dimLength" label="L (cm)">
+              <Form.Item name="dimLength" label="Dài (cm)">
                 <InputNumber min={0} precision={1} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name="dimWidth" label="W (cm)">
+              <Form.Item name="dimWidth" label="Rộng (cm)">
                 <InputNumber min={0} precision={1} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name="dimHeight" label="H (cm)">
+              <Form.Item name="dimHeight" label="Cao (cm)">
                 <InputNumber min={0} precision={1} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
           </Row>
-          <Form.Item name="barcode" label="Barcode / GTIN">
-            <Input placeholder="e.g. 012345678905" style={{ fontFamily: 'monospace' }} />
+          <Form.Item name="barcode" label="Mã vạch / GTIN">
+            <Input placeholder="VD: 012345678905" style={{ fontFamily: 'monospace' }} />
           </Form.Item>
         </>
       ),
     },
     {
       key: 'variants',
-      label: `Variants${variants.length > 0 ? ` (${variants.length})` : ''}`,
+      label: `Biến thể${variants.length > 0 ? ` (${variants.length})` : ''}`,
       children: <VariantsTab variants={variants} onChange={setVariants} />,
     },
   ];
@@ -1203,7 +1203,7 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
       title={
         <Flex align="center" gap={8}>
           {isEdit ? <EditOutlined /> : <PlusOutlined />}
-          <span>{isEdit ? 'Edit Product' : 'New Product'}</span>
+          <span>{isEdit ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</span>
         </Flex>
       }
       open={open}
@@ -1213,9 +1213,9 @@ function ProductDrawer({ open, editingProduct, categories, onClose }: ProductDra
       afterOpenChange={handleAfterOpenChange}
       extra={
         <Space>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>Huỷ</Button>
           <Button type="primary" onClick={handleSubmit} loading={isLoading}>
-            {isEdit ? 'Update' : 'Create'}
+            {isEdit ? 'Cập nhật' : 'Tạo mới'}
           </Button>
         </Space>
       }
@@ -1300,11 +1300,11 @@ export default function ProductsPage() {
     mutationFn: (id: string) => productsApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      toast.success('Product deleted');
+      toast.success('Đã xoá sản phẩm');
       setDeletingId(null);
     },
     onError: (err: Error) => {
-      toast.error(err.message || 'Failed to delete product');
+      toast.error(err.message || 'Xoá sản phẩm thất bại');
       setDeletingId(null);
     },
   });
@@ -1374,7 +1374,7 @@ export default function ProductsPage() {
 
   const columns: TableProps<Product>['columns'] = [
     {
-      title: 'Product',
+      title: 'Sản phẩm',
       key: 'product',
       render: (_: unknown, record: Product) => (
         <Flex align="center" gap={12}>
@@ -1410,7 +1410,7 @@ export default function ProductsPage() {
       ),
     },
     {
-      title: 'Price',
+      title: 'Giá',
       key: 'price',
       width: 130,
       sorter: (a: Product, b: Product) => a.price - b.price,
@@ -1440,7 +1440,7 @@ export default function ProductsPage() {
       },
     },
     {
-      title: 'Stock',
+      title: 'Tồn kho',
       key: 'quantity',
       width: 100,
       sorter: (a: Product, b: Product) => (a.quantity ?? 0) - (b.quantity ?? 0),
@@ -1467,7 +1467,7 @@ export default function ProductsPage() {
       },
     },
     {
-      title: 'Sold',
+      title: 'Đã bán',
       key: 'sellCount',
       width: 70,
       align: 'center',
@@ -1479,12 +1479,12 @@ export default function ProductsPage() {
       ),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       key: 'status',
       width: 85,
       filters: [
-        { text: 'Visible', value: 'Show' },
-        { text: 'Hidden', value: 'Hide' },
+        { text: 'Hiển thị', value: 'Show' },
+        { text: 'Ẩn', value: 'Hide' },
       ],
       onFilter: (value, record) => record.status === value,
       render: (_: unknown, record: Product) => <StatusBadge status={record.status} />,
@@ -1496,7 +1496,7 @@ export default function ProductsPage() {
       fixed: 'right',
       render: (_: unknown, record: Product) => (
         <Space size={0}>
-          <Tooltip title="View">
+          <Tooltip title="Xem">
             <Button
               type="text"
               size="small"
@@ -1504,7 +1504,7 @@ export default function ProductsPage() {
               onClick={() => handleView(record)}
             />
           </Tooltip>
-          <Tooltip title="Edit">
+          <Tooltip title="Sửa">
             <Button
               type="text"
               size="small"
@@ -1513,10 +1513,10 @@ export default function ProductsPage() {
             />
           </Tooltip>
           <Popconfirm
-            title="Delete product"
-            description="This action cannot be undone."
+            title="Xoá sản phẩm"
+            description="Thao tác này không thể hoàn tác."
             onConfirm={() => handleDelete(record._id)}
-            okText="Delete"
+            okText="Xoá"
             okButtonProps={{ danger: true }}
           >
             <Button
@@ -1539,10 +1539,10 @@ export default function ProductsPage() {
   return (
     <div>
       <PageHeader
-        title="Product Management"
+        title="Quản lý sản phẩm"
         extra={
           <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenAdd}>
-            Add Product
+            Thêm sản phẩm
           </Button>
         }
       />
@@ -1558,7 +1558,7 @@ export default function ProductsPage() {
       >
         <Flex gap={12} wrap="wrap" align="center">
           <Input
-            placeholder="Search products..."
+            placeholder="Tìm kiếm sản phẩm..."
             prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
             value={filters.search}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -1568,7 +1568,7 @@ export default function ProductsPage() {
           />
 
           <Select
-            placeholder="Category"
+            placeholder="Danh mục"
             style={{ width: 180 }}
             value={filters.category || undefined}
             onChange={(val) => handleFilterChange('category', val ?? '')}
@@ -1579,27 +1579,27 @@ export default function ProductsPage() {
           />
 
           <Select
-            placeholder="Status"
+            placeholder="Trạng thái"
             style={{ width: 130 }}
             value={filters.status || undefined}
             onChange={(val) => handleFilterChange('status', val ?? '')}
             allowClear
             options={[
-              { value: 'Show', label: 'Visible' },
-              { value: 'Hide', label: 'Hidden' },
+              { value: 'Show', label: 'Hiển thị' },
+              { value: 'Hide', label: 'Ẩn' },
             ]}
           />
 
           {hasActiveFilters && (
             <Button type="link" onClick={handleClearFilters} style={{ padding: 0 }}>
-              Clear filters
+              Xoá bộ lọc
             </Button>
           )}
 
           <div style={{ flex: 1 }} />
 
           <Text type="secondary" style={{ fontSize: 13 }}>
-            {pagination?.totalItems ?? 0} products
+            {pagination?.totalItems ?? 0} sản phẩm
           </Text>
         </Flex>
       </Card>
@@ -1619,12 +1619,12 @@ export default function ProductsPage() {
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                 description={
-                  hasActiveFilters ? 'No products match your filters' : 'No products yet'
+                  hasActiveFilters ? 'Không có sản phẩm phù hợp bộ lọc' : 'Chưa có sản phẩm nào'
                 }
               >
                 {!hasActiveFilters && (
                   <Button type="primary" icon={<PlusOutlined />} onClick={handleOpenAdd}>
-                    Add First Product
+                    Thêm sản phẩm đầu tiên
                   </Button>
                 )}
               </Empty>
@@ -1637,7 +1637,7 @@ export default function ProductsPage() {
             showSizeChanger: false,
             showTotal: (total, range) => (
               <Text type="secondary" style={{ fontSize: 13 }}>
-                {range[0]}-{range[1]} of {total}
+                {range[0]}-{range[1]} / {total}
               </Text>
             ),
             onChange: (newPage) => setPage(newPage),
@@ -1659,7 +1659,7 @@ export default function ProductsPage() {
         title={
           <Flex align="center" gap={8}>
             <InfoCircleOutlined />
-            <span>Product Details</span>
+            <span>Chi tiết sản phẩm</span>
           </Flex>
         }
         open={viewingProduct !== null}
@@ -1677,7 +1677,7 @@ export default function ProductsPage() {
                 handleOpenEdit(product);
               }}
             >
-              Edit
+              Sửa
             </Button>
           )
         }

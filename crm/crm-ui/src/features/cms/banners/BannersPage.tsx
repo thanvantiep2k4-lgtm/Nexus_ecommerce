@@ -32,11 +32,11 @@ import ImageUpload from '@/components/commons/ImageUpload';
 const { Text } = Typography;
 
 const BANNER_TYPE_OPTIONS = [
-  { value: 'announcement-bar', label: 'Announcement Bar' },
+  { value: 'announcement-bar', label: 'Thanh thông báo' },
   { value: 'popup', label: 'Popup' },
-  { value: 'hero-slide', label: 'Hero Slide' },
-  { value: 'promotional-banner', label: 'Promotional Banner' },
-  { value: 'category-banner', label: 'Category Banner' },
+  { value: 'hero-slide', label: 'Slide trang chủ' },
+  { value: 'promotional-banner', label: 'Banner khuyến mãi' },
+  { value: 'category-banner', label: 'Banner danh mục' },
 ];
 
 const BANNER_TYPE_COLOR: Record<string, string> = {
@@ -48,9 +48,9 @@ const BANNER_TYPE_COLOR: Record<string, string> = {
 };
 
 const STATUS_OPTIONS = [
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
-  { value: 'scheduled', label: 'Scheduled' },
+  { value: 'active', label: 'Đang hoạt động' },
+  { value: 'inactive', label: 'Ngừng hoạt động' },
+  { value: 'scheduled', label: 'Đã lên lịch' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -129,10 +129,10 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
     mutationFn: (data: Partial<Banner>) => bannersApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['banners'] });
-      toast.success('Banner created');
+      toast.success('Đã tạo banner');
       onClose();
     },
-    onError: () => toast.error('Failed to create banner'),
+    onError: () => toast.error('Tạo banner thất bại'),
   });
 
   const updateMutation = useMutation({
@@ -140,10 +140,10 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
       bannersApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['banners'] });
-      toast.success('Banner updated');
+      toast.success('Đã cập nhật banner');
       onClose();
     },
-    onError: () => toast.error('Failed to update banner'),
+    onError: () => toast.error('Cập nhật banner thất bại'),
   });
 
   const isLoading = createMutation.isPending || updateMutation.isPending;
@@ -191,11 +191,11 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
 
   return (
     <Modal
-      title={isEdit ? 'Edit Banner' : 'New Banner'}
+      title={isEdit ? 'Sửa banner' : 'Thêm banner'}
       open={open}
       onCancel={onClose}
       onOk={handleSubmit}
-      okText={isEdit ? 'Save' : 'Create'}
+      okText={isEdit ? 'Lưu' : 'Tạo'}
       confirmLoading={isLoading}
       width={560}
       afterOpenChange={handleAfterOpenChange}
@@ -205,24 +205,24 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
         {/* Name + Type */}
         <Form.Item
           name="title"
-          label="Banner Name"
-          rules={[{ required: true, message: 'Required' }]}
+          label="Tên banner"
+          rules={[{ required: true, message: 'Bắt buộc' }]}
         >
-          <Input placeholder="e.g. Summer Sale" />
+          <Input placeholder="VD: Khuyến mãi hè" />
         </Form.Item>
 
         <Row gutter={12}>
           <Col span={14}>
-            <Form.Item name="type" label="Type" rules={[{ required: true }]}>
+            <Form.Item name="type" label="Loại" rules={[{ required: true }]}>
               <Select options={BANNER_TYPE_OPTIONS} />
             </Form.Item>
           </Col>
           <Col span={10}>
-            <Form.Item name="status" label="Status">
+            <Form.Item name="status" label="Trạng thái">
               <Segmented
                 options={[
-                  { label: 'Active', value: 'active' },
-                  { label: 'Off', value: 'inactive' },
+                  { label: 'Bật', value: 'active' },
+                  { label: 'Tắt', value: 'inactive' },
                 ]}
               />
             </Form.Item>
@@ -230,19 +230,19 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
         </Row>
 
         {/* Image */}
-        <Form.Item name="content_image" label="Banner Image">
-          <ImageUpload placeholder="Upload image" width={520} height={160} />
+        <Form.Item name="content_image" label="Ảnh banner">
+          <ImageUpload placeholder="Tải ảnh lên" width={520} height={160} />
         </Form.Item>
 
         {/* Text */}
         <Row gutter={12}>
           <Col span={12}>
-            <Form.Item name="content_text" label="Text (EN)">
+            <Form.Item name="content_text" label="Nội dung (EN)">
               <Input placeholder="Free shipping on orders over $50!" />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="content_textVi" label="Text (VI)">
+            <Form.Item name="content_textVi" label="Nội dung (VI)">
               <Input placeholder="Miễn phí vận chuyển cho đơn trên 1.200.000₫!" />
             </Form.Item>
           </Col>
@@ -251,12 +251,12 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
         {/* Button */}
         <Row gutter={12}>
           <Col span={10}>
-            <Form.Item name="content_buttonText" label="Button Label">
+            <Form.Item name="content_buttonText" label="Nhãn nút">
               <Input placeholder="Shop Now" />
             </Form.Item>
           </Col>
           <Col span={14}>
-            <Form.Item name="content_buttonUrl" label="Button URL">
+            <Form.Item name="content_buttonUrl" label="Liên kết nút">
               <Input placeholder="/shop" />
             </Form.Item>
           </Col>
@@ -267,7 +267,7 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
           <Col span={7}>
             <Form.Item
               name="content_backgroundColor"
-              label="Background"
+              label="Màu nền"
               getValueFromEvent={(color) => color.toHexString()}
               getValueProps={(hex) => ({ value: hex || '#0989FF' })}
             >
@@ -277,7 +277,7 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
           <Col span={7}>
             <Form.Item
               name="content_textColor"
-              label="Text Color"
+              label="Màu chữ"
               getValueFromEvent={(color) => color.toHexString()}
               getValueProps={(hex) => ({ value: hex || '#ffffff' })}
             >
@@ -285,7 +285,7 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
             </Form.Item>
           </Col>
           <Col span={10}>
-            <Form.Item name="dismissible" label="Dismissible" valuePropName="checked">
+            <Form.Item name="dismissible" label="Cho phép đóng" valuePropName="checked">
               <Switch />
             </Form.Item>
           </Col>
@@ -296,7 +296,7 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
           <Col flex="auto">
             <Text type="secondary">
               <CalendarOutlined style={{ marginRight: 6 }} />
-              Set active dates
+              Đặt thời gian hiển thị
             </Text>
           </Col>
           <Col>
@@ -306,12 +306,12 @@ function BannerModal({ open, editing, onClose }: BannerModalProps) {
         {scheduled && (
           <Row gutter={12}>
             <Col span={12}>
-              <Form.Item name="scheduling_startDate" label="Start">
+              <Form.Item name="scheduling_startDate" label="Bắt đầu">
                 <Input type="datetime-local" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="scheduling_endDate" label="End">
+              <Form.Item name="scheduling_endDate" label="Kết thúc">
                 <Input type="datetime-local" />
               </Form.Item>
             </Col>
@@ -350,19 +350,19 @@ export default function BannersPage() {
     mutationFn: (id: string) => bannersApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['banners'] });
-      toast.success('Banner deleted');
+      toast.success('Đã xoá banner');
     },
-    onError: () => toast.error('Failed to delete banner'),
+    onError: () => toast.error('Xoá banner thất bại'),
   });
 
   const columns: TableProps<Banner>['columns'] = [
     {
-      title: 'Name',
+      title: 'Tên',
       key: 'title',
       render: (_: unknown, record: Banner) => <Text strong>{record.title}</Text>,
     },
     {
-      title: 'Type',
+      title: 'Loại',
       dataIndex: 'type',
       key: 'type',
       width: 170,
@@ -373,48 +373,48 @@ export default function BannersPage() {
       ),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       width: 110,
       render: (s: string) => (
         <Badge
           status={s === 'active' ? 'success' : s === 'scheduled' ? 'warning' : 'default'}
-          text={s}
+          text={STATUS_OPTIONS.find((o) => o.value === s)?.label ?? s}
         />
       ),
     },
     {
-      title: 'Schedule',
+      title: 'Lịch hiển thị',
       key: 'schedule',
       width: 180,
       render: (_: unknown, record: Banner) =>
         record.scheduling?.isAlwaysActive ? (
-          <Tag color="green">Always Active</Tag>
+          <Tag color="green">Luôn hiển thị</Tag>
         ) : (
           <div>
             <div style={{ fontSize: 12 }}>
               {record.scheduling?.startDate
-                ? dayjs(record.scheduling.startDate).format('MMM D, YYYY')
+                ? dayjs(record.scheduling.startDate).format('DD/MM/YYYY')
                 : '—'}
             </div>
             <div style={{ fontSize: 12, color: '#aaa' }}>
               {record.scheduling?.endDate
-                ? `→ ${dayjs(record.scheduling.endDate).format('MMM D, YYYY')}`
+                ? `→ ${dayjs(record.scheduling.endDate).format('DD/MM/YYYY')}`
                 : ''}
             </div>
           </div>
         ),
     },
     {
-      title: 'Priority',
+      title: 'Ưu tiên',
       dataIndex: 'priority',
       key: 'priority',
       width: 90,
       render: (p: number) => <Tag>{p}</Tag>,
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       width: 110,
       fixed: 'right' as const,
@@ -428,9 +428,10 @@ export default function BannersPage() {
             }}
           />
           <Popconfirm
-            title="Delete banner?"
+            title="Xoá banner?"
             onConfirm={() => deleteMutation.mutate(record._id)}
-            okText="Delete"
+            okText="Xoá"
+            cancelText="Huỷ"
             okButtonProps={{ danger: true }}
           >
             <Button icon={<DeleteOutlined />} danger />
@@ -443,7 +444,7 @@ export default function BannersPage() {
   return (
     <div>
       <PageHeader
-        title="Banners"
+        title="Banner"
         extra={
           <Button
             type="primary"
@@ -453,7 +454,7 @@ export default function BannersPage() {
               setModalOpen(true);
             }}
           >
-            Create Banner
+            Thêm banner
           </Button>
         }
       />
@@ -461,7 +462,7 @@ export default function BannersPage() {
       <Card size="small" style={{ marginBottom: 16 }}>
         <Space wrap>
           <Select
-            placeholder="All Types"
+            placeholder="Tất cả loại"
             value={typeFilter || undefined}
             onChange={(v) => setTypeFilter(v ?? '')}
             allowClear
@@ -469,7 +470,7 @@ export default function BannersPage() {
             style={{ width: 180 }}
           />
           <Select
-            placeholder="All Statuses"
+            placeholder="Tất cả trạng thái"
             value={statusFilter || undefined}
             onChange={(v) => setStatusFilter(v ?? '')}
             allowClear

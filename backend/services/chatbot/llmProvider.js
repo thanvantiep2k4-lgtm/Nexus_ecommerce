@@ -34,7 +34,28 @@ async function takeToken() {
   tokens -= 1;
 }
 
-async function streamChat({ systemInstruction, history, userMessage, tools, onToken, onToolCall }) {
+/**
+ * Stream one model turn.
+ *
+ * Takes the FULL conversation as `contents` (or `history` + `userMessage` for
+ * convenience) and calls generateContentStream instead of startChat: the chat
+ * helper of this SDK assigns role 'function' to tool results, which current
+ * Gemini models reject ("Role 'function' is not supported"), and it strips
+ * thought signatures that Gemini 3 requires to be echoed back on tool turns.
+ *
+ * Returns { text, toolCalls, modelContent, usage } where `modelContent` is the
+ * model's raw content (all parts as received, incl. thoughtSignature) so the
+ * caller can append it verbatim to the conversation before sending tool results.
+ */
+async function streamChat({
+  systemInstruction,
+  contents,
+  history,
+  userMessage,
+  tools,
+  onToken,
+  onToolCall,
+}) {
   await takeToken();
   const model = getClient().getGenerativeModel({
     model: config.chatModel,
@@ -43,13 +64,20 @@ async function streamChat({ systemInstruction, history, userMessage, tools, onTo
     generationConfig: { temperature: 0.4 },
   });
 
-  const chat = model.startChat({ history });
+  const convo = contents
+    ? [...contents]
+    : [
+        ...(history || []),
+        ...(userMessage ? [{ role: 'user', parts: [{ text: userMessage }] }] : []),
+      ];
+
   let attempt = 0;
   let lastErr;
   while (attempt < 3) {
     try {
-      const result = await chat.sendMessageStream(userMessage);
+      const result = await model.generateContentStream({ contents: convo });
       const toolCalls = [];
+      const rawParts = [];
       let text = '';
       for await (const chunk of result.stream) {
         const chunkText = chunk.text() || '';
@@ -62,11 +90,20 @@ async function streamChat({ systemInstruction, history, userMessage, tools, onTo
           toolCalls.push(c);
           if (onToolCall) onToolCall(c);
         }
+        const parts =
+          chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content
+            ? chunk.candidates[0].content.parts
+            : null;
+        if (Array.isArray(parts)) rawParts.push(...parts);
       }
       const final = await result.response;
+      const modelContent = rawParts.length
+        ? { role: 'model', parts: rawParts }
+        : (final.candidates && final.candidates[0] && final.candidates[0].content) || null;
       return {
         text,
         toolCalls,
+        modelContent,
         usage: final.usageMetadata || { promptTokenCount: 0, candidatesTokenCount: 0 },
       };
     } catch (e) {

@@ -5,7 +5,7 @@ import useCartInfo from '@/hooks/use-cart-info';
 import useCurrency from '@/hooks/use-currency';
 
 const CheckoutOrderArea = ({ checkoutData }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { formatPrice, currency } = useCurrency();
   const {
     cartTotal = 0,
@@ -16,7 +16,13 @@ const CheckoutOrderArea = ({ checkoutData }) => {
     taxRate = 0,
     taxLabel = 'VAT',
     taxEnabled = false,
+    shippingMethods = [],
+    shippingMethodId,
+    selectShippingMethod,
+    eligibleFree,
+    freeShipRemaining = 0,
   } = checkoutData;
+  const methodLabel = (m) => (i18n.language === 'vi' && m.labelVi ? m.labelVi : m.label || m.id);
   const { cart_products } = useSelector((state) => state.cart);
   const { total } = useCartInfo();
 
@@ -87,6 +93,32 @@ const CheckoutOrderArea = ({ checkoutData }) => {
             {shippingCost === 0 ? t('checkout.free') : formatPrice(shippingCost)}
           </span>
         </div>
+        {shippingMethods.length > 0 && (
+          <div className="cl-checkout__ship-methods">
+            {shippingMethods.map((m) => (
+              <label key={m.id} className="cl-checkout__ship-method">
+                <input
+                  type="radio"
+                  name="shippingMethod"
+                  checked={shippingMethodId === m.id}
+                  onChange={() => selectShippingMethod?.(m.id)}
+                />
+                <span>{methodLabel(m)}</span>
+                <span className="cost">
+                  {m.cost > 0 ? formatPrice(m.cost) : ''}
+                </span>
+              </label>
+            ))}
+            {!eligibleFree && freeShipRemaining > 0 && (
+              <p className="cl-checkout__ship-hint">
+                {t('checkout.freeShipHint', {
+                  amount: formatPrice(freeShipRemaining),
+                  defaultValue: 'Mua thêm {{amount}} để được miễn phí vận chuyển',
+                })}
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="cl-checkout__summary-row">
           <span className="label">{t('checkout.discount')}</span>

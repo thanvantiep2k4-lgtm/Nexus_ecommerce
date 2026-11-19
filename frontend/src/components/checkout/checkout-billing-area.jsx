@@ -18,7 +18,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             {t('checkout.userName')} <span className="required">*</span>
           </label>
           <input
-            {...register('firstName', { required: 'First name is required!' })}
+            {...register('firstName', { required: t('checkout.required.firstName') })}
             name="firstName"
             id="firstName"
             type="text"
@@ -63,7 +63,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             {t('checkout.address')} <span className="required">*</span>
           </label>
           <input
-            {...register('address', { required: 'Address is required!' })}
+            {...register('address', { required: t('checkout.required.address') })}
             name="address"
             id="address"
             type="text"
@@ -81,7 +81,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             {t('checkout.country')} <span className="required">*</span>
           </label>
           <input
-            {...register('country', { required: 'Country is required!' })}
+            {...register('country', { required: t('checkout.required.country') })}
             name="country"
             id="country"
             type="text"
@@ -106,7 +106,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             {t('checkout.city')} <span className="required">*</span>
           </label>
           <input
-            {...register('city', { required: 'City is required!' })}
+            {...register('city', { required: t('checkout.required.city') })}
             name="city"
             id="city"
             type="text"
@@ -120,7 +120,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             {t('checkout.zipCode')} <span className="required">*</span>
           </label>
           <input
-            {...register('zipCode', { required: 'Zip code is required!' })}
+            {...register('zipCode', { required: t('checkout.required.zipCode') })}
             name="zipCode"
             id="zipCode"
             type="text"
@@ -138,7 +138,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             {t('checkout.email')} <span className="required">*</span>
           </label>
           <input
-            {...register('email', { required: 'Email is required!' })}
+            {...register('email', { required: t('checkout.required.email') })}
             name="email"
             id="email"
             type="email"
@@ -153,7 +153,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             {t('checkout.phone')} <span className="required">*</span>
           </label>
           <input
-            {...register('contactNo', { required: 'Phone number is required!' })}
+            {...register('contactNo', { required: t('checkout.required.contactNo') })}
             name="contactNo"
             id="contactNo"
             type="text"

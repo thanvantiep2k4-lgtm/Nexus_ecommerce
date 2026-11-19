@@ -5,11 +5,11 @@ import { useCurrencyStore, type CurrencyCode } from '@/stores/useCurrencyStore';
 import { useExchangeRates } from '@/hooks/useExchangeRates';
 
 const OPTIONS: { code: CurrencyCode; label: string; symbol: string }[] = [
-  { code: 'VND', label: 'VND — Vietnamese Dong', symbol: '₫' },
-  { code: 'USD', label: 'USD — US Dollar', symbol: '$' },
+  { code: 'VND', label: 'VND — Việt Nam Đồng', symbol: '₫' },
+  { code: 'USD', label: 'USD — Đô la Mỹ', symbol: '$' },
   { code: 'EUR', label: 'EUR — Euro', symbol: '€' },
-  { code: 'GBP', label: 'GBP — British Pound', symbol: '£' },
-  { code: 'JPY', label: 'JPY — Japanese Yen', symbol: '¥' },
+  { code: 'GBP', label: 'GBP — Bảng Anh', symbol: '£' },
+  { code: 'JPY', label: 'JPY — Yên Nhật', symbol: '¥' },
 ];
 
 export default function CurrencySwitcher() {
@@ -40,7 +40,7 @@ export default function CurrencySwitcher() {
       <Button type="text" size="small">
         {current.code} {current.symbol}
         {ratesData?.stale && (
-          <Tooltip title="Exchange rate may be outdated">
+          <Tooltip title="Tỷ giá có thể chưa được cập nhật">
             <WarningOutlined style={{ color: '#faad14', marginLeft: 4 }} />
           </Tooltip>
         )}

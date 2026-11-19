@@ -60,6 +60,18 @@ const IconHistory = () => (
   </svg>
 );
 
+const IconStore = () => (
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M2 7l1.5-4h13L18 7M2 7v1a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 6 0 2.5 2.5 0 0 0 5 0V7M2 7h16"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    />
+    <path d="M3.5 10.5V17h13v-6.5M8 17v-4h4v4" stroke="currentColor" strokeWidth="1.5" />
+  </svg>
+);
+
 const IconSetting = () => (
   <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.5" />
@@ -112,6 +124,7 @@ const ProfileNavTab = ({ activeTab, setActiveTab }) => {
     { id: 'orders', label: t('profile.orderHistory'), icon: <IconOrders /> },
     { id: 'cards', label: t('profile.cardsAddress'), icon: <IconCards /> },
     { id: 'browsing', label: t('profile.browsingHistory'), icon: <IconHistory /> },
+    { id: 'vendor', label: t('profile.becomeSeller'), icon: <IconStore /> },
     { id: 'setting', label: t('profile.setting'), icon: <IconSetting /> },
   ];
 

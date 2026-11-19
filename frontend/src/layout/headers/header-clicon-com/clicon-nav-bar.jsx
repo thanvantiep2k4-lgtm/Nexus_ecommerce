@@ -116,9 +116,6 @@ const CliconNavBar = () => {
             <Link href="/compare">
               <i className="far fa-arrows-repeat"></i> {t('nav.compare')}
             </Link>
-            <Link href="/contact">
-              <i className="far fa-headset"></i> {t('nav.customerSupport')}
-            </Link>
             <Link href="/blog">
               <i className="far fa-newspaper"></i> {t('nav.blog')}
             </Link>
