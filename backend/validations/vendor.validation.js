@@ -37,7 +37,8 @@ const updateVendorProfile = Joi.object({
 // Vendor payout request
 // ---------------------------------------------------------------------------
 const requestPayout = Joi.object({
-  amount: Joi.number().min(1).required(),
+  // Số nguyên đồng (VND): model Payout và CSDL đều từ chối số lẻ, nên chặn sớm ở đây.
+  amount: Joi.number().integer().min(1).required(),
   notes: Joi.string().max(500).allow('', null).optional(),
 }).options({ stripUnknown: true });
 

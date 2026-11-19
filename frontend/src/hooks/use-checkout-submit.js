@@ -356,6 +356,12 @@ const useCheckoutSubmit = () => {
     })
       .then((res) => {
         if (res?.error) {
+          // VẤN ĐỀ ĐÃ BIẾT: lỗi từ API chỉ làm nút đặt hàng hết trạng thái "đang gửi", KHÔNG báo gì
+          // cho người dùng, nên họ thấy "bấm mà không có phản ứng". Đáng chú ý nhất là `409`:
+          // backend trả khi một hoặc nhiều món không đủ tồn kho, body
+          // `{ error, details: [{ productId, sku, requested }] }` (xem POST /api/v1/user/orders).
+          // Đơn không được tạo và kho không đổi, nên cần hiển thị thông báo hết hàng (khóa i18n mới
+          // trong cả en/vi) và đề nghị cập nhật giỏ hàng. Thuộc phần Giỏ hàng/Checkout.
           setIsCheckoutSubmit(false);
         } else if (res.data?.paymentUrl) {
           // VNPay flow: redirect to VNPay gateway

@@ -139,6 +139,12 @@ exports.createOrder = async (req, res, next) => {
 
     await order.save();
 
+    // VẤN ĐỀ ĐÃ BIẾT: đây là luồng tạo đơn của admin, vẫn dùng cách CŨ — lưu đơn rồi mới trừ kho
+    // bằng `$inc` không điều kiện và không nằm trong transaction. Hậu quả: (a) kho có thể thành số
+    // âm, (b) lỗi giữa chừng để lại đơn nhưng kho chưa trừ, (c) luôn trừ `quantity` kể cả khi dòng
+    // hàng thuộc biến thể (luồng khách hàng trừ `variants.$.stock`), nên tồn kho biến thể lệch.
+    // Cần dùng `withTransaction` + `deductStock` (services/stock.service.js) như
+    // controllers/order.controller.js khi làm lại luồng đơn hàng.
     // Update product quantities and sellCount
     if (order.cart && order.cart.length > 0) {
       for (const item of order.cart) {
@@ -192,6 +198,15 @@ exports.updateOrderStatus = async (req, res, next) => {
 
     const previousStatus = order.status;
 
+    // VẤN ĐỀ ĐÃ BIẾT khi hoàn kho lúc huỷ đơn:
+    //  1. LỆCH VỚI LÚC TRỪ: luồng khách đặt hàng trừ `variants.$.stock` với dòng có biến thể, còn
+    //     đoạn dưới luôn cộng lại vào `quantity`. Huỷ một đơn có biến thể làm `quantity` tăng oan
+    //     trong khi `stock` của biến thể không được trả lại.
+    //  2. Không nguyên tắc: đọc `previousStatus` rồi mới hoàn kho, ghi trạng thái ở bước sau. Hai
+    //     request huỷ đồng thời cùng thấy trạng thái cũ và cùng hoàn kho (cộng đôi).
+    //  3. Không nằm trong transaction với việc đổi trạng thái đơn.
+    // Cách sửa: một hàm `restoreStock` đối xứng với `deductStock`, gọi trong `withTransaction` cùng
+    // với việc đổi trạng thái có điều kiện (xem services/stock.service.js).
     // If cancelling, restore product quantities
     if (
       (status === 'cancel' || status === 'cancelled') &&
@@ -361,6 +376,10 @@ exports.deleteOrder = async (req, res, next) => {
       });
     }
 
+    // VẤN ĐỀ ĐÃ BIẾT: cùng lỗi với hoàn kho khi huỷ đơn ở updateOrderStatus (lệch biến thể, không
+    // nguyên tử). Thêm: chỉ kiểm tra `!== 'cancel'` nên đơn trạng thái 'cancelled' (cách viết khác,
+    // enum Order cho phép cả hai) bị hoàn kho lần nữa khi xoá. Xoá cứng đơn hàng cũng làm mất dấu
+    // vết kế toán; nên chuyển sang huỷ/lưu trữ thay vì xoá.
     // Restore product quantities if not already cancelled
     if (order.status !== 'cancel' && order.cart && order.cart.length > 0) {
       for (const item of order.cart) {

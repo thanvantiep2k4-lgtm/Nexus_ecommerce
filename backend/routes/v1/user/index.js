@@ -187,6 +187,10 @@ router.get('/orders/:id', ctrl.getOrderById);
  *     responses:
  *       201:
  *         description: Order created
+ *       409:
+ *         description: |
+ *           Không đủ tồn kho. Đơn KHÔNG được tạo và kho không bị trừ (cả giao dịch bị huỷ).
+ *           Body `details` liệt kê các dòng thiếu hàng: `[{ productId, sku, requested }]`.
  *       422:
  *         description: Validation error
  */

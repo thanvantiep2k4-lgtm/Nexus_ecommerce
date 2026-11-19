@@ -60,6 +60,38 @@ cd crm/crm-ui && npx tsc --noEmit
 - Tên file spec theo phân hệ: `M01-nha-ban`, `M02-san-pham`, `M03-tim-kiem`, `M04-gio-hang-checkout`, `M05-khuyen-mai`, `M06-don-hang`, `M07-thanh-toan`, `M08-tra-hang`, `M09-tai-chinh`, `M10-danh-gia-hieu-suat`, `M11-cms-thong-bao`, `M12-quan-tri` (ví dụ `docs/specs/M06-don-hang.md`).
 - Khi xong việc, báo lại danh sách file tài liệu đã cập nhật. Thay đổi không ảnh hưởng API (refactor nội bộ, sửa style, test) thì không cần cập nhật, nhưng phải nói rõ là không có thay đổi API.
 
+## Ghi chú giải thích tại chỗ sửa code (bắt buộc với mọi AI agent)
+
+Khi sửa code vì một vấn đề (lỗi, rủi ro, hành vi sai, thiết kế chưa đúng), **ghi chú ngay tại chỗ sửa** để người đọc sau hiểu *vì sao* code như vậy, không phải đoán. Gặp vấn đề tương tự ở chỗ khác mà **chưa sửa**, cũng ghi chú tại đó để lần sau không bỏ sót. Không ghi chú cho những dòng tự giải thích được; ghi chú là để giải thích lý do và hệ quả, không lặp lại code đang làm gì.
+
+**Cấu trúc một ghi chú** (viết tiếng Việt, đặt ngay trên đoạn code liên quan):
+
+1. **Làm gì và vì sao:** một câu nêu mục đích, kèm vấn đề của cách cũ nếu có.
+2. **Vấn đề / hệ quả cụ thể:** nếu không sửa thì xảy ra chuyện gì. Nêu tình huống cụ thể (ví dụ: hai người mua món cuối cùng một lúc làm kho thành -1), không nói chung chung.
+3. **Chỗ chưa sửa:** đề đầu dòng `VẤN ĐỀ ĐÃ BIẾT:` và đánh số từng ý, kèm cách sửa đúng hoặc bước nào trong kế hoạch sẽ xử lý.
+4. **Điều kiện sử dụng:** nếu hàm/đoạn code có quy tắc bắt buộc với người gọi (ví dụ phải truyền `session`, không được có tác dụng phụ), liệt kê thành các mục đánh số.
+5. **Tham chiếu:** trỏ tới file hoặc mục liên quan (`services/stock.service.js`, `docs/specs/...`) để người đọc đi tiếp được.
+
+Ví dụ:
+
+```js
+// Ba việc dưới đây phải thành công cùng nhau hoặc huỷ cùng nhau, nên gói trong MỘT transaction:
+//   (1) ghi nhận lượt dùng coupon  (2) tạo đơn  (3) trừ tồn kho có điều kiện.
+// Trước đây chạy rời nhau và trừ kho không kiểm tra điều kiện, nên có thể: tạo đơn xong server
+// lỗi mà kho chưa trừ, hoặc hai người mua món cuối cùng một lúc làm kho thành số âm.
+//
+// VẤN ĐỀ ĐÃ BIẾT:
+//  1. Việc gọi cổng thanh toán nằm NGOÀI transaction: thanh toán xong mới phát hiện hết hàng
+//     thì cần hoàn tiền. Chưa có luồng này (bước Thanh toán/Hoàn tiền).
+//  2. Giá và tổng tiền do client gửi lên và được tin nguyên xi (bước Checkout phải tự tính).
+```
+
+**Quy tắc ghi:**
+- Ghi **đúng thực tế code hiện tại**; sửa hoặc xoá ghi chú cũ khi code đổi, không để ghi chú mâu thuẫn với code.
+- Không ghi chú kiểu mơ hồ ("sửa lỗi", "tạm thời", "xem lại sau") và không để lại `TODO` không kèm lý do.
+- Ghi chú ở tầng CSDL (validator, quyền, chỉ mục) và tài liệu hạ tầng cũng theo cấu trúc trên: nêu rõ ràng buộc chặn điều gì.
+- Khi báo cáo kết quả, nêu các chỗ đã ghi chú "VẤN ĐỀ ĐÃ BIẾT" mà chưa sửa để người duyệt biết.
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 

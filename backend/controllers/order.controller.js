@@ -1,7 +1,6 @@
 const dayjs = require('dayjs');
 const { secret } = require('../config/secret');
 const Order = require('../models/Order');
-const Product = require('../models/Products');
 const Coupon = require('../models/Coupon');
 const ExchangeRate = require('../models/ExchangeRate');
 const User = require('../models/User');
@@ -9,6 +8,8 @@ const { emitOrderCreated, emitOrderUpdated } = require('../utils/socketEmitter')
 const PaymentService = require('../services/paymentService');
 const { sendTemplatedEmail } = require('../utils/emailService');
 const { buildPaymentUrl } = require('../utils/vnpay');
+const { withTransaction } = require('../core/withTransaction');
+const { deductStock, InsufficientStockError } = require('../services/stock.service');
 
 // create-payment-intent - DISABLED (Stripe removed)
 exports.paymentIntent = async (req, res, next) => {
@@ -87,8 +88,17 @@ exports.addOrder = async (req, res, next) => {
     }
 
     // Validate coupon (if provided) and record usage
+    //
+    // VẤN ĐỀ ĐÃ BIẾT (chưa sửa ở đây, thuộc bước "Checkout tách đơn theo shop"):
+    //  - `discount`, `subTotal`, `shippingCost`, `totalAmount` và giá từng dòng trong `cart` đều do
+    //    CLIENT gửi lên và được tin nguyên xi. Người dùng sửa request là mua rẻ tuỳ ý. Đúng ra
+    //    server phải tải lại giá từ DB và tự tính tổng/giảm giá/phí ship.
+    //  - Kiểm tra giới hạn lượt dùng coupon bên dưới (usageCount < usageLimit) là đọc-rồi-kiểm,
+    //    không nguyên tử: hai đơn đồng thời có thể cùng vượt giới hạn. Cần điều kiện ngay trong
+    //    câu lệnh cập nhật (xem cách làm với tồn kho ở services/stock.service.js).
     let resolvedDiscount = discount || 0;
     let appliedCoupon = null;
+    let couponToApply = null;
 
     if (req.body.couponCode) {
       const coupon = await Coupon.findOne({
@@ -108,16 +118,9 @@ exports.addOrder = async (req, res, next) => {
         const withinPerUserLimit = coupon.perUserLimit == null || userUsage < coupon.perUserLimit;
 
         if (withinDates && withinUsageLimit && withinPerUserLimit) {
-          await Coupon.findByIdAndUpdate(coupon._id, {
-            $inc: { usageCount: 1 },
-            $push: {
-              usedBy: {
-                userId: req.user._id,
-                usedAt: now,
-              },
-            },
-          });
-          appliedCoupon = coupon.couponCode;
+          // Chỉ GHI NHẬN lượt dùng ở bước transaction bên dưới (cùng lúc với tạo đơn). Trước đây
+          // lượt coupon bị trừ ngay tại đây; nếu tạo đơn sau đó lỗi thì coupon mất lượt oan.
+          couponToApply = coupon;
         }
       }
     }
@@ -134,32 +137,78 @@ exports.addOrder = async (req, res, next) => {
       exchangeRate = rateDoc?.rates?.[displayCurrency] ?? 1;
     }
 
-    const orderItems = await Order.create({
-      user: req.user._id,
-      cart,
-      name,
-      address,
-      email,
-      contact,
-      city,
-      country,
-      zipCode,
-      subTotal,
-      shippingCost,
-      discount: resolvedDiscount,
-      totalAmount,
-      shippingOption,
-      cardInfo,
-      paymentIntent,
-      paymentMethod,
-      orderNote,
-      status: 'pending',
-      paymentGateway: paymentResult.paymentGateway || paymentMethod.toLowerCase(),
-      paymentStatus: paymentResult.paymentStatus || 'unpaid',
-      transactionId: paymentResult.transactionId || null,
-      displayCurrency,
-      exchangeRate,
-    });
+    // Ba việc dưới đây phải thành công cùng nhau hoặc huỷ cùng nhau, nên gói trong MỘT transaction:
+    //   (1) ghi nhận lượt dùng coupon  (2) tạo đơn  (3) trừ tồn kho có điều kiện.
+    // Trước đây chạy rời nhau và trừ kho không kiểm tra điều kiện, nên có thể: tạo đơn xong server
+    // lỗi mà kho chưa trừ, hoặc hai người mua món cuối cùng một lúc làm kho thành số âm.
+    //
+    // LƯU Ý: việc gọi cổng thanh toán (PaymentService.processPayment ở trên) nằm NGOÀI transaction.
+    // Nếu thanh toán online đã được xử lý rồi mới phát hiện hết hàng thì cần hoàn tiền; hiện chưa có
+    // luồng này (sẽ có khi làm bước Thanh toán/Hoàn tiền). Đúng ra phải giữ chỗ hàng TRƯỚC khi thu tiền.
+    let orderItems;
+    try {
+      orderItems = await withTransaction(async (session) => {
+        const opts = session ? { session } : {};
+
+        if (couponToApply) {
+          await Coupon.updateOne(
+            { _id: couponToApply._id },
+            {
+              $inc: { usageCount: 1 },
+              $push: { usedBy: { userId: req.user._id, usedAt: new Date() } },
+            },
+            opts
+          );
+        }
+
+        const [created] = await Order.create(
+          [
+            {
+              user: req.user._id,
+              cart,
+              name,
+              address,
+              email,
+              contact,
+              city,
+              country,
+              zipCode,
+              subTotal,
+              shippingCost,
+              discount: resolvedDiscount,
+              totalAmount,
+              shippingOption,
+              cardInfo,
+              paymentIntent,
+              paymentMethod,
+              orderNote,
+              status: 'pending',
+              paymentGateway: paymentResult.paymentGateway || paymentMethod.toLowerCase(),
+              paymentStatus: paymentResult.paymentStatus || 'unpaid',
+              transactionId: paymentResult.transactionId || null,
+              displayCurrency,
+              exchangeRate,
+            },
+          ],
+          opts
+        );
+
+        // Ném InsufficientStockError nếu thiếu hàng → toàn bộ transaction (coupon + đơn) bị huỷ.
+        await deductStock(cart, session);
+
+        return created;
+      });
+    } catch (err) {
+      if (err instanceof InsufficientStockError) {
+        return res.status(409).json({
+          status: 'fail',
+          error: err.message,
+          details: err.details,
+        });
+      }
+      throw err;
+    }
+    if (couponToApply) appliedCoupon = couponToApply.couponCode;
 
     // Resolve {orderId} placeholder in bank transfer content using actual invoice
     if (paymentMethod === 'bank-transfer' && paymentResult.bankDetails?.transferContentTemplate) {
@@ -168,20 +217,6 @@ exports.addOrder = async (req, res, next) => {
           '{orderId}',
           String(orderItems.invoice)
         );
-    }
-
-    // Deduct stock for each cart item
-    for (const item of cart) {
-      const quantityToDeduct = item.orderQuantity || 1;
-
-      if (item.selectedVariant && item.selectedVariant.sku) {
-        await Product.updateOne(
-          { _id: item._id, 'variants.sku': item.selectedVariant.sku },
-          { $inc: { 'variants.$.stock': -quantityToDeduct } }
-        );
-      } else {
-        await Product.updateOne({ _id: item._id }, { $inc: { quantity: -quantityToDeduct } });
-      }
     }
 
     // Emit real-time update

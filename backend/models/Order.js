@@ -153,6 +153,13 @@ const orderSchema = new mongoose.Schema(
 );
 
 // define pre-save middleware to generate the invoice number
+//
+// VẤN ĐỀ ĐÃ BIẾT: số hoá đơn được sinh bằng "lấy số lớn nhất rồi +1". Hai đơn tạo cùng lúc đọc
+// được cùng một số lớn nhất nên cùng nhận một số hoá đơn; nhờ unique index trên `invoice`, đơn
+// thứ hai sẽ lỗi E11000 (duplicate key) và người dùng phải đặt lại. Cách sửa đúng là một
+// collection bộ đếm (`counters`) tăng bằng `findOneAndUpdate({$inc})`, nguyên tử. Chưa sửa vì
+// thuộc việc làm lại mô hình đơn hàng (đơn theo shop, mã đơn `orderCode`).
+// Truy vấn dưới đây dùng cùng session với lệnh lưu (nếu có) để chạy trong transaction.
 orderSchema.pre('save', async function (next) {
   const order = this;
   if (!order.invoice) {
@@ -162,6 +169,7 @@ orderSchema.pre('save', async function (next) {
       const highestInvoice = await mongoose
         .model('Order')
         .find({})
+        .session(order.$session())
         .sort({ invoice: 'desc' })
         .limit(1)
         .select({ invoice: 1 });

@@ -746,6 +746,14 @@ exports.requestPayout = async (req, res, next) => {
       return respond.error(res, 'INVALID_AMOUNT', 'amount must be a positive number', 400);
     }
 
+    // VẤN ĐỀ ĐÃ BIẾT (thuộc bước Sổ cái / Rút tiền, chưa sửa ở đây):
+    //  1. Số dư tính bằng "doanh thu đơn đã giao trừ các khoản đã rút" mỗi lần gọi, KHÔNG trừ hoa
+    //     hồng sàn, phí thanh toán hay thuế khấu trừ, nên người bán có thể rút nhiều hơn số họ
+    //     thật sự được nhận. Số dư thật phải lấy từ sổ cái (ledger), không tính lại từ đơn hàng.
+    //  2. Đọc số dư rồi mới tạo yêu cầu rút là hai bước rời nhau, không nguyên tử: hai yêu cầu gửi
+    //     cùng lúc đều thấy đủ số dư và cùng thành công (rút vượt số dư). Cần khoá số dư bằng một
+    //     bút toán trong transaction (xem core/withTransaction.js).
+    //  3. Đơn bị trả hàng sau khi giao vẫn được tính vào doanh thu ở đây.
     // Total revenue from delivered orders
     const revenueAgg = await Order.aggregate([
       { $match: { status: 'delivered', 'items.vendor': vendorId } },

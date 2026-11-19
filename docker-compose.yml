@@ -1,16 +1,58 @@
 services:
+  # MongoDB chạy ở chế độ REPLICA SET 1 node (rs0) có XÁC THỰC.
+  #  - replica set: bắt buộc để dùng transaction (đặt hàng + trừ kho + ghi sổ cái nguyên tử).
+  #    MongoDB đơn lẻ không hỗ trợ transaction.
+  #  - xác thực + keyFile: MongoDB đòi keyFile khi bật xác thực cho replica set. KeyFile là chuỗi bí
+  #    mật các node dùng để tin nhau; với 1 node chỉ cần tồn tại. Tự sinh lúc khởi động bên dưới.
+  #  - user: root tạo từ MONGO_INITDB_ROOT_*; các user ứng dụng (nexus_app, nexus_backup,
+  #    nexus_readonly) tạo bởi scripts/mongo/init-users.js. Xem scripts/mongo/users.config.js.
+  # Mật khẩu mặc định dưới đây CHỈ dành cho máy dev; production phải đặt mật khẩu riêng
+  # (docker-compose.prod.yml bắt buộc khai báo, không có mặc định).
+  # LƯU Ý: root và user chỉ được tạo khi thư mục dữ liệu còn TRỐNG. Đã có volume mongodata từ bản
+  # MongoDB cũ (không xác thực) thì phải xoá volume đó một lần, xem docs/PROJECT_PLAN.md mục 3.
   mongodb:
     image: mongo:7
     container_name: nexusmart-mongodb
+    entrypoint:
+      - bash
+      - -c
+      - |
+        set -e
+        if [ ! -f /data/configdb/keyfile ]; then openssl rand -base64 756 > /data/configdb/keyfile; fi
+        chmod 400 /data/configdb/keyfile
+        chown mongodb:mongodb /data/configdb/keyfile
+        exec docker-entrypoint.sh mongod --replSet rs0 --keyFile /data/configdb/keyfile --bind_ip_all
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS:-root_dev_password}
+      MONGO_APP_PASS: ${MONGO_APP_PASS:-nexus_app_dev_password}
+      MONGO_BACKUP_PASS: ${MONGO_BACKUP_PASS:-nexus_backup_dev_password}
+      MONGO_READONLY_PASS: ${MONGO_READONLY_PASS:-nexus_readonly_dev_password}
     ports:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
+      - ./scripts/mongo/init-users.js:/docker-entrypoint-initdb.d/10-init-users.js:ro
+      - ./scripts/mongo/users.config.js:/mongo-scripts/users.config.js:ro
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      # Healthy khi node đã là PRIMARY. Lần đầu chưa có replica set thì khởi tạo nó (rs.initiate).
+      # Máy ngoài Docker (npm run dev) kết nối bằng directConnection=true, xem backend/.env.example.
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - -u
+        - ${MONGO_ROOT_USER:-root}
+        - -p
+        - ${MONGO_ROOT_PASS:-root_dev_password}
+        - --authenticationDatabase
+        - admin
+        - --eval
+        - "try { quit(rs.status().myState === 1 ? 0 : 1) } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongodb:27017'}]}); quit(1) }"
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
 
   postgres:
     image: postgres:16-alpine
@@ -72,7 +114,7 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      MONGO_URI: mongodb://mongodb:27017/nexusmart
+      MONGO_URI: mongodb://nexus_app:${MONGO_APP_PASS:-nexus_app_dev_password}@mongodb:27017/nexusmart?authSource=admin&replicaSet=rs0
       PORT: 4000
       STORE_URL: http://localhost:3001
       ADMIN_URL: http://localhost:8081

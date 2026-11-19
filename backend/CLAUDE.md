@@ -25,6 +25,8 @@ API docs: Swagger UI at `GET /api-docs`, raw spec at `GET /api-docs.json`.
 
 **Required after any API change** (endpoint, request/response, permissions, status flow, returned model, webhook, Socket.io event): in the same commit/PR, update the Swagger JSDoc, `docs/api/API.md`, `docs/specs/<module>.md`, `docs/data-model.md` (if a model changed), `docs/STATUS.md` and `docs/CHANGELOG.md`. Create any file that does not exist yet. Full rules: section "Cập nhật tài liệu khi thay đổi API" in the root `CLAUDE.md`.
 
+**Comment the problem at the place you fix it.** When a change addresses a bug, risk or design flaw, leave a comment right there (in Vietnamese) saying what it does and why, the concrete consequence if left unfixed, any known problems you did NOT fix (prefix `VẤN ĐỀ ĐÃ BIẾT:`, numbered, with the correct fix or the plan step that covers it), rules callers must follow, and a pointer to related files. Do the same for similar problems you notice but leave unfixed. Structure and example: section "Ghi chú giải thích tại chỗ sửa code" in the root `CLAUDE.md`.
+
 ## Architecture
 
 ### Tech Stack

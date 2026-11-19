@@ -7,6 +7,10 @@
 
 Mọi thay đổi chạm tới API (endpoint, request/response, quyền, luồng trạng thái, model trả về, webhook, sự kiện Socket.io) phải cập nhật tài liệu **trong cùng commit/PR**: chú thích Swagger, `docs/api/API.md`, `docs/specs/<phân hệ>.md`, `docs/data-model.md` (nếu sửa model), `docs/STATUS.md`, `docs/CHANGELOG.md`. File chưa có thì tạo mới. Chi tiết từng file và quy tắc ghi: mục **"Cập nhật tài liệu khi thay đổi API"** trong `CLAUDE.md` ở gốc repo.
 
+## Ghi chú giải thích tại chỗ sửa code
+
+Khi sửa code vì một vấn đề (lỗi, rủi ro, thiết kế chưa đúng), ghi chú ngay tại chỗ sửa: làm gì và vì sao, hệ quả cụ thể nếu không sửa, các `VẤN ĐỀ ĐÃ BIẾT` chưa sửa (đánh số, kèm cách sửa đúng), điều kiện bắt buộc với người gọi, và tham chiếu tới file/mục liên quan. Gặp vấn đề tương tự ở chỗ khác mà chưa sửa cũng ghi chú tại đó. Cấu trúc đầy đủ và ví dụ: mục **"Ghi chú giải thích tại chỗ sửa code"** trong `CLAUDE.md` ở gốc repo.
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 

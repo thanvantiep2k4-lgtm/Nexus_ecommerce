@@ -1,18 +1,51 @@
 services:
   # ── Databases ──
+  # MongoDB: replica set 1 node + xác thực + keyFile (giải thích ở docker-compose.yml).
+  # Production KHÔNG có mật khẩu mặc định: thiếu biến nào thì `docker compose` dừng ngay (cú pháp
+  # `${VAR:?}`). Đặt trong file .env trên server. Mật khẩu chứa ký tự đặc biệt (@ : / ? # %)
+  # phải được mã hoá URL (percent-encode) khi nằm trong chuỗi kết nối MONGO_URI bên dưới.
   mongodb:
     image: mongo:7
     container_name: nexusmart-mongodb
     restart: unless-stopped
+    entrypoint:
+      - bash
+      - -c
+      - |
+        set -e
+        if [ ! -f /data/configdb/keyfile ]; then openssl rand -base64 756 > /data/configdb/keyfile; fi
+        chmod 400 /data/configdb/keyfile
+        chown mongodb:mongodb /data/configdb/keyfile
+        exec docker-entrypoint.sh mongod --replSet rs0 --keyFile /data/configdb/keyfile --bind_ip_all
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:?cần đặt MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS:?cần đặt MONGO_ROOT_PASS}
+      MONGO_APP_PASS: ${MONGO_APP_PASS:?cần đặt MONGO_APP_PASS}
+      MONGO_BACKUP_PASS: ${MONGO_BACKUP_PASS:?cần đặt MONGO_BACKUP_PASS}
+      MONGO_READONLY_PASS: ${MONGO_READONLY_PASS:?cần đặt MONGO_READONLY_PASS}
     ports:
       - "0.0.0.0:27017:27017"
     volumes:
       - mongodata:/data/db
+      - ./scripts/mongo/init-users.js:/docker-entrypoint-initdb.d/10-init-users.js:ro
+      - ./scripts/mongo/users.config.js:/mongo-scripts/users.config.js:ro
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - -u
+        - ${MONGO_ROOT_USER}
+        - -p
+        - ${MONGO_ROOT_PASS}
+        - --authenticationDatabase
+        - admin
+        - --eval
+        - "try { quit(rs.status().myState === 1 ? 0 : 1) } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongodb:27017'}]}); quit(1) }"
+      interval: 10s
       timeout: 10s
-      retries: 3
+      retries: 20
+      start_period: 30s
 
   postgres:
     image: postgres:16-alpine
@@ -68,7 +101,7 @@ services:
     restart: unless-stopped
     env_file: ./backend/.env
     environment:
-      MONGO_URI: mongodb://mongodb:27017/nexusmart
+      MONGO_URI: mongodb://nexus_app:${MONGO_APP_PASS:?}@mongodb:27017/nexusmart?authSource=admin&replicaSet=rs0
       PORT: 4000
       NODE_ENV: production
       KEYCLOAK_JWKS_URI: http://keycloak:8180/realms/shofy/protocol/openid-connect/certs
@@ -98,7 +131,7 @@ services:
     restart: unless-stopped
     env_file: ./crm/.env
     environment:
-      MONGO_URI: mongodb://mongodb:27017/nexusmart
+      MONGO_URI: mongodb://nexus_app:${MONGO_APP_PASS:?}@mongodb:27017/nexusmart?authSource=admin&replicaSet=rs0
       NODE_ENV: production
       CRM_PORT: 8081
       BACKEND_API_URL: http://backend:4000
