@@ -119,7 +119,7 @@ If something breaks in production:
 1. **Disable Google IdP** (immediate, no code change):
    ```bash
    docker exec shofy-keycloak /opt/keycloak/bin/kcadm.sh \
-     config credentials --server http://localhost:8080 --realm master \
+     config credentials --server http://localhost:8180 --realm master \
      --user "$KC_ADMIN" --password "$KC_ADMIN_PASSWORD"
    docker exec shofy-keycloak /opt/keycloak/bin/kcadm.sh \
      update identity-provider/instances/google -r shofy -s enabled=false

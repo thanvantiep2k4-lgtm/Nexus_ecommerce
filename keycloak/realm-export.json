@@ -1028,7 +1028,6 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:3000/*",
         "https://www.tychicus.id.vn/*",
         "http://localhost:3001/*",
         "https://tychicus.id.vn/*"

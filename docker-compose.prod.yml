@@ -69,11 +69,11 @@ services:
     env_file: ./backend/.env
     environment:
       MONGO_URI: mongodb://mongodb:27017/shofy
-      PORT: 7001
+      PORT: 4000
       NODE_ENV: production
       KEYCLOAK_JWKS_URI: http://keycloak:8180/realms/shofy/protocol/openid-connect/certs
     ports:
-      - "127.0.0.1:7001:7001"
+      - "127.0.0.1:4000:4000"
     depends_on:
       mongodb:
         condition: service_healthy
@@ -100,9 +100,10 @@ services:
     environment:
       MONGO_URI: mongodb://mongodb:27017/shofy
       NODE_ENV: production
-      BACKEND_API_URL: http://backend:7001
+      CRM_PORT: 8081
+      BACKEND_API_URL: http://backend:4000
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:8081"
     depends_on:
       mongodb:
         condition: service_healthy

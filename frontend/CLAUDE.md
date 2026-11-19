@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working in the 
 
 ## Project Overview
 
-Shofy Storefront is the customer-facing web app. Next.js 13 **Pages Router** (not App Router) on port `3001`. Renders SSR/ISR pages backed by the Express API at `:7001`, with a CMS-driven homepage and Redux Toolkit + RTK Query for state.
+Shofy Storefront is the customer-facing web app. Next.js 13 **Pages Router** (not App Router) on port `3001`. Renders SSR/ISR pages backed by the Express API at `:4000`, with a CMS-driven homepage and Redux Toolkit + RTK Query for state.
 
 ## Development Commands
 
@@ -156,7 +156,7 @@ For Keycloak SSO: the redirect flow is initiated by clicking the Keycloak login 
 
 `.env.local` (see `.env.example`):
 
-- `NEXT_PUBLIC_API_BASE_URL` — default `http://localhost:7001`
+- `NEXT_PUBLIC_API_BASE_URL` — default `http://localhost:4000`
 - `NEXT_PUBLIC_KEYCLOAK_*` — SSO endpoints
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - `REVALIDATE_SECRET` — used by `/api/revalidate` for on-demand ISR
