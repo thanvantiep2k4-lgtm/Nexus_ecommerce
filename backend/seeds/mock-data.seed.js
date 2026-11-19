@@ -13,7 +13,7 @@ const path = require('path');
 const bcrypt = require(path.join(__dirname, '..', 'node_modules', 'bcryptjs'));
 const { MongoClient, ObjectId } = require(path.join(__dirname, '..', 'node_modules', 'mongodb'));
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/shofy';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/nexusmart';
 
 const slugify = (s) =>
   s
@@ -26,7 +26,7 @@ const log = (label, n) => console.log(`  ${label.padEnd(28)} +${n}`);
 async function seed() {
   const client = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 8000 });
   await client.connect();
-  const db = client.db('shofy');
+  const db = client.db('nexusmart');
   console.log(`Connected to ${MONGO_URI}\n`);
 
   const now = new Date();

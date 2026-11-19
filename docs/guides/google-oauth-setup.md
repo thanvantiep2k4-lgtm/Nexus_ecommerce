@@ -8,7 +8,7 @@
 
 ### 1. Create or select GCP project
 1. Open https://console.cloud.google.com/
-2. Project selector (top bar) → "New Project" → name: `shofy-prod` → Create
+2. Project selector (top bar) → "New Project" → name: `nexusmart-prod` → Create
 
 ### 2. Configure OAuth consent screen
 1. Left nav → APIs & Services → OAuth consent screen

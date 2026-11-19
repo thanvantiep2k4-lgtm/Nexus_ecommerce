@@ -14,7 +14,7 @@ Multi-vendor marketplace with CMS-driven storefront, built with Express.js, Next
 | **Storefront** | Next.js 13 (Pages Router) + Bootstrap 5 | 3001 | Customer-facing store |
 | **CRM Admin** | Vite + React 19 + TypeScript + Ant Design 6 | 8081 (UI dev: 5173) | Admin panel |
 | **Auth** | Keycloak 26 | 8180 | SSO, RBAC (RS256 JWT) |
-| **Database** | MongoDB 7 | 27017 | Single database (`shofy`) |
+| **Database** | MongoDB 7 | 27017 | Single database (`nexusmart`) |
 
 ## Quick Start
 

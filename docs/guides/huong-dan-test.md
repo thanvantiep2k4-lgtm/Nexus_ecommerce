@@ -279,7 +279,7 @@ Ghi mỗi lỗi một dòng vào bảng sau (hoặc tạo GitHub Issue):
 | Tất cả trang storefront trả 200 | ✅ |
 
 ### 7.2 Lỗi đã sửa trong lần chạy 18/11
-- Test chatbot dùng tên class cũ (`shofy-chat`) → đã đổi sang `nx-chat`.
+- Test chatbot dùng tên class cũ (`nexusmart-chat`) → đã đổi sang `nx-chat`.
 - Jest fail ngẫu nhiên do chạy quá nhiều MongoDB in-memory song song → giới hạn 2 worker.
 - Chi tiết đơn hiện giá gốc ở từng dòng → đã hiện giá đã giảm; "Order status: pending" → "Trạng thái: Chờ xác nhận".
 - Tên sản phẩm bị lặp "Laptop ... Laptop" → đã sửa trong seed.

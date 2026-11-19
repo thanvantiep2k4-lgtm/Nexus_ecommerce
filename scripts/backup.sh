@@ -1,5 +1,5 @@
 #!/bin/bash
-# MongoDB Backup Script for Shofy
+# MongoDB Backup Script for NexusMart
 # Run daily via cron: 0 2 * * * /path/to/scripts/backup.sh
 #
 # Usage:
@@ -8,9 +8,9 @@
 
 set -euo pipefail
 
-BACKUP_DIR="${BACKUP_DIR:-/var/backups/shofy}"
+BACKUP_DIR="${BACKUP_DIR:-/var/backups/nexusmart}"
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
-DB_NAME="${DB_NAME:-shofy}"
+DB_NAME="${DB_NAME:-nexusmart}"
 MONGO_URI="${MONGO_URI:-mongodb://127.0.0.1:27017}"
 RETAIN_DAYS="${RETAIN_DAYS:-30}"
 

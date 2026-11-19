@@ -1,6 +1,6 @@
 #!/bin/bash
 # ================================================
-# Shofy VPS Initial Setup Script
+# NexusMart VPS Initial Setup Script
 # Run this ONCE on a fresh VPS with aaPanel
 # Usage: ssh root@YOUR_VPS_IP 'bash -s' < scripts/vps-setup.sh
 # ================================================
@@ -8,7 +8,7 @@
 set -e
 
 echo "========================================="
-echo "  Shofy VPS Setup"
+echo "  NexusMart VPS Setup"
 echo "========================================="
 
 # ── 1. Install Docker (if not present) ──
@@ -32,7 +32,7 @@ else
 fi
 
 # ── 3. Create deploy directory ──
-DEPLOY_PATH="/opt/shofy"
+DEPLOY_PATH="/opt/nexusmart"
 echo "[3/5] Setting up $DEPLOY_PATH..."
 
 if [ ! -d "$DEPLOY_PATH/.git" ]; then
@@ -51,27 +51,27 @@ echo "[4/5] Setting up environment files..."
 if [ ! -f ".env" ]; then
     echo "  Creating root .env from example..."
     cp .env.production.example .env
-    echo "  IMPORTANT: Edit /opt/shofy/.env with your production values!"
+    echo "  IMPORTANT: Edit /opt/nexusmart/.env with your production values!"
 fi
 
 if [ ! -f "backend/.env" ]; then
     echo "  Creating backend/.env from example..."
     cp backend/.env.example backend/.env
-    echo "  IMPORTANT: Edit /opt/shofy/backend/.env with production values!"
+    echo "  IMPORTANT: Edit /opt/nexusmart/backend/.env with production values!"
 fi
 
 if [ ! -f "crm/.env" ]; then
     echo "  Creating crm/.env from example..."
     cp crm/.env.example crm/.env
-    echo "  IMPORTANT: Edit /opt/shofy/crm/.env with production values!"
+    echo "  IMPORTANT: Edit /opt/nexusmart/crm/.env with production values!"
 fi
 
 # ── 5. Create deploy SSH key for GitHub Actions ──
 echo "[5/5] Setting up SSH key for CI/CD..."
 
-KEYFILE="/root/.ssh/shofy_deploy"
+KEYFILE="/root/.ssh/nexusmart_deploy"
 if [ ! -f "$KEYFILE" ]; then
-    ssh-keygen -t ed25519 -f "$KEYFILE" -N "" -C "shofy-deploy"
+    ssh-keygen -t ed25519 -f "$KEYFILE" -N "" -C "nexusmart-deploy"
     cat "$KEYFILE.pub" >> /root/.ssh/authorized_keys
     chmod 600 /root/.ssh/authorized_keys
     echo ""
@@ -105,14 +105,14 @@ echo "  Setup Complete!"
 echo "========================================="
 echo ""
 echo "Next steps:"
-echo "  1. Edit /opt/shofy/.env with production passwords"
-echo "  2. Edit /opt/shofy/backend/.env with production values"
-echo "  3. Edit /opt/shofy/crm/.env with production values"
+echo "  1. Edit /opt/nexusmart/.env with production passwords"
+echo "  2. Edit /opt/nexusmart/backend/.env with production values"
+echo "  3. Edit /opt/nexusmart/crm/.env with production values"
 echo "  4. Add these GitHub Secrets in your repo settings:"
 echo "     - VPS_HOST: $(curl -s ifconfig.me)"
 echo "     - VPS_USER: root"
 echo "     - VPS_SSH_KEY: (the private key printed above)"
 echo "     - VPS_PORT: 22"
-echo "  5. First deploy: cd /opt/shofy && docker compose -f docker-compose.prod.yml up -d --build"
+echo "  5. First deploy: cd /opt/nexusmart && docker compose -f docker-compose.prod.yml up -d --build"
 echo "  6. After that, pushes to main will auto-deploy!"
 echo ""

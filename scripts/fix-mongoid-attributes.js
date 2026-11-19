@@ -25,7 +25,7 @@ const Admin = require("../backend/model/Admin");
 const keycloakService = require("../backend/services/keycloak.service");
 
 async function main() {
-  const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/shofy";
+  const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/nexusmart";
   await mongoose.connect(mongoUri);
   console.log("Connected to MongoDB.");
 

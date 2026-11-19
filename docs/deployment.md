@@ -100,7 +100,7 @@ cd crm && npm run dev  # Port 8081
 
 ```bash
 ssh root@187.124.3.207
-cd /opt/shofy
+cd /opt/nexusmart
 ```
 
 ### 2. Pull latest code and deploy
@@ -116,10 +116,10 @@ Or via CI/CD (push to `main` triggers deploy workflow).
 
 ```bash
 # Seed email templates
-docker exec shofy-backend node seeds/email-templates.seed.js
+docker exec nexusmart-backend node seeds/email-templates.seed.js
 
 # Seed default data (WARNING: clears ALL collections)
-# docker exec shofy-backend node seeds/index.js
+# docker exec nexusmart-backend node seeds/index.js
 ```
 
 ### 4. Keycloak setup (first deploy only)
@@ -129,9 +129,9 @@ docker exec shofy-backend node seeds/email-templates.seed.js
 3. Create realm `shofy`
 4. Disable SSL requirement (required for self-signed cert):
    ```bash
-   docker exec shofy-keycloak /opt/keycloak/bin/kcadm.sh config credentials \
+   docker exec nexusmart-keycloak /opt/keycloak/bin/kcadm.sh config credentials \
      --server http://localhost:8180 --realm master --user admin --password <password>
-   docker exec shofy-keycloak /opt/keycloak/bin/kcadm.sh update realms/shofy \
+   docker exec nexusmart-keycloak /opt/keycloak/bin/kcadm.sh update realms/shofy \
      -s sslRequired=NONE
    ```
 5. Create clients:
@@ -157,7 +157,7 @@ docker compose up -d frontend
 If `image:` is set in docker-compose, Docker prefers registry over local build. For local builds, remove the `image:` line or use `docker compose up --force-recreate`.
 
 ### Keycloak SSL Reset
-Dropping `pgdata` volume resets realm settings. After any `docker volume rm shofy_pgdata`, re-run the `kcadm.sh update realms/shofy -s sslRequired=NONE` command.
+Dropping `pgdata` volume resets realm settings. After any `docker volume rm nexusmart_pgdata`, re-run the `kcadm.sh update realms/shofy -s sslRequired=NONE` command.
 
 ### API Base URL
 `NEXT_PUBLIC_API_BASE_URL` should NOT include `/api` suffix. Set to `https://187.124.3.207` (production) or `http://localhost:4000` (local dev).
@@ -185,7 +185,7 @@ The `iss` claim in Keycloak tokens must exactly match `KEYCLOAK_AUTHORITY` in ba
 |--------|-------|
 | `VPS_HOST` | 187.124.3.207 |
 | `VPS_USER` | root |
-| `VPS_SSH_KEY` | ed25519 key at `/root/.ssh/shofy_deploy` |
+| `VPS_SSH_KEY` | ed25519 key at `/root/.ssh/nexusmart_deploy` |
 | `VPS_PORT` | 22 |
 | `GHCR_TOKEN` | GitHub PAT (read/write packages) |
 | `GHCR_USER` | dtug20 |
@@ -199,7 +199,7 @@ The `iss` claim in Keycloak tokens must exactly match `KEYCLOAK_AUTHORITY` in ba
 
 ### Automated daily backup (cron on VPS)
 ```bash
-0 2 * * * /opt/shofy/scripts/backup.sh >> /var/log/shofy-backup.log 2>&1
+0 2 * * * /opt/nexusmart/scripts/backup.sh >> /var/log/nexusmart-backup.log 2>&1
 ```
 
 ### Restore
@@ -218,8 +218,8 @@ mongorestore --uri="mongodb://localhost:27017" --db=shofy ./backup-dir/shofy
 ## Monitoring
 
 ```bash
-docker logs shofy-backend -f
-docker logs shofy-frontend -f
-docker logs shofy-crm -f
-docker exec -it shofy-mongodb mongosh
+docker logs nexusmart-backend -f
+docker logs nexusmart-frontend -f
+docker logs nexusmart-crm -f
+docker exec -it nexusmart-mongodb mongosh
 ```

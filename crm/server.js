@@ -40,7 +40,7 @@ const memoryStore = new session.MemoryStore();
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'shofy-crm-session-secret',
+    secret: process.env.SESSION_SECRET || 'nexusmart-crm-session-secret',
     resave: false,
     saveUninitialized: false,
     store: memoryStore,
@@ -246,7 +246,7 @@ app.use((req, res) => {
 
 const PORT = process.env.CRM_PORT || 8081;
 app.listen(PORT, () => {
-  console.log(`Shofy CRM Server running on port ${PORT}`);
+  console.log(`NexusMart CRM Server running on port ${PORT}`);
   console.log(`Dashboard: http://localhost:${PORT}`);
 });
 

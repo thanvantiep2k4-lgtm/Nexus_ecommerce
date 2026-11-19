@@ -12,12 +12,12 @@
 const path = require('path');
 const { MongoClient, ObjectId } = require(path.join(__dirname, '..', 'node_modules', 'mongodb'));
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/shofy';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/nexusmart';
 
 async function seed() {
   const client = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 8000 });
   await client.connect();
-  const db = client.db('shofy');
+  const db = client.db('nexusmart');
   const now = new Date();
 
   const del = await db.collection('pages').deleteMany({ slug: 'home' });

@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongo:7
-    container_name: shofy-mongodb
+    container_name: nexusmart-mongodb
     ports:
       - "27017:27017"
     volumes:
@@ -14,7 +14,7 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    container_name: shofy-postgres
+    container_name: nexusmart-postgres
     environment:
       POSTGRES_DB: ${PG_DB:-keycloak}
       POSTGRES_USER: ${PG_USER:-keycloak}
@@ -32,7 +32,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.4.4
-    container_name: shofy-keycloak
+    container_name: nexusmart-keycloak
     env_file: .env
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER:-admin}
@@ -63,7 +63,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: shofy-backend
+    container_name: nexusmart-backend
     restart: unless-stopped
     ports:
       - "${BACKEND_PORT:-4000}:4000"
@@ -72,7 +72,7 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      MONGO_URI: mongodb://mongodb:27017/shofy
+      MONGO_URI: mongodb://mongodb:27017/nexusmart
       PORT: 4000
       STORE_URL: http://localhost:3001
       ADMIN_URL: http://localhost:8081
@@ -83,7 +83,7 @@ services:
     build:
       context: ./crm
       dockerfile: Dockerfile
-    container_name: shofy-crm
+    container_name: nexusmart-crm
     restart: unless-stopped
     ports:
       - "${CRM_PORT:-8081}:8081"
@@ -100,7 +100,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: shofy-frontend
+    container_name: nexusmart-frontend
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-3001}:3001"

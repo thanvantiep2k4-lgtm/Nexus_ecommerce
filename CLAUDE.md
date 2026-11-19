@@ -13,7 +13,7 @@ NexusMart là sàn TMĐT đa nhà bán tích hợp trợ lý AI (tên repo/code 
 | `frontend/` | Next.js 13 (Pages Router), React 18, Redux Toolkit/RTK Query, Bootstrap 5 | 3001 |
 | `crm/` | Server proxy Express (8081) + `crm/crm-ui` (Vite, React 19, TS, Ant Design 6; dev 5173) | 8081 / 5173 |
 | Keycloak 26 + PostgreSQL 16 | SSO, RBAC (admin/manager/staff/shipper/vendor/user) | 8180 / 5433 |
-| MongoDB 7 | DB `shofy` | 27017 |
+| MongoDB 7 | DB `nexusmart` | 27017 |
 
 Chi tiết từng phần: `backend/CLAUDE.md`, `frontend/CLAUDE.md`, `crm/CLAUDE.md`.
 

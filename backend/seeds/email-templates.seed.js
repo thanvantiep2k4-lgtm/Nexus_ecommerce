@@ -371,7 +371,7 @@ async function seedEmailTemplates() {
   let ownConnection = false;
 
   if (mongoose.connection.readyState === 0) {
-    const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/shofy';
+    const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/nexusmart';
     await mongoose.connect(MONGO_URI);
     ownConnection = true;
     console.log('[seed] Connected to MongoDB:', MONGO_URI);

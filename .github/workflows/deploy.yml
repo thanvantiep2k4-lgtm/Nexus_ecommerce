@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEPLOY_PATH: /opt/shofy
+  DEPLOY_PATH: /opt/nexusmart
   REGISTRY: ghcr.io
 
 jobs:
@@ -59,7 +59,7 @@ jobs:
               curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                 -d chat_id="${TELEGRAM_CHAT_ID}" \
                 -d parse_mode="Markdown" \
-                -d text="✅ *Shofy Deploy Successful*
+                -d text="✅ *NexusMart Deploy Successful*
             📦 Server: $(hostname)
             🕐 $(date '+%Y-%m-%d %H:%M:%S')
             🐳 Containers: $(docker ps --format '{{.Names}}' | tr '\n' ', ')" || true

@@ -9,7 +9,7 @@ on:
 env:
   NODE_VERSION: '20'
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/shofy
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/nexusmart
 
 jobs:
   # ── Lint & Test ──

@@ -37,7 +37,7 @@ docker exec -i \
   -e GOOGLE_CLIENT_SECRET="$(grep ^GOOGLE_CLIENT_SECRET .env | cut -d= -f2-)" \
   -e KC_ADMIN="$(grep ^KEYCLOAK_ADMIN_USER .env | cut -d= -f2- || echo admin)" \
   -e KC_ADMIN_PASSWORD="$(grep ^KEYCLOAK_ADMIN_PASSWORD .env | cut -d= -f2-)" \
-  shofy-keycloak \
+  nexusmart-keycloak \
   bash /opt/keycloak/scripts/configure-google-idp.sh
 
 # 7. Recreate frontend container
@@ -58,7 +58,7 @@ docker compose -f docker-compose.prod.yml up -d --force-recreate frontend
    - Identity Provider Links shows `google`
 8. Verify MongoDB:
    ```bash
-   docker exec shofy-mongodb mongosh shofy --eval 'db.users.findOne({email: "TEST_EMAIL"})'
+   docker exec nexusmart-mongodb mongosh nexusmart --eval 'db.users.findOne({email: "TEST_EMAIL"})'
    ```
    - Confirm `keycloakId` is populated and matches Keycloak user `id`
 
@@ -110,7 +110,7 @@ docker compose -f docker-compose.prod.yml up -d --force-recreate frontend
 | Google button missing on Keycloak login page | Theme not reloaded — restart Keycloak container |
 | Google button missing on storefront `/login` UI | i18n keys missing or frontend not rebuilt — check `frontend/src/locales/en/common.json` has `continueWithGoogle` |
 | Backend rejects token after Google login | `verifyToken.js` failed to sync user — check backend logs for `[Auth]` messages |
-| CRM login shows Google button | `client.clientId == 'shofy-crm'` check not matching — verify CRM client ID in realm matches |
+| CRM login shows Google button | `client.clientId == 'nexusmart-crm'` check not matching — verify CRM client ID in realm matches |
 
 ## Rollback
 
@@ -118,10 +118,10 @@ If something breaks in production:
 
 1. **Disable Google IdP** (immediate, no code change):
    ```bash
-   docker exec shofy-keycloak /opt/keycloak/bin/kcadm.sh \
+   docker exec nexusmart-keycloak /opt/keycloak/bin/kcadm.sh \
      config credentials --server http://localhost:8180 --realm master \
      --user "$KC_ADMIN" --password "$KC_ADMIN_PASSWORD"
-   docker exec shofy-keycloak /opt/keycloak/bin/kcadm.sh \
+   docker exec nexusmart-keycloak /opt/keycloak/bin/kcadm.sh \
      update identity-provider/instances/google -r shofy -s enabled=false
    ```
 
@@ -133,7 +133,7 @@ If something breaks in production:
 
 3. **Remove Google IdP entirely** (clean state):
    ```bash
-   docker exec shofy-keycloak /opt/keycloak/bin/kcadm.sh \
+   docker exec nexusmart-keycloak /opt/keycloak/bin/kcadm.sh \
      delete identity-provider/instances/google -r shofy
    ```
 
