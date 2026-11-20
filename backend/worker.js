@@ -18,6 +18,8 @@ const connectDB = require('./config/db');
 const { forWorker, closeRedis, warnThrottled } = require('./core/redis');
 const { closeQueues } = require('./core/queues');
 const { processors, registerSchedulers } = require('./jobs');
+const { installStateMachineSink } = require('./core/events');
+require('./subscribers'); // đăng ký các subscriber xử lý sự kiện từ outbox
 
 const CONCURRENCY = Number(process.env.WORKER_CONCURRENCY) || 5;
 const SHUTDOWN_TIMEOUT_MS = 30 * 1000;
@@ -28,6 +30,10 @@ function startWorkers({ concurrency = CONCURRENCY, log = console } = {}) {
     const worker = new Worker(queueName, processor, {
       connection: forWorker(),
       concurrency, // số job xử lý song song trong một worker
+      // Job đang chạy mà worker chết đột ngột bị coi là "stalled" sau lockDuration và được giao lại.
+      // Mặc định của BullMQ (30 giây) phù hợp thực tế; hai biến này chỉ để test rút ngắn thời gian chờ.
+      ...(process.env.WORKER_LOCK_DURATION_MS && { lockDuration: Number(process.env.WORKER_LOCK_DURATION_MS) }),
+      ...(process.env.WORKER_STALLED_INTERVAL_MS && { stalledInterval: Number(process.env.WORKER_STALLED_INTERVAL_MS) }),
     });
     worker.on('completed', (job) => log.log(`[worker:${queueName}] xong ${job.name} #${job.id}`));
     worker.on('failed', (job, err) =>
@@ -80,6 +86,8 @@ async function main() {
   // tới ~30 giây, và worker không được bị chặn trong lúc đó (job không cần Mongo vẫn phải chạy).
   // Lệnh Mongoose gọi trước khi kết nối xong được xếp hàng chờ (tối đa 10 giây rồi báo lỗi và job thử lại).
   connectDB();
+  // Worker cũng có thể gọi transition() (job SLA…): mọi chuyển trạng thái phải ghi outbox như bên API.
+  installStateMachineSink();
   const workers = startWorkers();
   registerSchedulersWithRetry();
 

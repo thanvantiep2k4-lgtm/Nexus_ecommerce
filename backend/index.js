@@ -282,6 +282,9 @@ app.use((req, res) => {
 
 app.use(globalErrorHandler);
 
+// Mọi transition() của máy trạng thái tự ghi một dòng outbox cùng transaction (core/events.js).
+require('./core/events').installStateMachineSink();
+
 // Start the chatbot embedding re-queue (debounced re-embed of products/blogs)
 require('./services/chatbot/embedQueue').start();
 

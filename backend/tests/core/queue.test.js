@@ -69,6 +69,23 @@ describe('parseRedisUrl', () => {
   });
 });
 
+describe('assertValidJobId: quy tắc jobId của BullMQ', () => {
+  const { assertValidJobId } = require('../../core/queues');
+
+  test('jobId hợp lệ: không có, gạch ngang/gạch dưới, hoặc đúng 3 đoạn có ":"', () => {
+    expect(() => assertValidJobId(undefined)).not.toThrow();
+    expect(() => assertValidJobId('evt-6aff196d580d37f355934379')).not.toThrow();
+    expect(() => assertValidJobId('order_abc_expire')).not.toThrow();
+    expect(() => assertValidJobId('order:abc:expire')).not.toThrow(); // 3 đoạn: BullMQ còn chấp nhận
+  });
+
+  test('jobId có ":" (không đúng 3 đoạn) hoặc toàn số bị từ chối với thông báo rõ ràng', () => {
+    expect(() => assertValidJobId('evt:abc')).toThrow(/không được chứa dấu ':'/);
+    expect(() => assertValidJobId('a:b:c:d')).toThrow(TypeError);
+    expect(() => assertValidJobId('12345')).toThrow(/toàn số/);
+  });
+});
+
 describe('Redis không sẵn sàng: API vẫn sống, chỉ chức năng hàng đợi trả 503', () => {
   const DEAD_URL = 'redis://127.0.0.1:6399'; // không có gì lắng nghe ở cổng này
   let queues;
@@ -112,6 +129,14 @@ describe('Redis không sẵn sàng: API vẫn sống, chỉ chức năng hàng �
       queues.QueueUnavailableError
     );
     expect(Date.now() - started).toBeLessThan(5000);
+  });
+
+  test('LỖI LẬP TRÌNH (jobId sai) ném ngay TypeError, KHÔNG bị gán nhãn "Redis không sẵn sàng", kể cả khi Redis chết', async () => {
+    const started = Date.now();
+    const err = await queues.enqueue(queues.QUEUES.SYSTEM, 'x', {}, { jobId: 'evt:abc' }).catch((e) => e);
+    expect(err).toBeInstanceOf(TypeError);
+    expect(err).not.toBeInstanceOf(queues.QueueUnavailableError);
+    expect(Date.now() - started).toBeLessThan(1000); // không phải chờ 3 giây của kết nối
   });
 
   test('endpoint trả 503 QUEUE_UNAVAILABLE, còn /health vẫn 200', async () => {

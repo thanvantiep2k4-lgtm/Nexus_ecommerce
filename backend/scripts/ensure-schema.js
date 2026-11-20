@@ -127,6 +127,40 @@ const COLLECTIONS = [
     indexes: [{ key: { entityType: 1, entityId: 1, at: 1 }, options: {} }],
   },
 
+  {
+    db: MAIN_DB,
+    name: 'outbox',
+    // Hộp thư đi của sự kiện (models/Outbox.js, core/events.js). Chỉ mục (kể cả TTL 7 ngày cho dòng done)
+    // do model khai báo, ensure-schema tạo qua createIndexes nên không khai báo lại ở đây.
+    validator: {
+      $jsonSchema: {
+        bsonType: 'object',
+        required: ['type', 'status'],
+        properties: {
+          type: { bsonType: 'string' },
+          status: { enum: ['pending', 'processing', 'published', 'done', 'dead'] },
+          attempts: { bsonType: 'number', minimum: 0 },
+        },
+      },
+    },
+  },
+  {
+    db: MAIN_DB,
+    name: 'event_deliveries',
+    // Biên nhận giao sự kiện (models/EventDelivery.js): chỉ mục duy nhất (eventId, subscriber) chống xử lý lặp.
+    validator: {
+      $jsonSchema: {
+        bsonType: 'object',
+        required: ['eventId', 'subscriber', 'at'],
+        properties: {
+          eventId: { bsonType: 'objectId' },
+          subscriber: { bsonType: 'string' },
+          at: { bsonType: 'date' },
+        },
+      },
+    },
+  },
+
   // ── Collection sẽ dùng ở bước Sổ cái / Ví (tạo sẵn để user và quyền đã đúng từ đầu) ──
   {
     db: LEDGER_DB,

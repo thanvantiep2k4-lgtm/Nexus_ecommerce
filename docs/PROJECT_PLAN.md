@@ -39,7 +39,9 @@ Khi kế hoạch gốc (`phancong.md`) và code hiện tại khác nhau, **chọ
 | CRM UI dev (Vite) | `crm/crm-ui/` | **5173** (proxy `/api` → 8081) |
 | Keycloak | `keycloak/` | **8180** |
 | PostgreSQL (cho Keycloak) | — | 5433 |
-| MongoDB | — | 27017 |
+| MongoDB (replica set 1 node, có xác thực) | — | 27017 |
+| Redis (hàng đợi job, dữ liệu tạm) | — | 6379 |
+| Worker (BullMQ) + Bull Board | `backend/worker.js`; Bull Board tại `:4000/admin/queues` | — |
 
 Luồng gọi: `Storefront → Backend`, `CRM UI → CRM server (8081) → Backend`, mọi người dùng đăng nhập qua `Keycloak` và gửi `Authorization: Bearer <JWT>`.
 
@@ -58,7 +60,7 @@ Luồng gọi: `Storefront → Backend`, `CRM UI → CRM server (8081) → Backe
 
 ### 2.4 Cấu trúc thư mục và quy ước code (thống nhất, không tự đổi)
 
-- **Tài liệu** chỉ nằm trong `docs/` (mục lục: `docs/README.md`). Không để file `.md` rải rác trong code, ngoại lệ `README.md`/`CLAUDE.md`/`AGENTS.md`/`KE_HOACH_NGHIEP_VU.md`.
+- **Tài liệu** chỉ nằm trong `docs/` (mục lục: `docs/README.md`). Không để file `.md` rải rác trong code, ngoại lệ `README.md`/`CLAUDE.md`/`AGENTS.md`/`KE_HOACH_NGHIEP_VU.md`/`THU_TU_TRIEN_KHAI.md`.
 - **Backend:** thư mục số nhiều `controllers/`, `models/`. Mỗi resource một file: `controllers/v1/<resource>.controller.js`, `models/<Resource>.js`, `validations/<resource>.validation.js`. Dữ liệu seed ở `seeds/data/`, runner `seeds/index.js`. Không đặt logic nghiệp vụ trong `routes/`.
 - **Frontend:** component theo tính năng trong `src/components/<feature>/`, trang trong `src/pages/`, gọi API qua RTK Query trong `src/redux/features/`. Import dùng alias `@/`.
 - **CRM UI:** mỗi tính năng một thư mục `src/features/<tên>/`, gọi API qua `src/services/api.ts`, import dùng alias `@/`.
@@ -76,11 +78,12 @@ Yêu cầu: Node 20, Docker Desktop, Git. Cần Cloudinary (ảnh) và Gemini AP
 git clone <repo> && cd Nexus
 
 npm run setup          # tạo .env từ .env.example + cài dependency cho cả 5 package
-npm run infra:up       # MongoDB + PostgreSQL + Keycloak (TỰ import realm "shofy")
+npm run infra:up       # MongoDB + Redis + PostgreSQL + Keycloak (TỰ import realm "shofy")
 # sửa backend/.env: CLOUDINARY_*, GEMINI_API_KEY  (MONGO_URI, KEYCLOAK_* đã đúng sẵn)
 
+(cd backend && npm run schema:ensure)   # 1 lần: gắn ràng buộc + chỉ mục vào MongoDB; chạy lại sau khi thêm model
 npm run seed           # CẢNH BÁO: xoá sạch mọi collection rồi nạp dữ liệu mẫu
-npm run dev            # chạy cùng lúc: api:4000, store:3001, crm:8081, crm-ui:5173
+npm run dev            # chạy cùng lúc: api:4000, worker, store:3001, crm:8081, crm-ui:5173
 ```
 
 | Mở | Địa chỉ |
@@ -109,6 +112,9 @@ cd crm/crm-ui && npx tsc --noEmit    # kiểm tra kiểu CRM
 | Port bị chiếm | `npm run kill-ports` |
 | 401 khi gọi API | Chưa đăng nhập Keycloak, hoặc secret trong `.env` khác `keycloak/realm-export.json` |
 | Keycloak không có realm | Xoá volume: `docker compose down -v` rồi `npm run infra:up` (realm chỉ import khi DB Keycloak trống) |
+| Mongo báo `Authentication failed` / backend không kết nối được MongoDB sau khi pull | Volume MongoDB cũ được tạo trước khi có xác thực nên không có user. Xoá riêng volume đó (mất dữ liệu local, nạp lại bằng `npm run seed`): `docker compose rm -sf mongodb` rồi `docker volume ls` tìm volume tên có `mongodata` và `docker volume rm <tên>`, sau đó `npm run infra:up`. Cập nhật `MONGO_URI` trong `backend/.env` và `crm/.env` theo `backend/.env.example` |
+| Redis báo `NOAUTH`/không kết nối được | `REDIS_URL` trong `backend/.env` phải khớp mật khẩu Redis (`REDIS_PASS`, mặc định dev `redis_dev_password`). Worker/API vẫn chạy khi Redis tắt nhưng không xử lý được job; xem `docs/guides/redis-bullmq.md` mục 6 |
+| Trang web toàn lỗi `500` (`buffering timed out after 10000ms`), `/user/profile` trả `401`, chậm ~10 giây | **Backend không kết nối được MongoDB** (không phải lỗi chậm của Express): mỗi truy vấn chờ 10 giây rồi lỗi. Kiểm tra `MONGO_URI` trong `backend/.env` có khớp container đang chạy không: `docker ps` xem container MongoDB, `docker exec <tên container> mongosh --eval "db.runCommand({ping:1})"`. Đúng cặp: MongoDB mới (có xác thực) dùng `MONGO_URI` có `nexus_app:...@...?authSource=admin&directConnection=true`; MongoDB cũ không xác thực dùng `mongodb://localhost:27017/<tên DB>`. `401` kèm `reason: "MongooseError"` cũng là lỗi DB, không phải token |
 | Chatbot im lặng | Thiếu `GEMINI_API_KEY` hoặc công tắc AI Chatbot ở CRM → Settings đang tắt |
 
 ---
@@ -168,7 +174,7 @@ Phạm vi: `crm/`, `backend/controllers/v1/cms.controller.js`, `admin.controller
 ### 6.2 Tài — Client: User & Product
 Phạm vi: `frontend/` (trang chủ, danh mục, chi tiết SP, auth, profile, search, wishlist).
 
-- [ ] **P0** **Rebrand Shofy → NexusMart** trên toàn repo: logo, title/meta SEO, i18n, footer, JSON-LD, tên package/container Docker, theme Keycloak (`keycloak/themes/`), realm name và client id nếu đổi (đổi cả `.env.example`, realm-export, CI). Báo cả nhóm trước khi đổi tên realm/client.
+- [ ] **P0** **Rebrand Shofy → NexusMart** trên toàn repo: logo, title/meta SEO, i18n, footer, JSON-LD, tên package/container Docker, theme Keycloak (`keycloak/themes/`), realm name và client id nếu đổi (đổi cả `.env.example`, realm-export, CI). Phần hạ tầng (DB, container, image CI) đã đổi sang `nexusmart`; realm, client và theme Keycloak giữ tên `shofy`; còn lại là giao diện (logo, chữ hiển thị, SEO).
 - [ ] **P0** **Form "Trở thành nhà bán hàng"** trong trang profile (gọi `POST /api/v1/user/vendor/apply`; hiển thị pending/rejected/approved) và hoàn thiện trang shop nhà bán `pages/vendor/[slug].jsx`.
 - [ ] **P0** Rà luồng đăng ký/đăng nhập/quên mật khẩu/Google qua Keycloak, sửa lỗi.
 - [ ] **P1** Trang danh mục: lọc theo biến thể (màu/size), filter lưu trên URL, phân trang server, skeleton loading.
@@ -202,7 +208,7 @@ Phạm vi: `backend/services/chatbot/`, `frontend/src/components/chatbot/`, revi
 - [ ] **P0** **Duyệt đánh giá**: `user.controller.addReview` đặt `status:'pending'`; route admin `/reviews` (list lọc status/rating, approve, reject kèm lý do, reply, delete); trang CRM `features/reviews/ReviewsPage.tsx` (thống kê + bulk action); storefront chỉ hiện review `approved`, giữ huy hiệu "đã mua hàng", báo "đang chờ duyệt" cho người gửi.
 - [ ] **P0** Dựng **Atlas Vector Search** thật + chạy `backfill-embeddings.js`; đo chất lượng tìm kiếm.
 - [ ] **P0** **Bộ kiểm thử chatbot có số liệu**: ≥ 30 kịch bản EN/VI (tìm SP, tra đơn, coupon, chính sách, ngoài phạm vi, prompt injection). Ghi kết quả (đúng/sai, độ trễ) vào `docs/report/chatbot-eval.md` để đưa vào báo cáo.
-- [ ] **P1** Chuyển rate-limit + embed queue sang Redis/BullMQ (nhóm quyết định có thêm Redis hay không).
+- [ ] **P1** Chuyển rate-limit + embed queue sang Redis/BullMQ (Redis, BullMQ và worker đã có sẵn, xem `docs/guides/redis-bullmq.md`).
 - [ ] **P1** Gemini tự đánh dấu review có nội dung xấu để admin ưu tiên duyệt.
 - [ ] **P2** Gợi ý sản phẩm dựa trên lịch sử xem/wishlist.
 

@@ -5,6 +5,15 @@ Quy tắc cập nhật: xem mục "Cập nhật tài liệu khi thay đổi API"
 
 ## [Chưa phát hành]
 
+### Sự kiện + outbox
+- Thêm `backend/core/events.js`: `emit` (ghi sự kiện vào collection `outbox` **cùng transaction** với dữ liệu), `subscribe`, `relayOnce` (relay lặp mỗi 2 giây ở worker, lấy dòng nguyên tử, tự thu hồi khi relay chết), `dispatch` (chạy subscriber, chống giao lặp bằng biên nhận `event_deliveries`), `nudge`. Thêm hàng đợi `events`, thư mục `subscribers/` (kèm subscriber thử `system.demo`). Hướng dẫn: `docs/guides/events-outbox.md`.
+- **Mọi `transition()` của máy trạng thái tự phát một sự kiện outbox** (`installStateMachineSink`, cài ở `index.js` và `worker.js`). Tên mặc định `<máy>.<trạng thái đích>`; dòng chuyển có thể đặt tên riêng bằng trường `event`; `recordCreated` phát `<máy>.created`.
+- Bảo đảm: giao ít nhất một lần + chống lặp = **tác dụng xảy ra đúng một lần** (subscriber ghi DB: tuyệt đối vì cùng transaction với biên nhận; subscriber `external`: có khe hở rất hẹp khi worker chết giữa lúc gửi và lúc ghi biên nhận). Không bảo đảm thứ tự giao.
+- Thêm collection `outbox` (dòng `done` tự xoá sau 7 ngày, dòng `dead` giữ lại) và `event_deliveries` (giữ 30 ngày); `npm run schema:ensure` gắn validator. Thêm `npm run event:demo` để tự kiểm chứng.
+- **Sửa lỗi `enqueue`/`cancelJob` (core/queues.js):** trước đây mọi lỗi đều bị gán nhãn "Redis không sẵn sàng" (`QueueUnavailableError`/`503`), kể cả lỗi lập trình như `jobId` sai quy tắc. Nay chỉ lỗi kết nối thật mới thành `QueueUnavailableError`; lỗi khác ném nguyên vẹn. Thêm `assertValidJobId`: BullMQ **từ chối `jobId` chứa dấu `:`** (trừ đúng 3 đoạn) và `jobId` toàn số, nên dùng `-` hoặc `_` (vd `order-<id>-expire`).
+- **Không có thay đổi API.** Chưa chuyển các chỗ `global.io.emit` và `sendTemplatedEmail` hiện có sang outbox (làm ở bước 32 và 38).
+- Biến môi trường tuỳ chọn: `OUTBOX_LOCK_TIMEOUT_MS`, `WORKER_LOCK_DURATION_MS`, `WORKER_STALLED_INTERVAL_MS`.
+
 ### Máy trạng thái (khung dùng chung)
 - Thêm `backend/core/stateMachine.js`: `defineMachine` (kiểm tra bảng chuyển trạng thái ngay lúc khởi động), `transition()` (một hàm duy nhất đổi trạng thái, chạy trong một transaction: kiểm tra đường đi, loại tác nhân, quyền, guard; đổi trạng thái có điều kiện; effects; ghi sự kiện; afterCommit), `availableActions`, `toMermaid`/`toMarkdownTable` (sinh tài liệu từ bảng). Hướng dẫn: `docs/guides/state-machine.md`.
 - Thêm collection `state_events` (model `StateEvent`): nhật ký chuyển trạng thái chung cho mọi loại đối tượng, ghi cùng transaction với việc đổi trạng thái. Timeline đơn hàng = lọc `entityType: 'order'` (thay cho `order_events` trong kế hoạch). `npm run schema:ensure` gắn validator và chỉ mục cho collection này.

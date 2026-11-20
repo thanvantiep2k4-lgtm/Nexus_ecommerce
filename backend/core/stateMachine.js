@@ -33,6 +33,7 @@
  *   set         trả về các trường bổ sung ghi cùng lúc với trạng thái (vd { shippedAt: new Date() })
  *   effects     việc phải làm kèm theo, CHẠY TRONG transaction (đổi dữ liệu khác; lỗi thì huỷ tất cả)
  *   afterCommit việc có tác dụng phụ ra ngoài (hẹn job, thông báo), CHỈ chạy sau khi commit
+ *   event       tên sự kiện phát ra outbox (vd 'order.shipped'); mặc định `<tên máy>.<trạng thái đích viết thường>`
  *
  * transition() chạy trong MỘT transaction theo thứ tự: tải đối tượng → kiểm tra đường đi → tác nhân →
  * quyền → guard → đổi trạng thái CÓ ĐIỀU KIỆN → effects → ghi sự kiện (models/StateEvent) → commit →
@@ -55,7 +56,8 @@
  *     nguồn sự thật, job chỉ giúp đúng giờ.
  *  2. Quyền hiện kiểm tra bằng `actor.permissions` (xem defaultCan). Phân quyền chi tiết theo vai trò
  *     (bước 11) sẽ thay bằng `setPermissionChecker`.
- *  3. Sự kiện mới chỉ nằm trong `state_events`. Phát thông báo/outbox (bước 7) sẽ gắn qua `setEventSink`.
+ *  3. Sự kiện được ghi vào `state_events`; `core/events.js` (installStateMachineSink) cắm vào `setEventSink` để
+ *     ghi thêm một dòng outbox cùng transaction, nhờ đó mọi transition() tự phát sự kiện cho các subscriber.
  */
 
 const StateEvent = require('../models/StateEvent');
@@ -135,7 +137,8 @@ function setPermissionChecker(fn) {
   permissionChecker = fn || defaultCan;
 }
 
-// Nơi gắn outbox/thông báo (bước 7): gọi TRONG transaction với (event, session) sau khi ghi sự kiện.
+// Nơi gắn outbox (core/events.js): gọi TRONG transaction với (event, session, { eventName }) sau khi ghi
+// sự kiện; có thể trả về một hàm để chạy sau commit.
 let eventSink = null;
 function setEventSink(fn) {
   eventSink = fn || null;
@@ -176,6 +179,7 @@ function defineMachine(cfg) {
     }
     if (t.permission != null && typeof t.permission !== 'string') fail(`action ${t.action}: \`permission\` phải là chuỗi`);
     if (t.actors != null && (!Array.isArray(t.actors) || !t.actors.length)) fail(`action ${t.action}: \`actors\` phải là mảng không rỗng`);
+    if (t.event != null && (typeof t.event !== 'string' || !t.event)) fail(`action ${t.action}: `+'`event` phải là chuỗi');
     for (const fn of ['guard', 'set', 'effects', 'afterCommit']) {
       if (t[fn] != null && typeof t[fn] !== 'function') fail(`action ${t.action}: \`${fn}\` phải là hàm`);
     }
@@ -359,7 +363,13 @@ async function transition(machine, entityId, action, actor, payload = {}) {
       ],
       opts
     );
-    if (eventSink) await eventSink(event.toObject(), session);
+    if (eventSink) {
+      // Sink nhận (sự kiện đã ghi, session, { eventName }) và chạy TRONG transaction. Nếu trả về một HÀM
+      // thì hàm đó chạy sau commit (vd "gõ cửa" relay outbox để phát sự kiện ngay).
+      const eventName = row.event || `${machine.name}.${String(to).toLowerCase()}`;
+      const post = await eventSink(event.toObject(), session, { eventName, machine: machine.name });
+      if (typeof post === 'function') afterCommitTasks.push(post);
+    }
 
     // Phản ánh trạng thái mới trên bản sao trả về (KHÔNG lưu: DB đã được cập nhật ở trên).
     entity.set({ [field]: to, ...extra });
@@ -406,7 +416,9 @@ async function recordCreated(machine, entityId, to, actor, { session = null, rea
     ],
     session ? { session } : {}
   );
-  if (eventSink) await eventSink(event.toObject(), session);
+  // Sự kiện khởi tạo phát ra tên `<máy>.created`. Giá trị trả về của sink (hàm chạy sau commit) bị bỏ qua vì
+  // recordCreated chạy trong transaction của NGƯỜI GỌI; relay định kỳ vẫn sẽ phát sự kiện (chậm tối đa vài giây).
+  if (eventSink) await eventSink(event.toObject(), session, { eventName: `${machine.name}.created`, machine: machine.name });
   return event;
 }
 

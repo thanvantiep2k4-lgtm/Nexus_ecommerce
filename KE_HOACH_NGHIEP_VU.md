@@ -988,6 +988,25 @@ Thêm biến môi trường (cập nhật `.env.example`): `REDIS_URL`, `MEILI_H
 5. `core/ledger.js`: `post(entries[])` kiểm tra cân bằng, ghi trong transaction.
 6. `core/idempotency.js`: middleware `Idempotency-Key` (Redis, TTL 24h).
 
+### 8.4 Bảo vệ dữ liệu trên MongoDB (bù các điểm yếu của CSDL tài liệu)
+
+MongoDB là CSDL chính vì danh mục đa ngành cần schema linh hoạt, và replica set cho phép transaction ACID nhiều document. Các biện pháp dưới đây bù những điểm CSDL quan hệ có sẵn mà MongoDB không tự làm:
+
+| Điểm yếu | Biện pháp | Áp dụng cho |
+|---|---|---|
+| Truy cập CSDL không kiểm soát | Bật xác thực + `keyFile` (replica set); cổng 27017 không publish ra ngoài; **user theo quyền tối thiểu**: `nexus_app` (đọc/ghi DB chính + chỉ `find`/`insert` ở DB sổ cái), `nexus_backup` (sao lưu), `nexus_readonly` (xem dữ liệu staging) | Mọi môi trường |
+| Không có ràng buộc schema ở tầng CSDL | **`$jsonSchema` validator** gắn trực tiếp vào collection (không chỉ dựa vào Mongoose), `validationAction: "error"` | `orders`, `skus`, `ledger_entries`, `wallet_balances`, `payouts`, `refunds` |
+| Tồn kho có thể âm hoặc bán vượt | Trừ kho bằng `updateOne({_id, stock: {$gte: qty}}, {$inc: …})` trong transaction + validator `stock >= 0`, `reserved >= 0` | `skus` |
+| Sổ cái có thể bị sửa/xoá | Sổ cái nằm ở database RIÊNG `nexusmart_ledger`; user ứng dụng chỉ có quyền `find` + `insert` ở đó (**không `update`/`remove`/`drop`**), nên "chỉ thêm" được bảo đảm ở tầng CSDL, không chỉ ở code. Không dùng user riêng cho sổ cái vì một transaction chỉ chạy dưới MỘT user, mà "đổi trạng thái đơn + ghi bút toán" phải nằm cùng transaction; quyền được phân theo database còn transaction vẫn chạy xuyên được 2 database | `ledger_entries` |
+| Không có khoá ngoại | Kiểm tra tham chiếu trong `transition()`/service + **unique index** (`orderCode`, `skuCode`, `storeSlug`, mỗi dòng hàng chỉ 1 đánh giá, `Idempotency-Key`) | Toàn hệ thống |
+| Sai số khi tính tiền | Lưu tiền VND bằng **số nguyên (đồng)**, không dùng số thực; bỏ mặc định `currency: 'USD'` trong `Payout`. Nếu cần ngoại tệ thì dùng `Decimal128` | Mọi trường tiền |
+| Không tách được dữ liệu tài chính khỏi dữ liệu thường khi mở rộng | Mọi thay đổi tài chính phát sự kiện qua outbox, nên sau này có thể tách mảng tài chính sang CSDL quan hệ mà không đổi nghiệp vụ. **Không tách ngay**: ghi trạng thái đơn và bút toán phải nằm trong cùng một transaction | Hướng phát triển |
+
+**Thiết lập MongoDB theo môi trường:**
+- **Local (dev):** `docker compose` chạy MongoDB trên máy mỗi thành viên, cổng chỉ bind `127.0.0.1`. Không nối thẳng vào CSDL của server.
+- **Staging/Production:** MongoDB chạy trong mạng Docker nội bộ, không publish cổng; thành viên cần xem dữ liệu thì vào qua mạng riêng (Tailscale) bằng user `nexus_readonly`.
+- Chuỗi kết nối luôn có xác thực: `mongodb://nexus_app:<mật khẩu>@mongo:27017/nexusmart?replicaSet=rs0&authSource=nexusmart`. Mật khẩu chỉ nằm trong file `.env` của môi trường, không đưa vào code, tài liệu hay `.mcp.json`.
+
 ---
 
 ## 9. Mô hình dữ liệu (MongoDB) v2
@@ -1009,21 +1028,21 @@ Ký hiệu: 🆕 mới · ✏️ sửa lớn · ✅ giữ.
 | `carts` 🆕 | 🆕 | `userId, items[{skuId, productId, shopId, quantity, selected, priceSnapshot}]` |
 | `checkout_sessions` 🆕 | 🆕 | `userId, idempotencyKey, orderIds[], paymentId, totals` |
 | `orders` | ✏️ | 1 đơn = 1 shop: `orderCode, checkoutSessionId, buyerId, shopId, items[{skuId, productId, title, variationLabel, image, price, qty, shopDiscount, platformVoucherShare, subtotal}], shippingAddress{…, ghnCodes}, shipping{carrier, service, fee, trackingCode, labelUrl, estimatedAt}, amounts{items, shipping, shopVoucher, platformVoucher, shippingVoucher, total}, paymentMethod, paymentId, status, subStatus, cancel{by, reason, at}, timestamps{paidAt, confirmedAt, pickedUpAt, deliveredAt, completedAt}, hasActiveReturn, settlementStatus` (bỏ `cart:[{}]`, trường VNPay rời rạc chuyển sang `payments`) |
-| `order_events` 🆕 | 🆕 | `orderId, from, to, action, actor{type, id}, reason, metadata, at` |
+| `state_events` 🆕 | 🆕 | `entityType, entityId, from, to, action, actor{type, id, roles}, reason, metadata, at`. **Một collection chung cho mọi loại đối tượng** (timeline đơn = `entityType: 'order'`), ghi cùng transaction với việc đổi trạng thái bởi `core/stateMachine.js` |
 | `payments` 🆕 | 🆕 | `checkoutSessionId, method, amount, status, gatewayTxnId, expiresAt, callbacks[]` |
 | `refunds` 🆕 | 🆕 | `orderId, returnId?, paymentId, amount, method, status, gatewayRef, processedBy` |
 | `return_requests` 🆕 | 🆕 | `orderId, buyerId, shopId, items[{orderItemId, qty}], reason, solution, evidence[], description, status, refundAmount, returnShipment{trackingCode}, sellerResponse{decision, evidence, at}, dispute{assignee, notes[], decision, reason, decidedAt}, deadlines{sellerRespondBy, buyerShipBy, sellerInspectBy}` |
 | `vouchers` | ✏️ (từ `coupons`) | `scope: PLATFORM|SHOP|SHIPPING, shopId?, code, discountType, value, maxDiscount, minSpend, startAt, endAt, totalQuota, perUserLimit, usedCount, audience, applicableProductIds[], approval{status, by}` |
 | `voucher_wallet` 🆕 | 🆕 | `userId, voucherId, savedAt, usedAt` |
 | `flash_sale_slots` 🆕, `flash_sale_registrations` 🆕 | 🆕 | khung giờ; đăng ký SKU + giá + số lượng + trạng thái duyệt |
-| `ledger_entries` 🆕 | 🆕 | `txnId, account, debit, credit, refType, refId, createdAt` (bất biến) |
+| `nexusmart_ledger.ledger_entries` 🆕 (database riêng) | 🆕 | `txnId, account, debit, credit, refType, refId, createdAt` (bất biến) |
 | `wallet_balances` 🆕 | 🆕 | `shopId, available, pending, inTransit, updatedAt` |
 | `settlements` 🆕 | 🆕 | `orderId, shopId, gross, commission, paymentFee, taxVat, taxPit, shippingCharge, net, status, settledAt` |
 | `payouts` | ✏️ | thêm máy trạng thái 2 cấp, `currency` cố định VND, `bankSnapshot`, `approvals[]`, `bankTxnRef`, `proofUrl` |
 | `reviews` | ✏️ | thêm `orderId, orderItemId, shopId, variationLabel, video, tags[], anonymous, editCount, aiModeration{label, score}, sellerReply{text, at}, reports[]` |
 | `penalties` 🆕 | 🆕 | `shopId, type, points, refType, refId, quarter, appeal{status, reason}` |
 | `notifications` 🆕 | 🆕 | `userId, category, title, body, link, refType, refId, readAt` |
-| `outbox` 🆕 | 🆕 | `event, payload, status, attempts, nextAttemptAt` |
+| `outbox` 🆕, `event_deliveries` 🆕 | 🆕 | `outbox`: `type, aggregateType, aggregateId, payload, status (pending/processing/published/done/dead), attempts, nextAttemptAt, lockedAt, lastError`; `event_deliveries`: `(eventId, subscriber)` duy nhất, biên nhận chống xử lý lặp |
 | `conversations` 🆕, `messages` 🆕 | 🆕 | chat buyer–shop; `firstResponseAt` |
 | `pages` ✏️, `page_versions` 🆕 | | `pageId, version, sections[], status, editor, approver, scheduledAt, publishedAt` |
 | `menus`, `banners`, `blog_posts`, `email_templates` | ✅/✏️ | thêm lịch + vị trí cho banner |
@@ -1034,6 +1053,22 @@ Ký hiệu: 🆕 mới · ✏️ sửa lớn · ✅ giữ.
 | `chat_sessions`, `chat_feedback` | ✅ | AI chatbot |
 
 **Di chuyển dữ liệu:** viết script `scripts/migrate-v2.js` (idempotent): chuyển `vendorProfile` → `shops`, `variants` → `skus` + `tierVariations`, `coupons` → `vouchers`, `Order.status` cũ → mã mới (`pending→TO_CONFIRM`, `confirmed/processing→TO_SHIP`, `shipped→SHIPPING`, `delivered→COMPLETED`, `cancel|cancelled→CANCELLED`). Cập nhật seed để có dữ liệu demo đủ mọi trạng thái.
+
+**Ràng buộc dữ liệu ở tầng CSDL** (script `scripts/ensure-schema.js`, idempotent, chạy trong bước deploy cùng `ensure-indexes.js`; production đặt `autoIndex: false`):
+
+| Collection | Validator `$jsonSchema` | Unique index chính |
+|---|---|---|
+| `skus` | `stock`, `reserved` là số nguyên ≥ 0; `price` số nguyên ≥ 0 | `skuCode` |
+| `orders` | `status` thuộc tập 11 trạng thái; `amounts.*` số nguyên ≥ 0; `items` không rỗng | `orderCode` |
+| `ledger_entries` | `debit`, `credit` số nguyên ≥ 0, đúng một trong hai > 0; `txnId`, `account`, `refType`, `refId` bắt buộc | (`txnId`, `account`, `refId`) |
+| `wallet_balances` | `available`, `pending`, `inTransit` số nguyên ≥ 0 | `shopId` |
+| `payouts` | `status` thuộc tập trạng thái rút tiền; `amount` số nguyên > 0 | `idempotencyKey` |
+| `refunds` | `amount` số nguyên > 0; `status` hợp lệ | (`orderId`, `returnId`) |
+| `reviews` | `rating` 1–5 | (`orderItemId`) mỗi dòng hàng 1 đánh giá |
+
+- **Mọi trường tiền là số nguyên đồng.** Hiển thị đổi sang tiền tệ khác chỉ ở tầng giao diện (xem 8.1 mục đa tiền tệ).
+- **Quyền ghi sổ cái:** `ledger_entries` nằm ở database `nexusmart_ledger`, user ứng dụng chỉ có `find` + `insert` (xem 8.4 và `scripts/mongo/users.config.js`). Quyền này được kiểm thử trong `backend/tests/core/mongo-roles.test.js`.
+- **Báo cáo tài chính/thuế:** dùng aggregation pipeline, các báo cáo nặng dựng sẵn bằng `$merge` vào collection tổng hợp (chạy bằng job đêm), không tính lúc đọc.
 
 ---
 
@@ -1120,7 +1155,7 @@ Nguyên tắc chia: **mỗi thành viên sở hữu trọn một nhóm phân h�
 - [ ] **P0** Model `products` v2 + `skus` (tier variations → ma trận SKU, khoảng giá, chỉ số tổng hợp), seed dữ liệu mẫu đầy đủ thuộc tính (≥ 5 ngành hàng).
 - [ ] **P0** **Trang chi tiết sản phẩm đầy đủ** (mục 5.2.4): gallery theo màu, chọn phân loại mờ theo tồn kho, bảng size, bảng thông số, ước tính phí ship/ngày giao, thẻ shop, voucher shop, khối đánh giá có bộ lọc, gợi ý sản phẩm, JSON-LD.
 - [ ] **P0** **Tìm kiếm**: index sản phẩm trên Meilisearch, đồng bộ qua job, không dấu, gõ sai, facet chung + facet theo thuộc tính danh mục, sắp xếp, autocomplete; trang danh mục + trang tìm kiếm (filter lưu trên URL, phân trang server, skeleton); trang shop công khai.
-- [ ] **P0** **Đơn hàng (M6)**: máy trạng thái đủ bảng 5.6.3 (dùng `core/stateMachine`), `order_events` + timeline, mọi job SLA (hết hạn thanh toán, tự xác nhận, quá hạn chuẩn bị hàng, tự đồng ý huỷ, tự hoàn thành), huỷ theo vai trò + lý do; **7 tab đơn mua** (Storefront), tab đơn hàng + thao tác hàng loạt trong Seller Center, trang đơn hàng Admin.
+- [ ] **P0** **Đơn hàng (M6)**: máy trạng thái đủ bảng 5.6.3 (dùng `core/stateMachine`), timeline từ `state_events` (`entityType: 'order'`), mọi job SLA (hết hạn thanh toán, tự xác nhận, quá hạn chuẩn bị hàng, tự đồng ý huỷ, tự hoàn thành), huỷ theo vai trò + lý do; **7 tab đơn mua** (Storefront), tab đơn hàng + thao tác hàng loạt trong Seller Center, trang đơn hàng Admin.
 - [ ] **P0** **Vận chuyển**: interface `Carrier` (`quote`, `createShipment`, `cancel`, `parseWebhook`); `MockCarrier` + trang **Giả lập vận chuyển** trong Admin; `GhnCarrier` sandbox (phí, leadtime, tạo/huỷ vận đơn, in phiếu, webhook idempotent).
 - [ ] **P0** Tài khoản: đăng ký/đăng nhập/quên mật khẩu/Google qua Keycloak, hồ sơ, sổ địa chỉ (mã tỉnh/huyện/xã GHN), yêu thích sản phẩm.
 - [ ] **P0** Đổi thương hiệu Shofy → NexusMart trên toàn repo.
@@ -1180,6 +1215,8 @@ Nguyên tắc chia: **mỗi thành viên sở hữu trọn một nhóm phân h�
 ---
 
 ## 12. Lộ trình, mức ưu tiên và phương án cắt giảm
+
+> Danh sách việc theo đúng thứ tự phụ thuộc (72 bước, mỗi bước có tham chiếu mục và tiêu chí xong): [`THU_TU_TRIEN_KHAI.md`](THU_TU_TRIEN_KHAI.md).
 
 ### 12.1 Lộ trình 8 tuần (4 sprint × 2 tuần)
 

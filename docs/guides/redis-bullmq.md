@@ -87,17 +87,18 @@ const { enqueue, cancelJob, QUEUES } = require('../core/queues');
 // hẹn 15 phút để huỷ đơn chưa thanh toán; jobId giúp chống trùng và huỷ về sau
 await enqueue(QUEUES.ORDERS, 'expire-unpaid', { orderId }, {
   delay: 15 * 60 * 1000,
-  jobId: `order:${orderId}:expire`,
+  jobId: `order-${orderId}-expire`,   // KHÔNG dùng ':' (BullMQ từ chối), dùng '-' hoặc '_'
 });
 
 // khi đơn được thanh toán
-await cancelJob(QUEUES.ORDERS, `order:${orderId}:expire`);
+await cancelJob(QUEUES.ORDERS, `order-${orderId}-expire`);
 ```
 
 Job chạy lặp theo lịch (thay `node-cron`) đăng ký trong `registerSchedulers()` ở `backend/jobs/index.js`.
 
 ## 5. Quy tắc bắt buộc khi viết processor
 
+0. **`jobId` không được chứa dấu `:`** (BullMQ từ chối, trừ đúng 3 đoạn như `a:b:c`) và không được toàn số. Dùng `-` hoặc `_`. `enqueue` kiểm tra ngay và ném `TypeError` rõ ràng; lỗi kiểu này **không** bị báo là "Redis không sẵn sàng".
 1. **Phải idempotent.** BullMQ bảo đảm job chạy **ít nhất một lần**, không phải đúng một lần (worker chết giữa chừng thì job chạy lại). Chạy hai lần vẫn phải đúng: đọc trạng thái hiện tại trong MongoDB trước khi làm ("nếu đơn đã huỷ rồi thì thôi").
 2. **Chỉ đưa id vào dữ liệu job**, không đưa cả document. Processor đọc lại MongoDB để có dữ liệu mới nhất.
 3. **Đừng dựa vào `cancelJob` để bảo đảm đúng.** Job đang chạy (`active`) không huỷ được; cái bảo đảm đúng là tính idempotent của processor. Huỷ chỉ là tối ưu.

@@ -17,6 +17,7 @@
     "worker": "node worker.js",
     "worker:dev": "nodemon worker.js",
     "job:demo": "node scripts/demo-delay-job.js",
+    "event:demo": "node scripts/demo-event.js",
     "catalog:backup": "node scripts/backup.js",
     "catalog:dry": "node scripts/migrate.js",
     "catalog:commit": "node scripts/migrate.js --commit",

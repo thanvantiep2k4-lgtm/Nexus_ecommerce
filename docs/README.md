@@ -6,7 +6,7 @@ Toàn bộ tài liệu của dự án nằm trong thư mục này. **Đọc [PRO
 |---|---|
 | [PROJECT_PLAN.md](PROJECT_PLAN.md) | Kế hoạch thống nhất: kiến trúc, port, cách chạy, quy ước, phân công từng người |
 | [deployment.md](deployment.md) | Triển khai Docker, Nginx, SSL, backup |
-| `guides/` | [**Hướng dẫn test các luồng chính**](guides/huong-dan-test.md), [Redis, BullMQ, worker, Bull Board](guides/redis-bullmq.md), [Máy trạng thái](guides/state-machine.md), [Docker: tránh chạy nhầm container cũ](guides/docker-tips.md), [Atlas Vector Search](guides/atlas-vector-index.md), [Google OAuth](guides/google-oauth-setup.md), [kế hoạch test Google OAuth](guides/google-oauth-test-plan.md) |
+| `guides/` | [**Hướng dẫn test các luồng chính**](guides/huong-dan-test.md), [Redis, BullMQ, worker, Bull Board](guides/redis-bullmq.md), [Máy trạng thái](guides/state-machine.md), [Sự kiện và outbox](guides/events-outbox.md), [Docker: tránh chạy nhầm container cũ](guides/docker-tips.md), [Atlas Vector Search](guides/atlas-vector-index.md), [Google OAuth](guides/google-oauth-setup.md), [kế hoạch test Google OAuth](guides/google-oauth-test-plan.md) |
 | `design/` | [Design system Clicon](design/clicon-design-system.md) cho storefront |
 | `report/` | Báo cáo đồ án (`BaoCao_Shofy.md` / `.docx`), sơ đồ Mermaid `diagrams/`, script build docx |
 | `reference/` | Tài liệu gốc: `phancong.md` (phân công ban đầu), `TMDT.pdf` (yêu cầu đề tài) |

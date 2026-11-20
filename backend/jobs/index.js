@@ -11,10 +11,12 @@
 
 const { QUEUES, getQueue } = require('../core/queues');
 const { systemProcessor } = require('./system.processor');
+const { eventsProcessor } = require('./events.processor');
 
 /** hàng đợi -> hàm xử lý. worker.js tạo một Worker cho mỗi mục. */
 const processors = {
   [QUEUES.SYSTEM]: systemProcessor,
+  [QUEUES.EVENTS]: eventsProcessor,
 };
 
 /**
@@ -27,6 +29,15 @@ async function registerSchedulers() {
     'heartbeat',
     { every: 30 * 1000 },
     { name: 'heartbeat', opts: { removeOnComplete: true, removeOnFail: { count: 20 } } }
+  );
+
+  // Relay outbox: chuyển sự kiện đang chờ vào hàng đợi mỗi 2 giây. Đây là LƯỚI AN TOÀN bảo đảm không mất
+  // sự kiện: kể cả khi "gõ cửa" sau commit thất bại (Redis chết thoáng chốc), lượt định kỳ này vẫn phát.
+  // Scheduler nằm trong Redis nên toàn hệ thống chỉ sinh MỘT job mỗi lượt dù có bao nhiêu worker.
+  await getQueue(QUEUES.EVENTS).upsertJobScheduler(
+    'outbox-relay',
+    { every: 2000 },
+    { name: 'relay', opts: { removeOnComplete: true, removeOnFail: { count: 20 }, attempts: 1 } }
   );
 }
 
